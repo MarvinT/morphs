@@ -14,8 +14,11 @@ seaborn
 pandas
 numpy
 pathlib
+sklearn
 
 git+git://github.com/gentnerlab/ephys-analysis@master#egg=ephys
+# since ephys-analysis doesn't have requirements...
+h5py
 
 # backwards compatibility
 pathlib2
