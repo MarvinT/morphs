@@ -3,7 +3,7 @@ import sys
 REQUIRED_PYTHON = "python"
 
 
-def main():
+def test_main():
     system_major = sys.version_info.major
     if REQUIRED_PYTHON == "python":
         required_major = 2
@@ -20,6 +20,9 @@ def main():
     else:
         print(">>> Development environment passes all tests!")
 
+def test_import():
+    import morphs
 
 if __name__ == '__main__':
-    main()
+    test_main()
+    test_import()
