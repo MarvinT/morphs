@@ -8,7 +8,8 @@ from sklearn.linear_model import LogisticRegression
 import morphs
 
 
-def cluster_accuracy(cluster, cluster_group, morph_dims, max_num_reps, n_folds=10, n_dim=50, tau=.01, stim_length=.4):
+def cluster_accuracy(cluster, cluster_group, morph_dims, max_num_reps,
+                     n_folds=10, n_dim=50, tau=.01, stim_length=.4):
     accuracies = pd.DataFrame(index=np.arange(len(morph_dims) * n_folds),
                               columns=['cluster', 'morph', 'i', 'accuracy'])
     idx = 0
@@ -58,9 +59,11 @@ def gen_cluster_accuracies():
                 morph_dims.sort()
                 morph_dims = morph_dims[1:]
 
-                max_num_reps = np.max([len(stim_group.groupby(by=('recording', 'stim_presentation'))) for stim_id, stim_group in template_spikes.groupby('stim_id')])
+                max_num_reps = np.max([len(stim_group.groupby(by=('recording', 'stim_presentation')))
+                                       for stim_id, stim_group in template_spikes.groupby('stim_id')])
 
-                accuracies_list = parallel(delayed(cluster_accuracy)(cluster, cluster_group, morph_dims, max_num_reps) for (cluster, cluster_group) in cluster_groups)
+                accuracies_list = parallel(delayed(cluster_accuracy)(cluster, cluster_group, morph_dims, max_num_reps)
+                                           for (cluster, cluster_group) in cluster_groups)
 
                 accuracies[block_path] = pd.concat(accuracies_list)
 
