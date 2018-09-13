@@ -47,7 +47,7 @@ def gen_cluster_accuracies():
     accuracies = {}
     with Parallel(n_jobs=morphs.parallel.N_JOBS) as parallel:
         for block_path in morphs.paths.BLOCKS:
-            print block_path
+            print(block_path)
             spikes = morphs.data.load.ephys(block_path, collapse_endpoints=True)
 
             if len(spikes['recording'].unique()) >= 1:
@@ -71,7 +71,7 @@ def gen_cluster_accuracies():
 
 def load_cluster_accuracies():
     if not morphs.paths.ACCURACIES_PKL.exists():
-        print 'Calculating all cluster accuracies first'
+        print('Calculating all cluster accuracies first')
         gen_cluster_accuracies()
     with open(morphs.paths.ACCURACIES_PKL, 'rb') as f:
         accuracies = Pickle.load(f)
