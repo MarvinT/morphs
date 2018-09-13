@@ -24,7 +24,7 @@ def ephys(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endp
             print('going to have to remove float stim recording ', rec)
             spikes = spikes[spikes['recording'] != rec]
             stims = stims[stims['recording'] != rec]
-        except:
+        except ValueError:
             if (rec_group['stim_duration'] > .41).any():
                 print('removing long stim recording ', rec)
                 spikes = spikes[spikes['recording'] != rec]
