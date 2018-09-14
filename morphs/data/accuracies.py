@@ -12,7 +12,6 @@ def cluster_accuracy(cluster, cluster_group, morph_dims, max_num_reps,
                      n_folds=10, n_dim=50, tau=.01, stim_length=.4):
     accuracies = pd.DataFrame(index=np.arange(len(morph_dims) * n_folds),
                               columns=['cluster', 'morph', 'i', 'accuracy'])
-    idx = 0
     filtered_responses = {}
     for motif, motif_group in cluster_group.groupby('stim_id'):
         trial_groups = motif_group.groupby(['recording', 'stim_presentation'])
@@ -26,6 +25,7 @@ def cluster_accuracy(cluster, cluster_group, morph_dims, max_num_reps,
         for i, fr in enumerate(filtered_responses[motif]):
             x[motif][i, :] = fr(t)
 
+    idx = 0
     for morph in morph_dims:
         l, r = morph
         x_concat = np.append(x[l], x[r], axis=0)
