@@ -10,5 +10,5 @@ ACCURACIES_PKL = PROCESSED_DIR / "all_accuracies.pkl"
 BLOCK_PATH_TEMPLATE = '/mnt/cube/mthielk/analysis/%s/kwik/*'
 
 BLOCKS = []
-for subj in morphs.subj.ephys_subjs:
+for subj in morphs.subj.EPHYS_SUBJS:
     BLOCKS += glob(BLOCK_PATH_TEMPLATE % (subj,))
