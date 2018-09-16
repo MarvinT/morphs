@@ -11,6 +11,7 @@ import morphs
 
 def cluster_accuracy(cluster, cluster_group, morph_dims, max_num_reps,
                      n_folds=10, n_dim=50, tau=.01, stim_length=.4):
+    '''Helper function to calculate the pairwise classification accuracy of template motifs'''
     accuracies = pd.DataFrame(index=np.arange(len(morph_dims) * n_folds),
                               columns=['cluster', 'morph', 'i', 'accuracy'])
     filtered_responses = {}
@@ -46,6 +47,7 @@ def cluster_accuracy(cluster, cluster_group, morph_dims, max_num_reps,
 
 
 def gen_cluster_accuracies():
+    '''Generates pickle file containing the accuracy for each cluster in each recording block'''
     accuracies = {}
     with Parallel(n_jobs=morphs.parallel.N_JOBS) as parallel:
         for block_path in morphs.paths.BLOCKS:
@@ -74,6 +76,7 @@ def gen_cluster_accuracies():
 
 
 def load_cluster_accuracies():
+    '''Loads pickle file containing the accuracy for each cluster in each recording block'''
     if not morphs.paths.ACCURACIES_PKL.exists():
         print('Calculating all cluster accuracies first')
         gen_cluster_accuracies()

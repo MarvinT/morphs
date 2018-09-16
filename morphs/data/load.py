@@ -7,6 +7,7 @@ from morphs.data.accuracies import load_cluster_accuracies as cluster_accuracies
 
 
 def ephys(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False):
+    '''Loads ephys data and parses stimuli for this project'''
     assert not (collapse_endpoints and shuffle_endpoints)
     spikes = core.load_spikes(block_path)
 
