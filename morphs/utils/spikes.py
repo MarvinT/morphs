@@ -1,3 +1,4 @@
+'''Utilities for spike processing'''
 import numpy as np
 
 

@@ -1,3 +1,4 @@
+'''Functions for calculating the accuracy of individual units on the template motifs for this project'''
 import cPickle as Pickle
 import pandas as pd
 import numpy as np

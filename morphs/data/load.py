@@ -1,3 +1,4 @@
+'''Collection of loading scripts'''
 import numpy as np
 from ephys import core, rigid_pandas
 

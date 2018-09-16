@@ -1,3 +1,6 @@
+'''Parsing functions for the stimuli names for this project'''
+
+
 def stim_id(df, stim_id='stim_id', end='end', morph_dim='morph_dim',
             morph_pos='morph_pos', lesser_dim='lesser_dim',
             greater_dim='greater_dim'):

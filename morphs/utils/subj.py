@@ -1,3 +1,4 @@
+'''Subject definitions for project'''
 import seaborn as sns
 
 BEHAVE_SUBJS = ['B979', 'B1107', 'B1082', 'B1218',
