@@ -11,6 +11,11 @@ ACCURACIES_PKL = PROCESSED_DIR / "all_accuracies.pkl"
 
 
 def blocks():
+    '''
+    Returns a list of different block paths that correspond to each
+    electrophysiological recording Ive done. Understands if this is
+    being run with local access to data.
+    '''
     if morphs.parallel.is_local():
         block_path_template = '/mnt/cube/mthielk/analysis/%s/kwik/*'
     else:
