@@ -5,7 +5,7 @@ import morphs
 
 PROJECT_DIR = Path(__file__).resolve().parents[2]
 DATA_DIR = PROJECT_DIR / "data"
-EPHYS_DIR = morphs.paths.DATA_DIR / 'ephys'
+EPHYS_DIR = DATA_DIR / 'ephys'
 PROCESSED_DIR = DATA_DIR / "processed"
 ACCURACIES_PKL = PROCESSED_DIR / "all_accuracies.pkl"
 
