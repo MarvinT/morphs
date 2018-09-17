@@ -1,8 +1,10 @@
 import sys
+import pytest
 
 REQUIRED_PYTHON = "python"
 
 
+@pytest.mark.run(order=0)
 def test_main():
     system_major = sys.version_info.major
     if REQUIRED_PYTHON == "python":
@@ -20,6 +22,8 @@ def test_main():
     else:
         print(">>> Development environment passes all tests!")
 
+
+@pytest.mark.run(order=1)
 def test_import():
     import morphs
 
