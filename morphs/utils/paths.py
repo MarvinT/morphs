@@ -1,5 +1,5 @@
 '''Path definitions'''
-from pathlib import Path
+from pathlib2 import Path
 from glob import glob
 import morphs
 
