@@ -13,7 +13,6 @@ joblib
 seaborn
 pandas
 numpy
-pathlib
 sklearn
 googledrivedownloader
 
