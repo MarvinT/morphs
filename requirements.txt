@@ -15,6 +15,7 @@ pandas
 numpy
 sklearn
 googledrivedownloader
+pytest-ordering
 
 git+git://github.com/gentnerlab/ephys-analysis@master#egg=ephys
 # since ephys-analysis doesn't have requirements...

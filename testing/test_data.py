@@ -11,3 +11,4 @@ def test_download_ephys_data():
     gdd.download_file_from_google_drive(file_id='12bp8fHCC51PWOiX8QxziY7oM7sOxQetA',
                                         dest_path=str(dest_path))
     assert dest_path.exists()
+    assert len(morphs.paths.blocks()) > 0
