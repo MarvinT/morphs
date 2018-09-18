@@ -1,5 +1,6 @@
 import morphs
 import pandas as pd
+from google_drive_downloader import GoogleDriveDownloader as gdd
 
 
 def reduce_behave_data(df):
@@ -24,4 +25,14 @@ def gen_behavior_df():
 
 
 def load_behavior_df():
+    if not morphs.paths.BEHAVE_PKL.exists():
+        print('downloading beahvior_df, alternatively you could run' +
+              'morphs.data.behavior.gen_behavior_df() to generate it')
+        download_behavior_df()
     return pd.read_pickle(morphs.paths.BEHAVE_PKL.as_posix())
+
+
+def download_behavior_df():
+    morphs.paths.BEHAVE_DIR.mkdir(parents=True, exist_ok=True)
+    gdd.download_file_from_google_drive(file_id='1wIOg1y0JpyeVgyDFrgOtzYv5XSymA-GX',
+                                        dest_path=morphs.paths.BEHAVE_PKL.as_posix())

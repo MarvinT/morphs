@@ -23,5 +23,8 @@ def generate_psychometric_params():
 
 
 def load_psychometric_params():
+    if not morphs.paths.PSYCHOMETRIC_PKL.exists():
+        print('generating psychometric params')
+        generate_psychometric_params()
     with open(morphs.paths.PSYCHOMETRIC_PKL.as_posix(), 'rb') as f:
         return Pickle.load(f)
