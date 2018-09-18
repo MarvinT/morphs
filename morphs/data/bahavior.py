@@ -19,9 +19,9 @@ def gen_behavior_df():
     cumulative_data = pd.concat([morphs.data.parse.behav_data_stim_id(behav_data[subj], subj) for
                                  subj in morphs.subj.BEHAVE_SUBJS])
     cumulative_data = reduce_behave_data(cumulative_data)
-    morphs.data.parse.stim_id(cumulative_data)
+    morphs.paths.BEHAVE_DIR.mkdir(parents=True, exist_ok=True)
     cumulative_data.to_pickle(morphs.paths.BEHAVE_PKL.as_posix())
 
 
 def load_behavior_df():
-    pd.read_pickle(morphs.paths.BEHAVE_PKL.as_posix())
+    return pd.read_pickle(morphs.paths.BEHAVE_PKL.as_posix())
