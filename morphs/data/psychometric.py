@@ -18,10 +18,10 @@ def generate_psychometric_params():
     morphs.data.parse.stim_id(cumulative_data)
     cumulative_data = morphs.data.parse.behav_data_inverted(cumulative_data)
     psychometric_params = calculate_psychometric_params(cumulative_data)
-    with open(morphs.paths.BEHAVE_PKL.as_posix(), 'wb') as f:
+    with open(morphs.paths.PSYCHOMETRIC_PKL.as_posix(), 'wb') as f:
         Pickle.dump(psychometric_params, f)
 
 
 def load_psychometric_params():
-    with open(morphs.paths.BEHAVE_PKL.as_posix(), 'rb') as f:
+    with open(morphs.paths.PSYCHOMETRIC_PKL.as_posix(), 'rb') as f:
         return Pickle.load(f)
