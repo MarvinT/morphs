@@ -150,7 +150,7 @@ def fit_4pl(x, y, p_start=None, verbose=False):
         pass
     for i in range(3):
         if verbose and i > 0:
-            print 'retry', i
+            print('retry', i)
         result = op.minimize(nll, p_start, args=(x, y), jac=ndll, bounds=(
             (eta_bounds, 1 - eta_bounds), (eta_bounds, 1 - eta_bounds),
             (None, None), (None, None)))
@@ -158,6 +158,6 @@ def fit_4pl(x, y, p_start=None, verbose=False):
             return result.x
         else:
             if verbose:
-                print p_start, 'failure', result
+                print(p_start, 'failure', result)
             p_start = result.x
     return False
