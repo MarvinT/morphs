@@ -2,9 +2,9 @@ import cPickle as Pickle
 import morphs
 
 
-def calculate_psychometric_params(cumulative_data):
+def calculate_psychometric_params(behavior_df):
     psychometric_params = {}
-    for subj, subj_group in cumulative_data.groupby('subj'):
+    for subj, subj_group in behavior_df.groupby('subj'):
         psychometric_params[subj] = {}
         for dim, dim_group in subj_group.groupby('morph_dim'):
             x = dim_group['morph_pos'].astype(float).values
@@ -14,10 +14,10 @@ def calculate_psychometric_params(cumulative_data):
 
 
 def generate_psychometric_params():
-    cumulative_data = morphs.data.load.behavior_df()
-    morphs.data.parse.stim_id(cumulative_data)
-    cumulative_data = morphs.data.parse.behav_data_inverted(cumulative_data)
-    psychometric_params = calculate_psychometric_params(cumulative_data)
+    behavior_df = morphs.data.load.behavior_df()
+    morphs.data.parse.stim_id(behavior_df)
+    behavior_df = morphs.data.parse.behav_data_inverted(behavior_df)
+    psychometric_params = calculate_psychometric_params(behavior_df)
     with open(morphs.paths.PSYCHOMETRIC_PKL.as_posix(), 'wb') as f:
         Pickle.dump(psychometric_params, f)
 

@@ -16,11 +16,11 @@ def gen_behavior_df():
     from behav import loading
     behav_data = loading.load_data_pandas(morphs.subj.BEHAVE_SUBJS,
                                           morphs.paths.behave_data_folder())
-    cumulative_data = pd.concat([morphs.data.parse.behav_data_stim_id(behav_data[subj], subj) for
-                                 subj in morphs.subj.BEHAVE_SUBJS])
-    cumulative_data = reduce_behave_data(cumulative_data)
+    behavior_df = pd.concat([morphs.data.parse.behav_data_stim_id(behav_data[subj], subj) for
+                             subj in morphs.subj.BEHAVE_SUBJS])
+    behavior_df = reduce_behave_data(behavior_df)
     morphs.paths.BEHAVE_DIR.mkdir(parents=True, exist_ok=True)
-    cumulative_data.to_pickle(morphs.paths.BEHAVE_PKL.as_posix())
+    behavior_df.to_pickle(morphs.paths.BEHAVE_PKL.as_posix())
 
 
 def load_behavior_df():
