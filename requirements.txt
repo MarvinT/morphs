@@ -13,8 +13,9 @@ joblib
 seaborn
 pandas
 numpy
-pathlib
 sklearn
+googledrivedownloader
+pytest-ordering
 
 git+git://github.com/gentnerlab/ephys-analysis@master#egg=ephys
 # since ephys-analysis doesn't have requirements...
