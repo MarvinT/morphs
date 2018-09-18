@@ -1,11 +1,9 @@
 import numpy as np
 import scipy.optimize as op
 
-eta_bounds = 1e-16
-
 
 def four_param_logistic(p):
-    """4p logistic function maker.
+    '''4p logistic function maker.
 
     Returns a function that accepts x and returns y for
     the 4-parameter logistic defined by p.
@@ -20,7 +18,7 @@ def four_param_logistic(p):
     Returns:
         A function that accepts a numpy array as an argument
         for x values and returns the y values for the defined 4pl curve.
-    """
+    '''
     A, K, B, M = p
 
     def f(x):
@@ -29,7 +27,7 @@ def four_param_logistic(p):
 
 
 def normalized_four_param_logistic(p):
-    """removes the scaling of A and K"""
+    '''removes the scaling of A and K'''
     A, K, B, M = p
 
     def f(x):
@@ -38,7 +36,7 @@ def normalized_four_param_logistic(p):
 
 
 def ln_like(p, x, y):
-    """log likelihood for fitting the four parameter logistic.
+    '''log likelihood for fitting the four parameter logistic.
 
     Args:
         p: an iterable of length 4
@@ -50,14 +48,14 @@ def ln_like(p, x, y):
     Returns:
         The log-likelihood that the samples y are drawn from a distribution
         where the 4pl(x; p) is the probability of getting y=1
-    """
+    '''
     p_4pl = four_param_logistic(p)
     probs = p_4pl(x)
     return np.sum(y * np.log(probs) + (1 - y) * np.log(1 - probs))
 
 
 def dln_like(p, x, y):
-    """gradient of the log likelihood for fitting the four parameter logistic.
+    '''gradient of the log likelihood for fitting the four parameter logistic.
 
     Args:
         p: an iterable of length 4
@@ -69,7 +67,7 @@ def dln_like(p, x, y):
     Returns:
         The gradient of the log-likelihood that the samples y are drawn from
         a distribution where the 4pl(x; p) is the probability of getting y=1
-    """
+    '''
     A, K, B, M = p
 
     def f(x):
@@ -89,17 +87,17 @@ def dln_like(p, x, y):
 
 
 def nll(*args):
-    """negative log-likelihood for fitting the 4 param logistic."""
+    '''negative log-likelihood for fitting the 4 param logistic.'''
     return -ln_like(*args)
 
 
 def ndll(*args):
-    """negative grad of the log-likelihood for fitting the 4 param logistic."""
+    '''negative grad of the log-likelihood for fitting the 4 param logistic.'''
     return -dln_like(*args)
 
 
 def est_pstart(x, y):
-    """basic estimation of a good place to start log likelihood maximization.
+    '''basic estimation of a good place to start log likelihood maximization.
 
     Args:
         x: a numpy array of length n
@@ -111,7 +109,7 @@ def est_pstart(x, y):
         p_start: an iterable of length 4 that should be a reasonable spot to
             start the optimization
             A, K, B, M = p_start
-    """
+    '''
     p_start = [.01, .99, .2, 0]
     x_vals = np.unique(x)
     p_start[3] = np.mean(x_vals)
@@ -123,8 +121,8 @@ def est_pstart(x, y):
     return p_start
 
 
-def fit_4pl(x, y, p_start=None, verbose=False):
-    """Fits a 4 parameter logistic function to the data.
+def fit_4pl(x, y, p_start=None, verbose=False, epsilon=1e-16):
+    '''Fits a 4 parameter logistic function to the data.
 
     Args:
         x: a numpy array of length n
@@ -137,12 +135,13 @@ def fit_4pl(x, y, p_start=None, verbose=False):
             A, K, B, M = p_start
             default=None
         verbose: boolean flag that allows printing of more error messages.
+        epsilon: limits A and K between (epsilon, 1 - epsilon) for stability
 
     Returns:
         p_result: an iterable of length 4 that defines the model that
         is maximally likely
             A, K, B, M = p_result
-    """
+    '''
     try:
         if not p_start:
             p_start = est_pstart(x, y)
@@ -152,7 +151,7 @@ def fit_4pl(x, y, p_start=None, verbose=False):
         if verbose and i > 0:
             print('retry', i)
         result = op.minimize(nll, p_start, args=(x, y), jac=ndll, bounds=(
-            (eta_bounds, 1 - eta_bounds), (eta_bounds, 1 - eta_bounds),
+            (epsilon, 1 - epsilon), (epsilon, 1 - epsilon),
             (None, None), (None, None)))
         if result.success:
             return result.x

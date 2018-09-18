@@ -3,6 +3,7 @@ import morphs
 
 
 def calculate_psychometric_params(behavior_df):
+    '''Fits psychometric params for each dim x each bird'''
     psychometric_params = {}
     for subj, subj_group in behavior_df.groupby('subj'):
         psychometric_params[subj] = {}
@@ -14,6 +15,10 @@ def calculate_psychometric_params(behavior_df):
 
 
 def generate_psychometric_params():
+    '''
+    Loads behavioral data, parses, calculates psychometric params,
+    then drops them into a pkl file
+    '''
     behavior_df = morphs.data.load.behavior_df()
     morphs.data.parse.stim_id(behavior_df)
     behavior_df = morphs.data.parse.behav_data_inverted(behavior_df)
@@ -23,6 +28,7 @@ def generate_psychometric_params():
 
 
 def load_psychometric_params():
+    '''loads pickle file containing the fit psychometric parameters for each bird'''
     if not morphs.paths.PSYCHOMETRIC_PKL.exists():
         print('generating psychometric params')
         generate_psychometric_params()

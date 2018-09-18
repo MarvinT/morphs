@@ -21,6 +21,7 @@ def separate_endpoints(stim_id_series):
 
 
 def is_inverted_dim(subj, morph_dim):
+    '''Whether a morph dimension is flipped for the subject'''
     left, right = morphs.subj.TRAINING[subj].lower().split('|')
     les, gre = morph_dim
     assert (les in left) != (gre in left)
@@ -29,6 +30,7 @@ def is_inverted_dim(subj, morph_dim):
 
 
 def behav_data_stim_id(df, subj):
+    '''parses stim_id from the wav path in the behavioral data'''
     df = df[(df['response'] != 'none') & (df['type_'] == 'normal')]
     df['stim_id'] = df['stimulus'].str.split('/').str[-1].str[:-4]
     df = df[df['stim_id'].str.len() == 5]
@@ -38,7 +40,12 @@ def behav_data_stim_id(df, subj):
 
 
 def behav_data_inverted(df):
-    # apparently groupby with categorical dtype is broken
+    '''
+    Flips the dimensions that need inverting
+    Faster than using is_inverted_dim
+    '''
+    # Apparently groupby with categorical dtype is broken
+    # See https://github.com/pandas-dev/pandas/issues/22512#issuecomment-422422573
     df['class_'] = df['class_'].astype(str)
     inverted_map = df[(df['morph_pos'] == 1)].groupby(['subj', 'morph_dim'],
                                                       observed=True).agg(lambda x: x.iloc[0])['class_'] == 'R'
