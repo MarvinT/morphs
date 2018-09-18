@@ -2,5 +2,7 @@ language: python
 python:
   - "2.7"
 script:
-  - pytest 
+  - pytest --cov morphs
+after_success:
+  - coveralls
 sudo: required
