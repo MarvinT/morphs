@@ -71,7 +71,7 @@ def gen_cluster_accuracies():
                 accuracies[block_path] = pd.concat(accuracies_list)
 
     morphs.paths.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
-    with open(str(morphs.paths.ACCURACIES_PKL), 'wb') as f:
+    with open(morphs.paths.ACCURACIES_PKL.as_posix(), 'wb') as f:
         Pickle.dump(accuracies, f)
 
 
@@ -80,7 +80,7 @@ def load_cluster_accuracies():
     if not morphs.paths.ACCURACIES_PKL.exists():
         print('Calculating all cluster accuracies first')
         gen_cluster_accuracies()
-    with open(str(morphs.paths.ACCURACIES_PKL), 'rb') as f:
+    with open(morphs.paths.ACCURACIES_PKL.as_posix(), 'rb') as f:
         accuracies = Pickle.load(f)
     cluster_accuracies = {block_path: accuracies[block_path].groupby(
         'cluster').agg(np.mean).sort_values('accuracy') for block_path in accuracies}

@@ -19,7 +19,7 @@ def blocks():
     if morphs.parallel.is_local():
         block_path_template = '/mnt/cube/mthielk/analysis/%s/kwik/*'
     else:
-        block_path_template = str(EPHYS_DIR) + '/%s/kwik/*'
+        block_path_template = EPHYS_DIR.as_posix() + '/%s/kwik/*'
 
     blocks = []
     for subj in morphs.subj.EPHYS_SUBJS:
