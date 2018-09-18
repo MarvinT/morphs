@@ -1,5 +1,6 @@
 import morphs
 import pytest
+import numpy as np
 
 
 @pytest.mark.run(order=4)
