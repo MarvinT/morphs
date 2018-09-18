@@ -14,7 +14,7 @@ def calculate_psychometric_params(cumulative_data):
 
 
 def generate_psychometric_params():
-    cumulative_data = morphs.load.behavior_df()
+    cumulative_data = morphs.data.load.behavior_df()
     morphs.data.parse.stim_id(cumulative_data)
     cumulative_data = morphs.data.parse.behav_data_inverted(cumulative_data)
     psychometric_params = calculate_psychometric_params(cumulative_data)
