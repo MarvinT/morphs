@@ -2,7 +2,7 @@ import morphs
 import pytest
 
 
-@pytest.mark.run(order=3)
+@pytest.mark.run(order=1)
 def test_load_gen_cluster_accuracies():
     assert len(morphs.paths.blocks()) > 0
     assert not morphs.paths.ACCURACIES_PKL.exists()
