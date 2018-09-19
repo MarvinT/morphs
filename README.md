@@ -1,5 +1,7 @@
-morphs
-==============================
+# morphs
+[![Build Status](https://travis-ci.com/MarvinT/morphs.svg?branch=master)](https://travis-ci.com/MarvinT/morphs)
+[![Coverage Status](https://coveralls.io/repos/github/MarvinT/morphs/badge.svg?branch=master)](https://coveralls.io/github/MarvinT/morphs?branch=master)
+
 
 Code for my morph project and analysis
 

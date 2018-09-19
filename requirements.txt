@@ -16,6 +16,8 @@ numpy
 sklearn
 googledrivedownloader
 pytest-ordering
+pytest-cov
+python-coveralls
 
 git+git://github.com/gentnerlab/ephys-analysis@master#egg=ephys
 # since ephys-analysis doesn't have requirements...
