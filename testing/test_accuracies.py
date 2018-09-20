@@ -30,5 +30,5 @@ def test_cluster_accuracy():
     max_num_reps = np.max([len(stim_group.groupby(by=('recording', 'stim_presentation')))
                            for stim_id, stim_group in template_spikes.groupby('stim_id')])
 
-    accuracies_list = [morphs.data.accuracies.cluster_accuracies(cluster, cluster_group, morph_dims, max_num_reps)
+    accuracies_list = [morphs.data.accuracies.cluster_accuracy(cluster, cluster_group, morph_dims, max_num_reps)
                        for (cluster, cluster_group) in cluster_groups]
