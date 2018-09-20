@@ -9,3 +9,4 @@
 
 ### order=1
 - generate ACCURACIES_PKL
+- generate PSYCHOMETRIC_PKL

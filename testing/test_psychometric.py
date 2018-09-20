@@ -24,6 +24,7 @@ def test_behav_data_inverted():
 
 
 @pytest.mark.run(order=1)
-def test_generate_psychometric_params():
-    morphs.data.psychometric.generate_psychometric_params()
+def test_load_generate_psychometric_params():
+    assert not morphs.paths.PSYCHOMETRIC_PKL.exists()
+    morphs.data.psychometric.load_psychometric_params()
     assert morphs.paths.PSYCHOMETRIC_PKL.exists()
