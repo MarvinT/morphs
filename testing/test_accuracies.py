@@ -12,13 +12,13 @@ def test_load_gen_cluster_accuracies():
 @pytest.mark.run(order=2)
 def test_cluster_accuracy():
     assert len(morphs.paths.blocks()) > 0
-	block_path = morphs.paths.blocks()[]
-	assert morphs.paths.ACCURACIES_PKL.exists()
-	accuracies, cluster_accuracies = morphs.data.accuracies.load_cluster_accuracies()
-	cluster = cluster_accuracies[block_path].index[-1]
-	spikes = morphs.data.load.ephys(block_path, good_clusters=[cluster], collapse_endpoints=True)
-	assert len(spikes['recording'].unique()) >= 1
-	template_spikes = spikes[spikes['stim_id'].isin(list('abcdefgh'))]
+    block_path = morphs.paths.blocks()[]
+    assert morphs.paths.ACCURACIES_PKL.exists()
+    accuracies, cluster_accuracies = morphs.data.accuracies.load_cluster_accuracies()
+    cluster = cluster_accuracies[block_path].index[-1]
+    spikes = morphs.data.load.ephys(block_path, good_clusters=[cluster], collapse_endpoints=True)
+    assert len(spikes['recording'].unique()) >= 1
+    template_spikes = spikes[spikes['stim_id'].isin(list('abcdefgh'))]
     cluster_groups = template_spikes.groupby('cluster')
 
     morph_dims = spikes.morph_dim.unique()
