@@ -9,6 +9,6 @@ def test_shuffle_endpoints():
     assert morphs.paths.ACCURACIES_PKL.exists()
     accuracies, cluster_accuracies = morphs.data.accuracies.load_cluster_accuracies()
     cluster = cluster_accuracies[block_path].index[-1]
-    spikes = morphs.data.load.ephys(block_path, good_clusters=[cluster],
-                                    shuffle_endpoints=True)
+    spikes = morphs.data.load.ephys_data(block_path, good_clusters=[cluster],
+                                         shuffle_endpoints=True)
     assert len(spikes) > 0
