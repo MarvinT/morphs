@@ -3,13 +3,14 @@ import pytest
 import numpy as np
 
 
-@pytest.mark.run(order=4)
-def test_download_behavior_df():
-    morphs.data.behavior.download_behavior_df()
+@pytest.mark.run(order=0)
+def test_load_download_behavior_df():
+    assert not morphs.paths.BEHAVE_PKL.exists()
+    morphs.data.behavior.load_behavior_df()
     assert morphs.paths.BEHAVE_PKL.exists()
 
 
-@pytest.mark.run(order=5)
+@pytest.mark.run(order=1)
 def test_behav_data_inverted():
     behavior_df = morphs.data.load.behavior_df()
     morphs.data.parse.stim_id(behavior_df)
@@ -22,7 +23,7 @@ def test_behav_data_inverted():
     assert np.all(behavior_df['inverted'] == behavior_df['inverted_slow'])
 
 
-@pytest.mark.run(order=6)
+@pytest.mark.run(order=1)
 def test_generate_psychometric_params():
     morphs.data.psychometric.generate_psychometric_params()
     assert morphs.paths.PSYCHOMETRIC_PKL.exists()
