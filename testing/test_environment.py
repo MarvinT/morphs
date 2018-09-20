@@ -23,7 +23,7 @@ def test_main():
         print(">>> Development environment passes all tests!")
 
 
-@pytest.mark.run(order=1)
+@pytest.mark.run(order=0)
 def test_import():
     import morphs
 
