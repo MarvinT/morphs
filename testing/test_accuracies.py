@@ -9,6 +9,7 @@ def test_load_gen_cluster_accuracies():
     accuracies, cluster_accuracies = morphs.data.accuracies.load_cluster_accuracies()
     assert morphs.paths.ACCURACIES_PKL.exists()
 
+
 @pytest.mark.run(order=2)
 def test_cluster_accuracy():
     assert len(morphs.paths.blocks()) > 0
