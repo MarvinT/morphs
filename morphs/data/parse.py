@@ -21,7 +21,13 @@ def separate_endpoints(stim_id_series):
 
 
 def is_inverted_dim(subj, morph_dim):
-    '''Whether a morph dimension is flipped for the subject'''
+    '''
+    To compare behavior between subjects with different L/R associations, 
+    psychometric functions are plotted as 
+    P(response associated with the alphanumerically greater motif)
+    This function returns whether response associated with the
+    alphanumerically greater motif is R for a given subj and morph dimension
+    '''
     left, right = morphs.subj.TRAINING[subj].lower().split('|')
     les, gre = morph_dim
     assert (les in left) != (gre in left)
