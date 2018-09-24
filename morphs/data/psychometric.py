@@ -34,3 +34,7 @@ def load_psychometric_params():
         generate_psychometric_params()
     with open(morphs.paths.PSYCHOMETRIC_PKL.as_posix(), 'rb') as f:
         return Pickle.load(f)
+
+
+if __name__ == '__main__':
+    generate_psychometric_params()
