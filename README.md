@@ -31,7 +31,8 @@ Project Organization
     │
     ├── setup.py           <- makes project pip installable (pip install -e .) so morphs can be imported
     ├── morphs             <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes morphs a Python module
+    │   │
+    │   ├── config         <- Definitions for data paths and project configuration
     │   │
     │   ├── data           <- Scripts to process the data
     │   │
