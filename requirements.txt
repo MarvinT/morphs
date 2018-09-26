@@ -13,7 +13,7 @@ joblib
 seaborn
 pandas
 numpy
-sklearn
+sklearn==0.19.2
 googledrivedownloader
 pytest-ordering
 pytest-cov
