@@ -58,6 +58,7 @@ def gen_cluster_accuracies():
 
             if len(spikes['recording'].unique()) >= 1:
                 template_spikes = spikes[spikes['stim_id'].isin(list('abcdefgh'))]
+                assert len(template_spikes) > 0
                 cluster_groups = template_spikes.groupby('cluster')
 
                 morph_dims = spikes.morph_dim.unique()
