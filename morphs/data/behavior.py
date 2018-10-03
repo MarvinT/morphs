@@ -32,8 +32,8 @@ def gen_behavior_df():
 def load_behavior_df():
     '''Loads behavior df (and downloads it if it doesnt exist)'''
     if not morphs.paths.BEHAVE_PKL.exists():
-        print(('downloading beahvior_df, alternatively you could run' +
-              'morphs.data.behavior.gen_behavior_df() to generate it'))
+        print('downloading beahvior_df, alternatively you could run' +
+              'morphs.data.behavior.gen_behavior_df() to generate it')
         download_behavior_df()
     return pd.read_pickle(morphs.paths.BEHAVE_PKL.as_posix())
 
