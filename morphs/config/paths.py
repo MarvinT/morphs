@@ -6,8 +6,11 @@ import morphs
 PROJECT_DIR = Path(__file__).resolve().parents[2]
 DATA_DIR = PROJECT_DIR / "data"
 EPHYS_DIR = DATA_DIR / 'ephys'
+BEHAVE_DIR = DATA_DIR / 'behavior'
+BEHAVE_PKL = BEHAVE_DIR / 'behave.pkl'
 PROCESSED_DIR = DATA_DIR / "processed"
 ACCURACIES_PKL = PROCESSED_DIR / "all_accuracies.pkl"
+PSYCHOMETRIC_PKL = PROCESSED_DIR / "psychometrics.pkl"
 
 
 def blocks():
@@ -25,3 +28,10 @@ def blocks():
     for subj in morphs.subj.EPHYS_SUBJS:
         blocks += glob(block_path_template % (subj,))
     return blocks
+
+
+def behave_data_folder():
+    if morphs.parallel.is_local():
+        return '/mnt/cube/RawData/Zog/'
+    else:
+        return BEHAVE_DIR.as_posix()

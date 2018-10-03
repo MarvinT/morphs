@@ -1,3 +1,3 @@
-from morphs.utils import parallel, subj, spikes
-from morphs.utils import paths
+from morphs.utils import spikes, logistic
+from morphs.config import parallel, subj, paths
 import morphs.data
