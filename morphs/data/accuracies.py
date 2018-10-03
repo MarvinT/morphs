@@ -1,5 +1,7 @@
 '''Functions for calculating the accuracy of individual units on the template motifs for this project'''
-import cPickle as Pickle
+from __future__ import absolute_import
+from __future__ import print_function
+import six.moves.cPickle as Pickle
 import pandas as pd
 import numpy as np
 from joblib import Parallel, delayed

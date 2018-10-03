@@ -1,5 +1,8 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import numpy as np
 import scipy.optimize as op
+from six.moves import range
 
 
 def four_param_logistic(p):
@@ -149,7 +152,7 @@ def fit_4pl(x, y, p_start=None, verbose=False, epsilon=1e-16):
         pass
     for i in range(3):
         if verbose and i > 0:
-            print('retry', i)
+            print(('retry', i))
         result = op.minimize(nll, p_start, args=(x, y), jac=ndll, bounds=(
             (epsilon, 1 - epsilon), (epsilon, 1 - epsilon),
             (None, None), (None, None)))
@@ -157,6 +160,6 @@ def fit_4pl(x, y, p_start=None, verbose=False, epsilon=1e-16):
             return result.x
         else:
             if verbose:
-                print(p_start, 'failure', result)
+                print((p_start, 'failure', result))
             p_start = result.x
     return False

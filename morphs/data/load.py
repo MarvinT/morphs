@@ -1,4 +1,6 @@
 '''Collection of loading scripts'''
+from __future__ import absolute_import
+from __future__ import print_function
 import numpy as np
 from ephys import core, rigid_pandas
 
@@ -25,12 +27,12 @@ def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle
     for rec, rec_group in stims.groupby('recording'):
         try:
             rec_group['stim_name'].astype(float)
-            print('going to have to remove float stim recording ', rec)
+            print(('going to have to remove float stim recording ', rec))
             spikes = spikes[spikes['recording'] != rec]
             stims = stims[stims['recording'] != rec]
         except ValueError:
             if (rec_group['stim_duration'] > .41).any():
-                print('removing long stim recording ', rec)
+                print(('removing long stim recording ', rec))
                 spikes = spikes[spikes['recording'] != rec]
                 stims = stims[stims['recording'] != rec]
 

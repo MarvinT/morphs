@@ -1,4 +1,5 @@
 '''Utilities for spike processing'''
+from __future__ import absolute_import
 import numpy as np
 
 

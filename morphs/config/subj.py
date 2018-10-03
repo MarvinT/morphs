@@ -1,5 +1,7 @@
 '''Subject definitions for project'''
+from __future__ import absolute_import
 import seaborn as sns
+from six.moves import zip
 
 BEHAVE_SUBJS = ['B979', 'B1107', 'B1082', 'B1218',
                 'B1222', 'B1101', 'B1088', 'B1105']
