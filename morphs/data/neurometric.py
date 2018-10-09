@@ -47,9 +47,9 @@ def hold_one_out_neurometric_fit_dist_all_subj(representations, labels, psychome
     all_samples = []
     for subj in psychometric_params:
         print subj
-        all_samples.append(hold_one_out_psychometric_fit_dist(representations, labels, subj, psychometric_params,
-                                                              shuffle_count=shuffle_count, parallel=parallel,
-                                                              n_jobs=n_jobs))
+        all_samples.append(hold_one_out_neurometric_fit_dist(representations, labels, subj, psychometric_params,
+                                                             shuffle_count=shuffle_count, parallel=parallel,
+                                                             n_jobs=n_jobs))
     return pd.concat(all_samples)
 
 
