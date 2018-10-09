@@ -1,4 +1,6 @@
 '''Collection of loading scripts'''
+from __future__ import absolute_import
+from __future__ import print_function
 import numpy as np
 from ephys import core, rigid_pandas
 
@@ -8,7 +10,7 @@ from morphs.data.behavior import load_behavior_df as behavior_df
 from morphs.data.psychometric import load_psychometric_params as psychometric_params
 
 
-def ephys(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False):
+def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False):
     '''Loads ephys data and parses stimuli for this project'''
     assert not (collapse_endpoints and shuffle_endpoints)
     spikes = core.load_spikes(block_path)
@@ -34,7 +36,7 @@ def ephys(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endp
                 spikes = spikes[spikes['recording'] != rec]
                 stims = stims[stims['recording'] != rec]
 
-    stim_ids = stims['stim_name']
+    stim_ids = stims['stim_name'].str.decode('UTF-8')
     stim_ids = stim_ids.str.replace(r'_rec', '')
     stim_ids = stim_ids.str.replace(r'_rep\d\d', '')
     if collapse_endpoints:

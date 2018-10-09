@@ -1,5 +1,7 @@
 '''Functions for calculating the accuracy of individual units on the template motifs for this project'''
-import cPickle as Pickle
+from __future__ import absolute_import
+from __future__ import print_function
+import six.moves.cPickle as Pickle
 import pandas as pd
 import numpy as np
 from joblib import Parallel, delayed
@@ -52,15 +54,16 @@ def gen_cluster_accuracies():
     with Parallel(n_jobs=morphs.parallel.N_JOBS) as parallel:
         for block_path in morphs.paths.blocks():
             print(block_path)
-            spikes = morphs.data.load.ephys(block_path, collapse_endpoints=True)
+            spikes = morphs.data.load.ephys_data(block_path, collapse_endpoints=True)
 
             if len(spikes['recording'].unique()) >= 1:
                 template_spikes = spikes[spikes['stim_id'].isin(list('abcdefgh'))]
+                assert len(template_spikes) > 0
                 cluster_groups = template_spikes.groupby('cluster')
 
                 morph_dims = spikes.morph_dim.unique()
+                morph_dims = morph_dims[~pd.isnull(morph_dims)]
                 morph_dims.sort()
-                morph_dims = morph_dims[1:]
 
                 max_num_reps = np.max([len(stim_group.groupby(by=('recording', 'stim_presentation')))
                                        for stim_id, stim_group in template_spikes.groupby('stim_id')])

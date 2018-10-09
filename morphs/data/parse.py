@@ -1,4 +1,5 @@
 '''Parsing functions for the stimuli names for this project'''
+from __future__ import absolute_import
 import morphs
 
 

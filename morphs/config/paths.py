@@ -1,4 +1,5 @@
 '''Path definitions'''
+from __future__ import absolute_import
 from pathlib2 import Path
 from glob import glob
 import morphs

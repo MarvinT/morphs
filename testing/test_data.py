@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from google_drive_downloader import GoogleDriveDownloader as gdd
 import morphs
 import pytest

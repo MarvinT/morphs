@@ -1,4 +1,6 @@
-import cPickle as Pickle
+from __future__ import absolute_import
+from __future__ import print_function
+import six.moves.cPickle as Pickle
 import morphs
 
 
@@ -23,6 +25,7 @@ def generate_psychometric_params():
     morphs.data.parse.stim_id(behavior_df)
     behavior_df = morphs.data.parse.behav_data_inverted(behavior_df)
     psychometric_params = calculate_psychometric_params(behavior_df)
+    morphs.paths.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     with open(morphs.paths.PSYCHOMETRIC_PKL.as_posix(), 'wb') as f:
         Pickle.dump(psychometric_params, f)
 

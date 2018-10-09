@@ -1,4 +1,5 @@
 '''Utility constants and functions for parallelization'''
+from __future__ import absolute_import
 import joblib
 import platform
 
