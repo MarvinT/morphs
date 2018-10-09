@@ -67,7 +67,7 @@ def gen_cluster_accuracies():
                 morph_dims = morph_dims[~pd.isnull(morph_dims)]
                 morph_dims.sort()
 
-                max_num_reps = np.max([len(stim_group.groupby(by=('recording', 'stim_presentation')))
+                max_num_reps = np.max([len(stim_group.groupby(by=['recording', 'stim_presentation']))
                                        for stim_id, stim_group in template_spikes.groupby('stim_id')])
 
                 accuracies_list = parallel(delayed(cluster_accuracy)(cluster, cluster_group, morph_dims, max_num_reps)
