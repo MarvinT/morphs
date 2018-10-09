@@ -72,3 +72,21 @@ def bird_id(block_path):
 def blockpath_name(block_path):
     '''extracts block name from block_path'''
     return block_path.split(os.sep)[-1]
+
+
+def effective_morph(df, behavior_subj):
+    '''Parses df and provides cols: inverted, effective_dim, and effective_pos'''
+    left, right = morphs.subj.TRAINING[behavior_subj].lower().split('|')
+
+    df['inverted'] = df['lesser_dim'].str.match(_in_pattern(right)) & df[
+        'greater_dim'].str.match(_in_pattern(left))
+
+    df['effective_dim'] = df['morph_dim']
+    df.loc[df['inverted'], 'effective_dim'] = df['morph_dim'].str[::-1][df['inverted']]
+
+    df['effective_pos'] = df['morph_pos']
+    df.loc[df['inverted'], 'effective_pos'] = 128 - (df[df['inverted']]['morph_pos'] - 1)
+
+
+def _in_pattern(string):
+    return r'[' + string + r']'

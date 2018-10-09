@@ -66,7 +66,7 @@ def make_label_df(labels, behavior_subj, psychometric_params):
         if dim in psychometric_params[behavior_subj]:
             label_df.loc[dim_group.index, 'behave_data'] = True
 
-    parse_effective_morph(label_df, behavior_subj)
+    morphs.data.parse.effective_morph(label_df, behavior_subj)
     return label_df
 
 
@@ -76,7 +76,7 @@ def make_behavior_df(behavior_subj, psychometric_params):
     behavior_df = pd.DataFrame(data={'morph_dim': morph_dims, 'morph_pos': morph_poss})
     behavior_df['lesser_dim'] = behavior_df['morph_dim'].str[0]
     behavior_df['greater_dim'] = behavior_df['morph_dim'].str[1]
-    parse_effective_morph(behavior_df, behavior_subj)
+    morphs.data.parse.effective_morph(behavior_df, behavior_subj)
     for dim, dim_group in behavior_df.groupby('morph_dim'):
         psyc = morphs.logistic.normalized_four_param_logistic(
             psychometric_params[behavior_subj][dim])
@@ -89,23 +89,6 @@ def make_behavior_df(behavior_subj, psychometric_params):
     behavior_df.loc[behavior_df['inverted'], 'p_left'] = behavior_df.loc[
         behavior_df['inverted'], 'p_greater']
     return behavior_df
-
-
-def parse_effective_morph(df, behavior_subj):
-    left, right = morphs.subj.TRAINING[behavior_subj].lower().split('|')
-
-    df['inverted'] = df['lesser_dim'].str.match(in_pattern(right)) & df[
-        'greater_dim'].str.match(in_pattern(left))
-
-    df['effective_dim'] = df['morph_dim']
-    df.loc[df['inverted'], 'effective_dim'] = df['morph_dim'].str[::-1][df['inverted']]
-
-    df['effective_pos'] = df['morph_pos']
-    df.loc[df['inverted'], 'effective_pos'] = 128 - (df[df['inverted']]['morph_pos'] - 1)
-
-
-def in_pattern(string):
-    return r'[' + string + r']'
 
 
 def calc_samples(representations, label_df, behavior_df, idx, shuffle=False, tol=1e-4):
