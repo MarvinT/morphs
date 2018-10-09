@@ -59,7 +59,7 @@ def hold_one_out_neurometric_fit_dist_all_subj(representations, labels, psychome
 
 def make_label_df(labels, behavior_subj, psychometric_params):
     label_df = pd.DataFrame(data={'stim_id': labels})
-    morphs.parse.stim_id(label_df)
+    morphs.data.parse.stim_id(label_df)
 
     label_df['behave_data'] = False
     for dim, dim_group in label_df.groupby('morph_dim'):
