@@ -59,7 +59,7 @@ def create_neural_rep(spikes, stim_length=.4, max_id_len=None, num_samples=50):
     t = np.linspace(0, stim_length, num_samples)
     num_exemplars = len(spikes.groupby(['stim_id', 'recording', 'stim_presentation']))
     X = np.zeros((num_exemplars, num_samples * len(clusters)))
-    labels = np.empty(num_exemplars, dtype='S%d' % (max_id_len))
+    labels = np.empty(num_exemplars, dtype='U%d' % (max_id_len))
     idx = 0
     for stim_id, stim_group in spikes.groupby('stim_id'):
         for (rec, stim_pres), trial_group in stim_group.groupby(['recording', 'stim_presentation']):
