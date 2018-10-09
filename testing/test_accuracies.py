@@ -26,8 +26,8 @@ def test_cluster_accuracy():
     cluster_groups = template_spikes.groupby('cluster')
 
     morph_dims = spikes.morph_dim.unique()
+    morph_dims = morph_dims[~pd.isnull(morph_dims)]
     morph_dims.sort()
-    morph_dims = morph_dims[1:]
     max_num_reps = np.max([len(stim_group.groupby(by=('recording', 'stim_presentation')))
                            for stim_id, stim_group in template_spikes.groupby('stim_id')])
 
