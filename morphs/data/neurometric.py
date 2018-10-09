@@ -198,3 +198,48 @@ def logistic_dim_reduction(X, labels):
     proj_matrix = np.array([dim_discriminants[dim] / np.linalg.norm(dim_discriminants[dim])
                             for dim in dim_discriminants]).squeeze().T
     return X.dot(proj_matrix)
+
+
+def generate_neurometric_null_block(block_path, num_shuffles, cluster_accuracies):
+    nshuffle_dir = morphs.paths.num_shuffle_dir(num_shuffles)
+    nshuffle_dir.mkdir(parents=True, exist_ok=True)
+    pkl_path = nshuffle_dir / (morphs.data.parse.blockpath_name(block_path) + '.pkl')
+
+    good_clusters = morphs.data.accuracies.good_clusters(cluster_accuracies[block_path])
+    spikes = morphs.data.load.ephys_data(
+        block_path, good_clusters=good_clusters, shuffle_endpoints=True)
+
+    X, labels = morphs.spikes.create_neural_rep(spikes, max_id_len=5)
+
+    X_red = logistic_dim_reduction(X, labels)
+
+    block_samples_df = hold_one_out_neurometric_fit_dist_all_subj(X_red, labels, psychometric_params,
+                                                                  shuffle_count=num_shuffles, parallel=True,
+                                                                  n_jobs=morphs.parallel.N_JOBS)
+    block_samples_df['block'] = block_path
+    block_samples_df.to_pickle(pkl_path.as_posix)
+
+
+def load_neurometric_null_block(block_path, num_shuffles, cluster_accuracies):
+    nshuffle_dir = morphs.paths.num_shuffle_dir(num_shuffles)
+    pkl_path = morphs.paths.num_shuffle_dir(
+        num_shuffles) / (morphs.data.parse.blockpath_name(block_path) + '.pkl')
+    if not pkl_path.exists():
+        generate_neurometric_null_block(block_path, num_shuffles, cluster_accuracies)
+    with open(pkl_path.as_posix(), 'rb') as f:
+        return pickle.load(f)
+
+
+def generate_neurometric_null_all(num_shuffles):
+    accuracies, cluster_accuracies = morphs.data.load.cluster_accuracies()
+    all_samples = [load_neurometric_null_block(block_path, num_shuffles, cluster_accuracies)
+                   for block_path in morphs.data.accuracies.good_recs(cluster_accuracies)]
+    all_samples_df = pd.concat(all_samples, ignore_index=True)
+    all_samples_df.to_pickle(morphs.path.num_shuffle_pkl(num_shuffles))
+
+
+def load_neurometric_null_all(num_shuffles):
+    if not morphs.paths.num_shuffle_pkl(num_shuffles).exists():
+        generate_neurometric_null_all(num_shuffles)
+    with open(morphs.paths.num_shuffle_pkl(num_shuffles).as_posix(), 'rb') as f:
+        return pickle.load(f)
