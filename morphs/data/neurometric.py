@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 import pandas as pd
 import numpy as np
+import itertools
 import morphs
 import sklearn as skl
 import sklearn.linear_model
