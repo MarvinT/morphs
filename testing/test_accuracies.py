@@ -2,6 +2,7 @@ from __future__ import absolute_import
 import morphs
 import pytest
 import numpy as np
+import pandas as pd
 
 
 @pytest.mark.run(order=1)
