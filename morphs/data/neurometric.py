@@ -55,7 +55,7 @@ def hold_one_out_neurometric_fit_dist_all_subj(representations, labels, psychome
 
 def make_label_df(labels, behavior_subj, psychometric_params):
     label_df = pd.DataFrame(data={'stim_id': labels})
-    m.morph.parse_stim_id(label_df)
+    morphs.parse.stim_id(label_df)
 
     label_df['behave_data'] = False
     for dim, dim_group in label_df.groupby('morph_dim'):
@@ -74,7 +74,8 @@ def make_behavior_df(behavior_subj, psychometric_params):
     behavior_df['greater_dim'] = behavior_df['morph_dim'].str[1]
     parse_effective_morph(behavior_df, behavior_subj)
     for dim, dim_group in behavior_df.groupby('morph_dim'):
-        psyc = m.normalized_four_param_logistic(psychometric_params[behavior_subj][dim])
+        psyc = morphs.logistic.normalized_four_param_logistic(
+            psychometric_params[behavior_subj][dim])
         behavior_df.loc[dim_group.index, 'p_greater'] = dim_group['morph_pos'].apply(psyc)
     behavior_df['p_lesser'] = 1.0 - behavior_df['p_greater']
     behavior_df['p_left'], behavior_df['p_right'] = behavior_df[
@@ -87,7 +88,7 @@ def make_behavior_df(behavior_subj, psychometric_params):
 
 
 def parse_effective_morph(df, behavior_subj):
-    left, right = m.morph.training[behavior_subj].lower().split('|')
+    left, right = morphs.subj.TRAINING[behavior_subj].lower().split('|')
 
     df['inverted'] = df['lesser_dim'].str.match(in_pattern(right)) & df[
         'greater_dim'].str.match(in_pattern(left))
