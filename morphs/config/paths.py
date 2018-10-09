@@ -12,6 +12,7 @@ BEHAVE_PKL = BEHAVE_DIR / 'behave.pkl'
 PROCESSED_DIR = DATA_DIR / "processed"
 ACCURACIES_PKL = PROCESSED_DIR / "all_accuracies.pkl"
 PSYCHOMETRIC_PKL = PROCESSED_DIR / "psychometrics.pkl"
+NEUROMETRIC_NULL_DIR = PROCESSED_DIR / "neurometric_null"
 
 
 def blocks():
@@ -36,3 +37,11 @@ def behave_data_folder():
         return '/mnt/cube/RawData/Zog/'
     else:
         return BEHAVE_DIR.as_posix()
+
+
+def num_shuffle_dir(num_shuffles):
+    return NEUROMETRIC_NULL_DIR / str(num_shuffles)
+
+
+def num_shuffle_pkl(num_shuffles):
+    return NEUROMETRIC_NULL_DIR / ('neurometric_null_dist_' + str(NUM_SHUFFLES) + '.pkl')
