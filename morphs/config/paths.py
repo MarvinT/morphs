@@ -44,4 +44,4 @@ def num_shuffle_dir(num_shuffles):
 
 
 def num_shuffle_pkl(num_shuffles):
-    return NEUROMETRIC_NULL_DIR / ('neurometric_null_dist_' + str(NUM_SHUFFLES) + '.pkl')
+    return NEUROMETRIC_NULL_DIR / ('neurometric_null_dist_' + str(num_shuffles) + '.pkl')
