@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from __future__ import print_function
-import six.moves.cPickle as Pickle
+import pickle
 import morphs
 
 
@@ -27,7 +27,7 @@ def generate_psychometric_params():
     psychometric_params = calculate_psychometric_params(behavior_df)
     morphs.paths.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     with open(morphs.paths.PSYCHOMETRIC_PKL.as_posix(), 'wb') as f:
-        Pickle.dump(psychometric_params, f)
+        pickle.dump(psychometric_params, f)
 
 
 def load_psychometric_params():
@@ -36,7 +36,7 @@ def load_psychometric_params():
         print('generating psychometric params')
         generate_psychometric_params()
     with open(morphs.paths.PSYCHOMETRIC_PKL.as_posix(), 'rb') as f:
-        return Pickle.load(f)
+        return pickle.load(f)
 
 
 if __name__ == '__main__':

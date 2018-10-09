@@ -1,7 +1,7 @@
 '''Functions for calculating the accuracy of individual units on the template motifs for this project'''
 from __future__ import absolute_import
 from __future__ import print_function
-import six.moves.cPickle as Pickle
+import pickle
 import pandas as pd
 import numpy as np
 from joblib import Parallel, delayed
@@ -77,7 +77,7 @@ def gen_cluster_accuracies():
 
     morphs.paths.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     with open(morphs.paths.ACCURACIES_PKL.as_posix(), 'wb') as f:
-        Pickle.dump(accuracies, f)
+        pickle.dump(accuracies, f)
 
 
 def load_cluster_accuracies():
@@ -86,7 +86,7 @@ def load_cluster_accuracies():
         print('Calculating all cluster accuracies first')
         gen_cluster_accuracies()
     with open(morphs.paths.ACCURACIES_PKL.as_posix(), 'rb') as f:
-        accuracies = Pickle.load(f)
+        accuracies = pickle.load(f)
     cluster_accuracies = {block_path: accuracies[block_path].groupby(
         'cluster').agg(np.mean).sort_values('accuracy') for block_path in accuracies}
     return accuracies, cluster_accuracies
