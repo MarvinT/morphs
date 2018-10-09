@@ -1,6 +1,7 @@
 '''Parsing functions for the stimuli names for this project'''
 from __future__ import absolute_import
 import morphs
+import os
 
 
 def stim_id(df, stim_id='stim_id', end='end', morph_dim='morph_dim',
