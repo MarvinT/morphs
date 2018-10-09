@@ -36,9 +36,9 @@ def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle
                 spikes = spikes[spikes['recording'] != rec]
                 stims = stims[stims['recording'] != rec]
 
-    stim_ids = stims['stim_name']
-    stim_ids = stim_ids.str.replace(b'_rec', '')
-    stim_ids = stim_ids.str.replace(b'_rep\d\d', '')
+    stim_ids = stims['stim_name'].str.decode('UTF-8')
+    stim_ids = stim_ids.str.replace(r'_rec', '')
+    stim_ids = stim_ids.str.replace(r'_rep\d\d', '')
     if collapse_endpoints:
         stim_ids, _ = morphs.data.parse.separate_endpoints(stim_ids)
     stims['stim_id'] = stim_ids

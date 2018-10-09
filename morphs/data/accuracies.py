@@ -57,7 +57,7 @@ def gen_cluster_accuracies():
             spikes = morphs.data.load.ephys_data(block_path, collapse_endpoints=True)
 
             if len(spikes['recording'].unique()) >= 1:
-                template_spikes = spikes[spikes['stim_id'].isin(list(b'abcdefgh'))]
+                template_spikes = spikes[spikes['stim_id'].isin(list('abcdefgh'))]
                 assert len(template_spikes) > 0
                 cluster_groups = template_spikes.groupby('cluster')
 
