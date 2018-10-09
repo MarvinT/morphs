@@ -10,6 +10,8 @@ from sklearn.linear_model import LogisticRegression
 
 import morphs
 
+CLUSTER_ACCURACY_CUTOFF = .6
+
 
 def cluster_accuracy(cluster, cluster_group, morph_dims, max_num_reps,
                      n_folds=10, n_dim=50, tau=.01, stim_length=.4):
@@ -88,6 +90,16 @@ def load_cluster_accuracies():
     cluster_accuracies = {block_path: accuracies[block_path].groupby(
         'cluster').agg(np.mean).sort_values('accuracy') for block_path in accuracies}
     return accuracies, cluster_accuracies
+
+
+def good_clusters(block_cluster_accuracies, cutoff=CLUSTER_ACCURACY_CUTOFF):
+    '''returns a df of clusters that have accuracy > cutoff'''
+    return block_cluster_accuracies[block_cluster_accuracies.accuracy > cutoff].index.values
+
+
+def good_recs(cluster_accuracies, cutoff=CLUSTER_ACCURACY_CUTOFF):
+    '''returns a list of blocks that have good clusters'''
+    return [block_path for block_path in cluster_accuracies if len(good_clusters(cluster_accuracies[block_path], cutoff=cutoff)) > 0]
 
 
 if __name__ == '__main__':
