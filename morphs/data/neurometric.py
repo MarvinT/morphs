@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import pandas as pd
 import numpy as np
 import morphs
@@ -5,6 +7,8 @@ import sklearn as skl
 import sklearn.linear_model
 from sklearn.linear_model import LogisticRegression
 from joblib import Parallel, delayed
+from six.moves import range
+from six.moves import zip
 
 
 def hold_one_out_neurometric_fit_dist(representations, labels, behavior_subj, psychometric_params,
@@ -33,10 +37,10 @@ def hold_one_out_neurometric_fit_dist(representations, labels, behavior_subj, ps
 
     if parallel:
         all_samples = Parallel(n_jobs=n_jobs)(delayed(calc_samples)(representations, label_df, behavior_df,
-                                                                    idx, shuffle=shuffle) for idx, shuffle in [(i, i != 0) for i in xrange(shuffle_count + 1)])
+                                                                    idx, shuffle=shuffle) for idx, shuffle in [(i, i != 0) for i in range(shuffle_count + 1)])
     else:
         all_samples = [calc_samples(representations, label_df, behavior_df, idx, shuffle=shuffle)
-                       for idx, shuffle in [(i, i != 0) for i in xrange(shuffle_count + 1)]]
+                       for idx, shuffle in [(i, i != 0) for i in range(shuffle_count + 1)]]
     all_samples_df = pd.concat(all_samples, ignore_index=True)
     all_samples_df['subj'] = behavior_subj
     return all_samples_df
@@ -46,7 +50,7 @@ def hold_one_out_neurometric_fit_dist_all_subj(representations, labels, psychome
                                                shuffle_count=1024, parallel=True, n_jobs=morphs.parallel.N_JOBS):
     all_samples = []
     for subj in psychometric_params:
-        print subj
+        print(subj)
         all_samples.append(hold_one_out_neurometric_fit_dist(representations, labels, subj, psychometric_params,
                                                              shuffle_count=shuffle_count, parallel=parallel,
                                                              n_jobs=n_jobs))
@@ -67,8 +71,8 @@ def make_label_df(labels, behavior_subj, psychometric_params):
 
 
 def make_behavior_df(behavior_subj, psychometric_params):
-    morph_dims, morph_poss = zip(
-        *itertools.product(psychometric_params[behavior_subj].keys(), np.arange(1, 129)))
+    morph_dims, morph_poss = list(zip(
+        *itertools.product(list(psychometric_params[behavior_subj].keys()), np.arange(1, 129))))
     behavior_df = pd.DataFrame(data={'morph_dim': morph_dims, 'morph_pos': morph_poss})
     behavior_df['lesser_dim'] = behavior_df['morph_dim'].str[0]
     behavior_df['greater_dim'] = behavior_df['morph_dim'].str[1]
