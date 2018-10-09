@@ -227,7 +227,7 @@ def generate_neurometric_null_all(num_shuffles):
     all_samples = [load_neurometric_null_block(block_path, num_shuffles, cluster_accuracies, psychometric_params)
                    for block_path in morphs.data.accuracies.good_recs(cluster_accuracies)]
     all_samples_df = pd.concat(all_samples, ignore_index=True)
-    all_samples_df.to_pickle(morphs.path.num_shuffle_pkl(num_shuffles))
+    all_samples_df.to_pickle(morphs.paths.num_shuffle_pkl(num_shuffles))
 
 
 def load_neurometric_null_all(num_shuffles):
