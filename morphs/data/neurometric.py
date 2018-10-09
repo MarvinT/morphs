@@ -206,7 +206,7 @@ def generate_neurometric_null_block(block_path, num_shuffles, cluster_accuracies
                                                                   shuffle_count=num_shuffles, parallel=True,
                                                                   n_jobs=morphs.parallel.N_JOBS)
     block_samples_df['block'] = block_path
-    block_samples_df.to_pickle(pkl_path.as_posix)
+    block_samples_df.to_pickle(pkl_path.as_posix())
 
 
 def load_neurometric_null_block(block_path, num_shuffles, cluster_accuracies, psychometric_params):
