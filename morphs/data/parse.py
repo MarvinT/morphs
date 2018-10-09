@@ -60,3 +60,14 @@ def behav_data_inverted(df):
         'subj', 'morph_dim'), how='left', sort=False)
     df['greater_response'] = (df['response'] == 'R') != (df['inverted'])
     return df
+
+
+def bird_id(block_path):
+    '''extracts bird id from block_path'''
+    name = blockpath_name(block_path)
+    return name.split('__')[-1].split('_')[0]
+
+
+def blockpath_name(block_path):
+    '''extracts block name from block_path'''
+    return block_path.split(os.sep)[-1]
