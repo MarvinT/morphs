@@ -23,26 +23,25 @@ def hold_one_out_neurometric_fit_dist(representations, labels, behavior_subj, ps
     -----
     representations : np.array
         size = (num_data_points, num_dimensions)
-    labels : iterable of string labels or np array of dtype='S5'
-        labels : Pandas.DataFrame
-            len = num_data_points
-            required columns = ['morph_dim', 'morph_pos']
-            overwritten/created columns = ['behave_data', 'p_r', 'p_l']
+    labels : iterable of string labels or np array of dtype='U5'
     behavior_subj : str
-    shuffle_count : int
-    calibrate : boolean
+    psychometric_params : morphs.data.load.psychometric_params()
+    shuffle_count : int, how many times to shuffle
+    parallel : boolean, whether to parallelize
+    n_jobs : int > 0, number of parallel jobs to run
 
     Returns
     -----
+    df containing neurometric fits of actual data and shuffled morph dim labeled data
     '''
     label_df = make_label_df(labels, behavior_subj, psychometric_params)
     behavior_df = make_behavior_df(behavior_subj, psychometric_params)
 
     if parallel:
-        all_samples = Parallel(n_jobs=n_jobs)(delayed(calc_samples)(representations, label_df, behavior_df,
-                                                                    idx, shuffle=shuffle) for idx, shuffle in [(i, i != 0) for i in range(shuffle_count + 1)])
+        all_samples = Parallel(n_jobs=n_jobs)(delayed(_calc_samples)(representations, label_df, behavior_df,
+                                                                     idx, shuffle=shuffle) for idx, shuffle in [(i, i != 0) for i in range(shuffle_count + 1)])
     else:
-        all_samples = [calc_samples(representations, label_df, behavior_df, idx, shuffle=shuffle)
+        all_samples = [_calc_samples(representations, label_df, behavior_df, idx, shuffle=shuffle)
                        for idx, shuffle in [(i, i != 0) for i in range(shuffle_count + 1)]]
     all_samples_df = pd.concat(all_samples, ignore_index=True)
     all_samples_df['subj'] = behavior_subj
@@ -51,6 +50,7 @@ def hold_one_out_neurometric_fit_dist(representations, labels, behavior_subj, ps
 
 def hold_one_out_neurometric_fit_dist_all_subj(representations, labels, psychometric_params,
                                                shuffle_count=1024, parallel=True, n_jobs=morphs.parallel.N_JOBS):
+    '''Runs hold_one_out_neurometric_fit_dist on all subjects'''
     all_samples = []
     for subj in psychometric_params:
         print(subj)
@@ -61,6 +61,7 @@ def hold_one_out_neurometric_fit_dist_all_subj(representations, labels, psychome
 
 
 def make_label_df(labels, behavior_subj, psychometric_params):
+    '''Turns labels into a parsed df'''
     label_df = pd.DataFrame(data={'stim_id': labels})
     morphs.data.parse.stim_id(label_df)
 
@@ -74,6 +75,7 @@ def make_label_df(labels, behavior_subj, psychometric_params):
 
 
 def make_behavior_df(behavior_subj, psychometric_params):
+    '''Generates behaviorally determined psychometric functions for the given subj in df form'''
     morph_dims, morph_poss = list(zip(
         *itertools.product(list(psychometric_params[behavior_subj].keys()), np.arange(1, 129))))
     behavior_df = pd.DataFrame(data={'morph_dim': morph_dims, 'morph_pos': morph_poss})
@@ -94,7 +96,7 @@ def make_behavior_df(behavior_subj, psychometric_params):
     return behavior_df
 
 
-def calc_samples(representations, label_df, behavior_df, idx, shuffle=False, tol=1e-4):
+def _calc_samples(representations, label_df, behavior_df, idx, shuffle=False, tol=1e-4):
     error_list, dim_list = fit_held_outs(_merge_df(label_df, behavior_df, shuffle=shuffle),
                                          representations, tol=tol)
     return pd.DataFrame(data={'errors': error_list, 'held_out_dim': dim_list, 'shuffle_index': idx, 'shuffled': shuffle})
@@ -108,6 +110,7 @@ def _merge_df(label_df, behavior_df, shuffle=False):
 
 
 def shuffle_effective_dim(df, shuffle=False):
+    '''Generates and may shuffle the effective dimension'''
     if shuffle:
         behave_dims = df[df['behave_data']]['effective_dim'].unique()
         non_behave_dims = set(df['effective_dim'].unique()) - set(behave_dims)
@@ -120,6 +123,7 @@ def shuffle_effective_dim(df, shuffle=False):
 
 
 def fit_held_outs(merged_df, representations, accum='sse', tol=1e-4):
+    '''Fits the neurometric functions and accumulates them'''
     mbdf = merged_df[merged_df['behave_data']]
     error_list = []
     dim_list = []
@@ -192,6 +196,11 @@ def logistic_dim_reduction(X, labels):
 
 
 def generate_neurometric_null_block(block_path, num_shuffles, cluster_accuracies, psychometric_params):
+    '''
+    For a given block_path, load ephys data, create neural rep, reduce dim, and 
+    hold_one_out_neurometric_fit_dist_all_subj
+    Then save to a pickle.
+    '''
     nshuffle_dir = morphs.paths.num_shuffle_dir(num_shuffles)
     nshuffle_dir.mkdir(parents=True, exist_ok=True)
     pkl_path = nshuffle_dir / (morphs.data.parse.blockpath_name(block_path) + '.pkl')
@@ -212,6 +221,7 @@ def generate_neurometric_null_block(block_path, num_shuffles, cluster_accuracies
 
 
 def load_neurometric_null_block(block_path, num_shuffles, cluster_accuracies, psychometric_params):
+    '''Load pickle containing df of neural rep of a given block path hold_one_out_neurometric_fit_dist_all_subj'''
     nshuffle_dir = morphs.paths.num_shuffle_dir(num_shuffles)
     pkl_path = morphs.paths.num_shuffle_dir(
         num_shuffles) / (morphs.data.parse.blockpath_name(block_path) + '.pkl')
@@ -223,6 +233,7 @@ def load_neurometric_null_block(block_path, num_shuffles, cluster_accuracies, ps
 
 
 def generate_neurometric_null_all(num_shuffles):
+    '''generates pickle file containing each ephys dataset fit to each subj for a given num_shuffles'''
     accuracies, cluster_accuracies = morphs.data.load.cluster_accuracies()
     psychometric_params = morphs.data.load.psychometric_params()
     all_samples = [load_neurometric_null_block(block_path, num_shuffles, cluster_accuracies, psychometric_params)
@@ -232,6 +243,7 @@ def generate_neurometric_null_all(num_shuffles):
 
 
 def load_neurometric_null_all(num_shuffles):
+    '''loads pickle file containing each ephys dataset fit to each subj for a given num_shuffles'''
     if not morphs.paths.num_shuffle_pkl(num_shuffles).exists():
         generate_neurometric_null_all(num_shuffles)
     with open(morphs.paths.num_shuffle_pkl(num_shuffles).as_posix(), 'rb') as f:
@@ -240,8 +252,8 @@ def load_neurometric_null_all(num_shuffles):
 
 @click.command()
 @click.option('--num_shuffles', default=8, help='number of times to shuffle null distribution')
-def main(num_shuffles):
+def _main(num_shuffles):
     generate_neurometric_null_all(num_shuffles)
 
 if __name__ == '__main__':
-    main()
+    _main()

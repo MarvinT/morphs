@@ -15,4 +15,4 @@ def test_load_generate_load_neurometric_null_all():
 @pytest.mark.run(order=-1)
 def test_neurometric_main():
     runner = CliRunner()
-    result = runner.invoke(morphs.data.neurometric.main, ['--num_shuffles=8'])
+    result = runner.invoke(morphs.data.neurometric._main, ['--num_shuffles=8'])
