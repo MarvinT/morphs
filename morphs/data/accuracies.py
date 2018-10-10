@@ -1,7 +1,7 @@
 '''Functions for calculating the accuracy of individual units on the template motifs for this project'''
 from __future__ import absolute_import
 from __future__ import print_function
-import six.moves.cPickle as Pickle
+import pickle
 import pandas as pd
 import numpy as np
 from joblib import Parallel, delayed
@@ -9,6 +9,8 @@ from sklearn.cross_validation import StratifiedKFold
 from sklearn.linear_model import LogisticRegression
 
 import morphs
+
+CLUSTER_ACCURACY_CUTOFF = .6
 
 
 def cluster_accuracy(cluster, cluster_group, morph_dims, max_num_reps,
@@ -65,7 +67,7 @@ def gen_cluster_accuracies():
                 morph_dims = morph_dims[~pd.isnull(morph_dims)]
                 morph_dims.sort()
 
-                max_num_reps = np.max([len(stim_group.groupby(by=('recording', 'stim_presentation')))
+                max_num_reps = np.max([len(stim_group.groupby(by=['recording', 'stim_presentation']))
                                        for stim_id, stim_group in template_spikes.groupby('stim_id')])
 
                 accuracies_list = parallel(delayed(cluster_accuracy)(cluster, cluster_group, morph_dims, max_num_reps)
@@ -75,7 +77,7 @@ def gen_cluster_accuracies():
 
     morphs.paths.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     with open(morphs.paths.ACCURACIES_PKL.as_posix(), 'wb') as f:
-        Pickle.dump(accuracies, f)
+        pickle.dump(accuracies, f)
 
 
 def load_cluster_accuracies():
@@ -84,10 +86,20 @@ def load_cluster_accuracies():
         print('Calculating all cluster accuracies first')
         gen_cluster_accuracies()
     with open(morphs.paths.ACCURACIES_PKL.as_posix(), 'rb') as f:
-        accuracies = Pickle.load(f)
+        accuracies = pickle.load(f)
     cluster_accuracies = {block_path: accuracies[block_path].groupby(
         'cluster').agg(np.mean).sort_values('accuracy') for block_path in accuracies}
     return accuracies, cluster_accuracies
+
+
+def good_clusters(block_cluster_accuracies, cutoff=CLUSTER_ACCURACY_CUTOFF):
+    '''returns a df of clusters that have accuracy > cutoff'''
+    return block_cluster_accuracies[block_cluster_accuracies.accuracy > cutoff].index.values
+
+
+def good_recs(cluster_accuracies, cutoff=CLUSTER_ACCURACY_CUTOFF):
+    '''returns a list of blocks that have good clusters'''
+    return [block_path for block_path in cluster_accuracies if len(good_clusters(cluster_accuracies[block_path], cutoff=cutoff)) > 0]
 
 
 if __name__ == '__main__':

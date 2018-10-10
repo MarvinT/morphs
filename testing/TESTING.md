@@ -10,3 +10,6 @@
 ### order=1
 - generate ACCURACIES_PKL
 - generate PSYCHOMETRIC_PKL
+
+### order=2
+- generate num_shuffle_pkl(8)
