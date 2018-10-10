@@ -5,6 +5,7 @@ import numpy as np
 import itertools
 import pickle
 import morphs
+import click
 import sklearn as skl
 import sklearn.linear_model
 from sklearn.linear_model import LogisticRegression
@@ -235,3 +236,12 @@ def load_neurometric_null_all(num_shuffles):
         generate_neurometric_null_all(num_shuffles)
     with open(morphs.paths.num_shuffle_pkl(num_shuffles).as_posix(), 'rb') as f:
         return pickle.load(f)
+
+
+@click.command()
+@click.option('--num_shuffles', default=8, help='number of times to shuffle null distribution')
+def main(num_shuffles):
+    generate_neurometric_null_all(num_shuffles)
+
+if __name__ == '__main__':
+    main()
