@@ -195,7 +195,7 @@ def logistic_dim_reduction(X, labels):
     return X.dot(proj_matrix)
 
 
-def generate_neurometric_null_block(block_path, num_shuffles, cluster_accuracies, psychometric_params):
+def generate_neurometric_null_block(block_path, num_shuffles, cluster_accuracies, psychometric_params, n_jobs=morphs.parallel.N_JOBS):
     '''
     For a given block_path, load ephys data, create neural rep, reduce dim, and 
     hold_one_out_neurometric_fit_dist_all_subj
@@ -215,28 +215,28 @@ def generate_neurometric_null_block(block_path, num_shuffles, cluster_accuracies
 
     block_samples_df = hold_one_out_neurometric_fit_dist_all_subj(X_red, labels, psychometric_params,
                                                                   shuffle_count=num_shuffles, parallel=True,
-                                                                  n_jobs=morphs.parallel.N_JOBS)
+                                                                  n_jobs=n_jobs)
     block_samples_df['block'] = block_path
     block_samples_df.to_pickle(pkl_path.as_posix())
 
 
-def load_neurometric_null_block(block_path, num_shuffles, cluster_accuracies, psychometric_params):
+def load_neurometric_null_block(block_path, num_shuffles, cluster_accuracies, psychometric_params, n_jobs=morphs.parallel.N_JOBS):
     '''Load pickle containing df of neural rep of a given block path hold_one_out_neurometric_fit_dist_all_subj'''
     nshuffle_dir = morphs.paths.num_shuffle_dir(num_shuffles)
     pkl_path = morphs.paths.num_shuffle_dir(
         num_shuffles) / (morphs.data.parse.blockpath_name(block_path) + '.pkl')
     if not pkl_path.exists():
         generate_neurometric_null_block(block_path, num_shuffles,
-                                        cluster_accuracies, psychometric_params)
+                                        cluster_accuracies, psychometric_params, n_jobs=n_jobs)
     with open(pkl_path.as_posix(), 'rb') as f:
         return pickle.load(f)
 
 
-def generate_neurometric_null_all(num_shuffles):
+def generate_neurometric_null_all(num_shuffles, n_jobs=morphs.parallel.N_JOBS):
     '''generates pickle file containing each ephys dataset fit to each subj for a given num_shuffles'''
     accuracies, cluster_accuracies = morphs.data.load.cluster_accuracies()
     psychometric_params = morphs.data.load.psychometric_params()
-    all_samples = [load_neurometric_null_block(block_path, num_shuffles, cluster_accuracies, psychometric_params)
+    all_samples = [load_neurometric_null_block(block_path, num_shuffles, cluster_accuracies, psychometric_params, n_jobs=n_jobs)
                    for block_path in morphs.data.accuracies.good_recs(cluster_accuracies)]
     all_samples_df = pd.concat(all_samples, ignore_index=True)
     all_samples_df.to_pickle(morphs.paths.num_shuffle_pkl(num_shuffles))
@@ -252,8 +252,9 @@ def load_neurometric_null_all(num_shuffles):
 
 @click.command()
 @click.option('--num_shuffles', default=8, help='number of times to shuffle null distribution')
-def _main(num_shuffles):
-    generate_neurometric_null_all(num_shuffles)
+@click.option('--num_jobs', default=morphs.parallel.N_JOBS, help='number of parallel cores to use')
+def _main(num_shuffles, num_jobs):
+    generate_neurometric_null_all(num_shuffles, n_jobs=num_jobs)
 
 if __name__ == '__main__':
     _main()
