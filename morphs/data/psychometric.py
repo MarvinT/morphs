@@ -24,7 +24,8 @@ def generate_psychometric_params():
     behavior_df = morphs.data.load.behavior_df()
     morphs.data.parse.stim_id(behavior_df)
     behavior_df = morphs.data.parse.behav_data_inverted(behavior_df)
-    psychometric_params = calculate_psychometric_params(behavior_df)
+    psychometric_params = calculate_psychometric_params(
+        behavior_df[behavior_df['type_'] == 'normal'])
     morphs.paths.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     with open(morphs.paths.PSYCHOMETRIC_PKL.as_posix(), 'wb') as f:
         pickle.dump(psychometric_params, f)
