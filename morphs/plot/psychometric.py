@@ -29,7 +29,7 @@ def grid(behavior_df, subjects=morphs.subj.BEHAVE_SUBJS,
          x_label='Morph Position', y_label='P(greater response)',
          legend=True, legend_title='Subject', size=5,
          sub_title="{row_name}                  {col_name}",
-         **kwargs):
+         scatter_kws={'s': 1}, **kwargs):
     if row and row_order is None:
         row_order = np.sort(behavior_df[row].unique())
     if col and col_order is None:
@@ -48,7 +48,8 @@ def grid(behavior_df, subjects=morphs.subj.BEHAVE_SUBJS,
                    row_order=row_order, col_order=col_order,
                    hue_order=hue_order,
                    palette=color_order,
-                   legend=False, height=size, aspect=1, **kwargs)
+                   legend=False, height=size, aspect=1,
+                   scatter_kws=scatter_kws, **kwargs)
     if fit_reg:
         g.map_dataframe(_4pl, 'morph_pos', 'greater_response')
     g = g.set_titles(sub_title)
