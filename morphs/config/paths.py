@@ -14,6 +14,9 @@ ACCURACIES_PKL = PROCESSED_DIR / "all_accuracies.pkl"
 PSYCHOMETRIC_PKL = PROCESSED_DIR / "psychometrics.pkl"
 NEUROMETRIC_NULL_DIR = PROCESSED_DIR / "neurometric_null"
 
+REPORTS_DIR = PROJECT_DIR / 'reports'
+FIGURES_DIR = REPORTS_DIR / 'figures'
+
 
 def blocks():
     '''
