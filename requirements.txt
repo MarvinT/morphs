@@ -18,6 +18,7 @@ pytest>=3.10
 pytest-ordering
 pytest-cov
 python-coveralls
+nbval
 
 seaborn
 # seaborn recommended:
