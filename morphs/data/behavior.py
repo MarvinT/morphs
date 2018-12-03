@@ -8,10 +8,10 @@ from google_drive_downloader import GoogleDriveDownloader as gdd
 
 def reduce_behave_data(df):
     '''Trims df and changes dtypes to reduce pkl size'''
-    df = df[['class_', 'response', 'correct', 'rt', 'reward', 'stim_id', 'subj']]
+    df = df[['type_', 'class_', 'response', 'correct', 'rt', 'reward', 'stim_id', 'subj']]
     for col in ['correct', 'reward']:
         df[col] = df[col].astype(bool)
-    for col in ['class_', 'response', 'subj']:
+    for col in ['type_', 'class_', 'response', 'subj']:
         df[col] = df[col].astype('category')
     return df
 
@@ -32,7 +32,7 @@ def gen_behavior_df():
 def load_behavior_df():
     '''Loads behavior df (and downloads it if it doesnt exist)'''
     if not morphs.paths.BEHAVE_PKL.exists():
-        print('downloading beahvior_df, alternatively you could run' +
+        print('downloading beahvior_df, alternatively you could run ' +
               'morphs.data.behavior.gen_behavior_df() to generate it')
         download_behavior_df()
     return pd.read_pickle(morphs.paths.BEHAVE_PKL.as_posix())
