@@ -12,7 +12,7 @@ def _cf_4pl(x, A, K, B, M):
 def _4pl(x, y, color=None, **kwargs):
     data = kwargs.pop("data")
 
-    popt, pcov = sp.optimize.curve_fit(_cf_4pl, data[x].values, data[y].values)
+    popt, pcov = sp.optimize.curve_fit(_cf_4pl, data[x].values, data[y].values, maxfev=10000)
     try:
         result_4pl = morphs.logistic.four_param_logistic(popt)
         t = np.arange(128) + 1
