@@ -5,6 +5,8 @@ import pickle
 from six import exec_
 from pathlib2 import Path
 from joblib import Parallel, delayed
+import ephys
+import ephys.clust
 
 
 # adapted from klustakwik
