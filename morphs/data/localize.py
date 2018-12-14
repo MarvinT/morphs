@@ -69,8 +69,7 @@ def load_all_loc(prefer_download=True):
             download_all_loc()
         else:
             generate_all_loc()
-    with open(morphs.paths.LOCATIONS_PKL.as_posix(), 'rb') as f:
-        return pickle.load(f)
+    return morphs.load._pickle(morphs.paths.LOCATIONS_PKL.as_posix())
 
 
 def download_all_loc():

@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 import numpy as np
 from ephys import core, rigid_pandas
+import pickle
 
 import morphs
 from morphs.data.accuracies import load_cluster_accuracies as cluster_accuracies
@@ -72,3 +73,12 @@ def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle
     rigid_pandas.timestamp2time(spikes, fs, 'stim_aligned_time')
 
     return spikes
+
+
+def _pickle(pickle_file):
+    try:
+        with open(pickle_file, 'rb') as f:
+            return pickle.load(f)
+    except UnicodeDecodeError as e:
+        with open(pickle_file, 'rb') as f:
+            return pickle.load(f, encoding='latin1')
