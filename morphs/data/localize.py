@@ -7,6 +7,7 @@ from pathlib2 import Path
 from joblib import Parallel, delayed
 import ephys
 import ephys.clust
+from google_drive_downloader import GoogleDriveDownloader as gdd
 
 
 # adapted from klustakwik
@@ -62,8 +63,17 @@ def generate_all_loc(parallel=False, n_jobs=morphs.parallel.N_JOBS):
     all_locs_df.to_pickle(morphs.paths.LOCATIONS_PKL)
 
 
-def load_all_loc():
+def load_all_loc(prefer_download=True):
     if not morphs.paths.LOCATIONS_PKL.exists():
-        generate_all_loc()
+        if prefer_download:
+            download_all_loc()
+        else:
+            generate_all_loc()
     with open(morphs.paths.LOCATIONS_PKL.as_posix(), 'rb') as f:
         return pickle.load(f)
+
+
+def download_all_loc():
+    morphs.paths.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+    gdd.download_file_from_google_drive(file_id=1wLoMiKJjKPQbNF_qplqrMzHLyFCyFXn3,
+                                        dest_path=morphs.paths.LOCATIONS_PKL.as_posix())
