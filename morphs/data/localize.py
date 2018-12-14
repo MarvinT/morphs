@@ -75,5 +75,5 @@ def load_all_loc(prefer_download=True):
 
 def download_all_loc():
     morphs.paths.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
-    gdd.download_file_from_google_drive(file_id=1wLoMiKJjKPQbNF_qplqrMzHLyFCyFXn3,
+    gdd.download_file_from_google_drive(file_id='1wLoMiKJjKPQbNF_qplqrMzHLyFCyFXn3',
                                         dest_path=morphs.paths.LOCATIONS_PKL.as_posix())
