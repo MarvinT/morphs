@@ -74,6 +74,21 @@ def blockpath_name(block_path):
     return block_path.split(os.sep)[-1]
 
 
+def recording_site(block_path):
+    '''parses AP, ML, and Z position from block name'''
+    name = blockpath_name(block_path)
+    axes = ['AP', 'ML', 'Z']
+    idxs = zip(axes, [(0, -2),
+                      (0, -1),
+                      (1, -1)])
+    vals = {}
+    for axis, (i, j) in idxs:
+        vals[axis] = name.split('__')[i].split('_')[j]
+        assert vals[axis][0:len(axis)] == axis
+        vals[axis] = int(vals[axis][len(axis):])
+    return tuple(vals[axis] for axis in axes)
+
+
 def effective_morph(df, behavior_subj):
     '''Parses df and provides cols: inverted, effective_dim, and effective_pos'''
     left, right = morphs.subj.TRAINING[behavior_subj].lower().split('|')

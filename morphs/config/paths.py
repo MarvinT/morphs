@@ -11,6 +11,7 @@ BEHAVE_DIR = DATA_DIR / 'behavior'
 BEHAVE_PKL = BEHAVE_DIR / 'behave.pkl'
 PROCESSED_DIR = DATA_DIR / "processed"
 ACCURACIES_PKL = PROCESSED_DIR / "all_accuracies.pkl"
+LOCATIONS_PKL = PROCESSED_DIR / 'unit_locations.pkl'
 PSYCHOMETRIC_PKL = PROCESSED_DIR / "psychometrics.pkl"
 NEUROMETRIC_NULL_DIR = PROCESSED_DIR / "neurometric_null"
 
