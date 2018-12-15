@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import morphs
-import pickle
 from six import exec_
 from pathlib2 import Path
 from joblib import Parallel, delayed
@@ -69,7 +68,7 @@ def load_all_loc(prefer_download=True):
             download_all_loc()
         else:
             generate_all_loc()
-    return morphs.load._pickle(morphs.paths.LOCATIONS_PKL.as_posix())
+    return morphs.data.load._pickle(morphs.paths.LOCATIONS_PKL.as_posix())
 
 
 def download_all_loc():
