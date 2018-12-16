@@ -6,13 +6,15 @@ import morphs
 
 PROJECT_DIR = Path(__file__).resolve().parents[2]
 DATA_DIR = PROJECT_DIR / "data"
-EPHYS_DIR = DATA_DIR / 'ephys'
+STIM_DIR = DATA_DIR / 'stimuli'
+SPECT_PKL = STIM_DIR / 'spectrograms.pkl'
 BEHAVE_DIR = DATA_DIR / 'behavior'
 BEHAVE_PKL = BEHAVE_DIR / 'behave.pkl'
+EPHYS_DIR = DATA_DIR / 'ephys'
 PROCESSED_DIR = DATA_DIR / "processed"
-ACCURACIES_PKL = PROCESSED_DIR / "all_accuracies.pkl"
-LOCATIONS_PKL = PROCESSED_DIR / 'unit_locations.pkl'
 PSYCHOMETRIC_PKL = PROCESSED_DIR / "psychometrics.pkl"
+LOCATIONS_PKL = PROCESSED_DIR / 'unit_locations.pkl'
+ACCURACIES_PKL = PROCESSED_DIR / "all_accuracies.pkl"
 NEUROMETRIC_NULL_DIR = PROCESSED_DIR / "neurometric_null"
 
 REPORTS_DIR = PROJECT_DIR / 'reports'
