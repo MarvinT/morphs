@@ -6,6 +6,7 @@ import numpy as np
 def single(dim, pos, spects):
     im = spects[dim[0]][dim[1]][pos].astype(float)
     im /= np.max(im)
+    plt.figure()
     f = plt.imshow(im, aspect=8)
     plt.axis('off')
     return f.figure
