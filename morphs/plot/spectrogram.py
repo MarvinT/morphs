@@ -3,6 +3,14 @@ import matplotlib.pylab as plt
 import numpy as np
 
 
+def single(dim, pos, spects):
+    im = spects[dim[0]][dim[1]][pos].astype(float)
+    im /= np.max(im)
+    f = plt.imshow(im, aspect=8)
+    plt.axis('off')
+    return f.figure
+
+
 def morphs(dims, spects, divisions=16, fontsize=32, width=10, aspect=8):
     morphs = {l + g: np.concatenate([spects[l][g][pos].astype(float) / np.max(spects[l][g][pos])
                                      for pos in np.linspace(1, 128, divisions, dtype=int)], axis=1) for l, g in dims}
@@ -31,4 +39,4 @@ def morphs(dims, spects, divisions=16, fontsize=32, width=10, aspect=8):
     ax_g.yaxis.set_ticklabels(g_labels, fontsize=fontsize)
     ax_g.tick_params(axis='y', which='both', left=False, right=False)
 
-    return f
+    return f.figure
