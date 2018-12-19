@@ -11,6 +11,7 @@ from morphs.data.behavior import load_behavior_df as behavior_df
 from morphs.data.psychometric import load_psychometric_params as psychometric_params
 from morphs.data.neurometric import load_neurometric_null_all as neurometric_null_all
 from morphs.data.localize import load_all_loc as all_loc
+from morphs.data.spectrogram import load_morph_spectrograms as morph_spectrograms
 
 
 def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False):
