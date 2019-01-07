@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from __future__ import print_function
 import morphs
 import pandas as pd
-from google_drive_downloader import GoogleDriveDownloader as gdd
 
 
 def reduce_behave_data(df):
@@ -40,6 +39,4 @@ def load_behavior_df(prefer_download=True):
 
 
 def download_behavior_df():
-    morphs.paths.BEHAVE_DIR.mkdir(parents=True, exist_ok=True)
-    gdd.download_file_from_google_drive(file_id='1wIOg1y0JpyeVgyDFrgOtzYv5XSymA-GX',
-                                        dest_path=morphs.paths.BEHAVE_PKL.as_posix())
+    morphs.data.load._download(morphs.paths.BEHAVE_PKL, '1wIOg1y0JpyeVgyDFrgOtzYv5XSymA-GX')

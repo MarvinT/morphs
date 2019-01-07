@@ -4,6 +4,7 @@ from __future__ import print_function
 import numpy as np
 from ephys import core, rigid_pandas
 import pickle
+from google_drive_downloader import GoogleDriveDownloader as gdd
 
 import morphs
 from morphs.data.accuracies import load_cluster_accuracies as cluster_accuracies
@@ -83,3 +84,9 @@ def _pickle(pickle_file):
     except UnicodeDecodeError as e:
         with open(pickle_file, 'rb') as f:
             return pickle.load(f, encoding='latin1')
+
+
+def _download(dest_file, file_id):
+    dest_file.parent.mkdir(parents=True, exist_ok=True)
+    gdd.download_file_from_google_drive(file_id=file_id,
+                                        dest_path=dest_file.as_posix())
