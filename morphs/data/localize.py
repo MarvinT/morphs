@@ -61,10 +61,10 @@ def generate_all_loc(parallel=False, n_jobs=morphs.parallel.N_JOBS):
     all_locs_df.to_pickle(morphs.paths.LOCATIONS_PKL)
 
 
+def download_all_loc():
+    morphs.utils.load._download(morphs.paths.LOCATIONS_PKL, '1wLoMiKJjKPQbNF_qplqrMzHLyFCyFXn3')
+
+
 @morphs.utils.load._create(morphs.paths.LOCATIONS_PKL, generate_all_loc, download_func=download_all_loc)
 def load_all_loc(prefer_download=True):
     return morphs.utils.load._pickle(morphs.paths.LOCATIONS_PKL.as_posix())
-
-
-def download_all_loc():
-    morphs.utils.load._download(morphs.paths.LOCATIONS_PKL, '1wLoMiKJjKPQbNF_qplqrMzHLyFCyFXn3')
