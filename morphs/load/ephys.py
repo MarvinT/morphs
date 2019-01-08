@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 import numpy as np
 from ephys import core, rigid_pandas
+import morphs
 
 
 def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False):
