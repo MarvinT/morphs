@@ -80,11 +80,9 @@ def gen_cluster_accuracies():
         pickle.dump(accuracies, f)
 
 
+@morphs.data.load._create(morphs.paths.ACCURACIES_PKL, gen_cluster_accuracies)
 def load_cluster_accuracies():
     '''Loads pickle file containing the accuracy for each cluster in each recording block'''
-    if not morphs.paths.ACCURACIES_PKL.exists():
-        print('Calculating all cluster accuracies first')
-        gen_cluster_accuracies()
     with open(morphs.paths.ACCURACIES_PKL.as_posix(), 'rb') as f:
         accuracies = pickle.load(f)
     cluster_accuracies = {block_path: accuracies[block_path].groupby(
