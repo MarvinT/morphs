@@ -33,10 +33,10 @@ def _create(file_loc, gen_func, download_func=None):
             if not exists:
                 if prefer_download and download_func:
                     print('downloading, alternatively set prefer_download=False to generate the data yourself')
-                    download_func()
+                    download_func(*args, **kwargs)
                 else:
                     print('generating')
-                    gen_func()
-            return func()
+                    gen_func(*args, **kwargs)
+            return func(*args, **kwargs)
         return wrapper_load
     return decorator_load
