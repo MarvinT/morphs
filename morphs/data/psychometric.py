@@ -21,7 +21,7 @@ def generate_psychometric_params():
     Loads behavioral data, parses, calculates psychometric params,
     then drops them into a pkl file
     '''
-    behavior_df = morphs.data.load.behavior_df()
+    behavior_df = morphs.load.behavior_df()
     morphs.data.parse.stim_id(behavior_df)
     behavior_df = morphs.data.parse.behav_data_inverted(behavior_df)
     psychometric_params = calculate_psychometric_params(
@@ -31,7 +31,7 @@ def generate_psychometric_params():
         pickle.dump(psychometric_params, f)
 
 
-@morphs.data.load._create(morphs.paths.PSYCHOMETRIC_PKL, generate_psychometric_params)
+@morphs.utils.load._create(morphs.paths.PSYCHOMETRIC_PKL, generate_psychometric_params)
 def load_psychometric_params():
     '''loads pickle file containing the fit psychometric parameters for each bird'''
     with open(morphs.paths.PSYCHOMETRIC_PKL.as_posix(), 'rb') as f:

@@ -1,18 +1,7 @@
-'''Collection of loading scripts'''
 from __future__ import absolute_import
 from __future__ import print_function
 import numpy as np
 from ephys import core, rigid_pandas
-import pickle
-from google_drive_downloader import GoogleDriveDownloader as gdd
-
-import morphs
-from morphs.data.accuracies import load_cluster_accuracies as cluster_accuracies
-from morphs.data.behavior import load_behavior_df as behavior_df
-from morphs.data.psychometric import load_psychometric_params as psychometric_params
-from morphs.data.neurometric import load_neurometric_null_all as neurometric_null_all
-from morphs.data.localize import load_all_loc as all_loc
-from morphs.data.spectrogram import load_morph_spectrograms as morph_spectrograms
 
 
 def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False):
@@ -75,39 +64,3 @@ def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle
     rigid_pandas.timestamp2time(spikes, fs, 'stim_aligned_time')
 
     return spikes
-
-
-def _pickle(pickle_file):
-    try:
-        with open(pickle_file, 'rb') as f:
-            return pickle.load(f)
-    except UnicodeDecodeError:
-        with open(pickle_file, 'rb') as f:
-            return pickle.load(f, encoding='latin1')
-
-
-def _download(dest_file, file_id):
-    dest_file.parent.mkdir(parents=True, exist_ok=True)
-    gdd.download_file_from_google_drive(file_id=file_id,
-                                        dest_path=dest_file.as_posix())
-
-
-def _create(file_loc, gen_func, download_func=None):
-    def decorator_load(func):
-        @functools.wraps(func)
-        def wrapper_load(*args, **kwargs):
-            prefer_download = kwargs.pop('prefer_download', True)
-            try:
-                exists = file_loc.exists()
-            except AttributeError:
-                exists = file_loc(args[0]).exists()
-            if not exists:
-                if prefer_download and download_func:
-                    print('downloading, alternatively set prefer_download=False to generate the data yourself')
-                    download_func()
-                else:
-                    print('generating')
-                    gen_func()
-            return func()
-        return wrapper_load
-    return decorator_load

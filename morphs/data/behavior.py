@@ -28,11 +28,11 @@ def gen_behavior_df():
     behavior_df.to_pickle(morphs.paths.BEHAVE_PKL.as_posix())
 
 
-@morphs.data.load._create(morphs.paths.BEHAVE_PKL, gen_behavior_df, download_func=download_behavior_df)
+@morphs.utils.load._create(morphs.paths.BEHAVE_PKL, gen_behavior_df, download_func=download_behavior_df)
 def load_behavior_df(prefer_download=True):
     '''Loads behavior df (and downloads it if it doesnt exist)'''
     return pd.read_pickle(morphs.paths.BEHAVE_PKL.as_posix())
 
 
 def download_behavior_df():
-    morphs.data.load._download(morphs.paths.BEHAVE_PKL, '1wIOg1y0JpyeVgyDFrgOtzYv5XSymA-GX')
+    morphs.utils.load._download(morphs.paths.BEHAVE_PKL, '1wIOg1y0JpyeVgyDFrgOtzYv5XSymA-GX')

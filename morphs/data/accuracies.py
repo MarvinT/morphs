@@ -56,7 +56,7 @@ def gen_cluster_accuracies():
     with Parallel(n_jobs=morphs.parallel.N_JOBS) as parallel:
         for block_path in morphs.paths.blocks():
             print(block_path)
-            spikes = morphs.data.load.ephys_data(block_path, collapse_endpoints=True)
+            spikes = morphs.load.ephys_data(block_path, collapse_endpoints=True)
 
             if len(spikes['recording'].unique()) >= 1:
                 template_spikes = spikes[spikes['stim_id'].isin(list('abcdefgh'))]
@@ -80,7 +80,7 @@ def gen_cluster_accuracies():
         pickle.dump(accuracies, f)
 
 
-@morphs.data.load._create(morphs.paths.ACCURACIES_PKL, gen_cluster_accuracies)
+@morphs.utils.load._create(morphs.paths.ACCURACIES_PKL, gen_cluster_accuracies)
 def load_cluster_accuracies():
     '''Loads pickle file containing the accuracy for each cluster in each recording block'''
     with open(morphs.paths.ACCURACIES_PKL.as_posix(), 'rb') as f:
