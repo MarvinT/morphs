@@ -242,7 +242,7 @@ def generate_neurometric_null_all(num_shuffles, n_jobs=morphs.parallel.N_JOBS):
     all_samples_df.to_pickle(morphs.paths.num_shuffle_pkl(num_shuffles))
 
 
-@morphs.utils.load._create(morphs.paths.num_shuffle_pkl, generate_neurometric_null_all)
+@morphs.utils.load._load(morphs.paths.num_shuffle_pkl, generate_neurometric_null_all)
 def load_neurometric_null_all(num_shuffles):
     '''loads pickle file containing each ephys dataset fit to each subj for a given num_shuffles'''
     with open(morphs.paths.num_shuffle_pkl(num_shuffles).as_posix(), 'rb') as f:

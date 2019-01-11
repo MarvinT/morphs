@@ -65,6 +65,6 @@ def download_all_loc():
     morphs.utils.load._download(morphs.paths.LOCATIONS_PKL, '1wLoMiKJjKPQbNF_qplqrMzHLyFCyFXn3')
 
 
-@morphs.utils.load._create(morphs.paths.LOCATIONS_PKL, generate_all_loc, download_func=download_all_loc)
+@morphs.utils.load._load(morphs.paths.LOCATIONS_PKL, generate_all_loc, download_func=download_all_loc)
 def load_all_loc(prefer_download=True):
     return morphs.utils.load._pickle(morphs.paths.LOCATIONS_PKL.as_posix())
