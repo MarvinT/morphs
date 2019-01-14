@@ -1,11 +1,12 @@
 from __future__ import absolute_import
 from __future__ import print_function
 import numpy as np
+import pandas as pd
 from ephys import core, rigid_pandas
 import morphs
 
 
-def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False):
+def calculate_ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False):
     '''Loads ephys data and parses stimuli for this project'''
     assert not (collapse_endpoints and shuffle_endpoints)
     spikes = core.load_spikes(block_path)
@@ -65,3 +66,25 @@ def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle
     rigid_pandas.timestamp2time(spikes, fs, 'stim_aligned_time')
 
     return spikes
+
+
+def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False, memoize=True):
+    if shuffle_endpoints and memoize:
+        print("I won't memoize shuffled data so each time you run it you can get a new sample.")
+        memoize = False
+    if not memoize:
+        return calculate_ephys_data(block_path, good_clusters=good_clusters,
+                                    collapse_endpoints=collapse_endpoints,
+                                    shuffle_endpoints=shuffle_endpoints)
+    else:
+        file_loc = morphs.paths.ephys_pkl(block_path, collapse_endpoints)
+        if file_loc.exists():
+            spikes = pd.read_pickle(file_loc.as_posix())
+        else:
+            spikes = calculate_ephys_data(block_path, good_clusters=None,
+                                          collapse_endpoints=collapse_endpoints,
+                                          shuffle_endpoints=shuffle_endpoints)
+            spikes.to_pickle(file_loc.as_posix())
+        if good_clusters is not None:
+            spikes = spikes[spikes.cluster.isin(good_clusters)]
+        return spikes
