@@ -84,7 +84,13 @@ def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle
             spikes = calculate_ephys_data(block_path, good_clusters=None,
                                           collapse_endpoints=collapse_endpoints,
                                           shuffle_endpoints=shuffle_endpoints)
+            file_loc.parent.mkdir(parents=True, exist_ok=True)
             spikes.to_pickle(file_loc.as_posix())
         if good_clusters is not None:
             spikes = spikes[spikes.cluster.isin(good_clusters)]
         return spikes
+
+if ___name__ == '__main__':
+    for block_path in morphs.paths.blocks():
+        _ = ephys_data(block_path, collapse_endpoints=False)
+        _ = ephys_data(block_path, collapse_endpoints=True)
