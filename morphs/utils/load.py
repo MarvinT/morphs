@@ -25,7 +25,7 @@ def _pickle(pickle_file):
 
 def _download(dest_file, file_id):
     '''
-    Downloads file from Google Drive
+    returns a function that downloads file from Google Drive
 
     Parameters
     ------
@@ -34,9 +34,11 @@ def _download(dest_file, file_id):
     file_id : str
         file_id for Google Drive file
     '''
-    dest_file.parent.mkdir(parents=True, exist_ok=True)
-    gdd.download_file_from_google_drive(file_id=file_id,
-                                        dest_path=dest_file.as_posix())
+    def download():
+        dest_file.parent.mkdir(parents=True, exist_ok=True)
+        gdd.download_file_from_google_drive(file_id=file_id,
+                                            dest_path=dest_file.as_posix())
+    return download
 
 
 def _load(file_loc, gen_func, download_func=None):
