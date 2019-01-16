@@ -106,19 +106,19 @@ def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle
         return calculate_ephys_data(block_path, good_clusters=good_clusters,
                                     collapse_endpoints=collapse_endpoints,
                                     shuffle_endpoints=shuffle_endpoints)
+
+    file_loc = morphs.paths.ephys_pkl(block_path, collapse_endpoints)
+    if file_loc.exists():
+        spikes = pd.read_pickle(file_loc.as_posix())
     else:
-        file_loc = morphs.paths.ephys_pkl(block_path, collapse_endpoints)
-        if file_loc.exists():
-            spikes = pd.read_pickle(file_loc.as_posix())
-        else:
-            spikes = calculate_ephys_data(block_path, good_clusters=None,
-                                          collapse_endpoints=collapse_endpoints,
-                                          shuffle_endpoints=shuffle_endpoints)
-            file_loc.parent.mkdir(parents=True, exist_ok=True)
-            spikes.to_pickle(file_loc.as_posix())
-        if good_clusters is not None:
-            spikes = spikes[spikes.cluster.isin(good_clusters)]
-        return spikes
+        spikes = calculate_ephys_data(block_path, good_clusters=None,
+                                      collapse_endpoints=collapse_endpoints,
+                                      shuffle_endpoints=shuffle_endpoints)
+        file_loc.parent.mkdir(parents=True, exist_ok=True)
+        spikes.to_pickle(file_loc.as_posix())
+    if good_clusters is not None:
+        spikes = spikes[spikes.cluster.isin(good_clusters)]
+    return spikes
 
 
 if __name__ == '__main__':
