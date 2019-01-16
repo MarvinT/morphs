@@ -7,7 +7,20 @@ import morphs
 
 
 def calculate_ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False):
-    '''Loads ephys data and parses stimuli for this project'''
+    '''
+    Loads ephys data and parses stimuli for this project
+
+    Parameters
+    ------
+    block_path : str
+    good_clusters : None or list of ints
+        removes spikes that aren't from the provided list of cluster ids
+    collapse_endpoints : boolean
+        maps all of the morph endpoints on to the template name [a-h]
+    shuffle_endpoints : boolean
+        shuffles all of the stimuli labels of a each template
+        not compatible with collapse_endpoints
+    '''
     assert not (collapse_endpoints and shuffle_endpoints)
     spikes = core.load_spikes(block_path)
 
@@ -69,6 +82,23 @@ def calculate_ephys_data(block_path, good_clusters=None, collapse_endpoints=Fals
 
 
 def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False, memoize=True):
+    '''
+    saves and loads processed ephys data if shuffle_endpoints==False for faster analysis
+    shuffled data isn't saved so that each time you run it you can get a new sample
+
+    Parameters
+    ------
+    block_path : str
+    good_clusters : None or list of ints
+        removes spikes that aren't from the provided list of cluster ids
+    collapse_endpoints : boolean
+        maps all of the morph endpoints on to the template name [a-h]
+    shuffle_endpoints : boolean
+        shuffles all of the stimuli labels of a each template
+        not compatible with collapse_endpoints
+    memoize : boolean
+        whether to save the processed spikes dataframe for later use
+    '''
     if shuffle_endpoints and memoize:
         print("I won't memoize shuffled data so each time you run it you can get a new sample.")
         memoize = False
