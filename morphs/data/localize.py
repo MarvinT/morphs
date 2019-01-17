@@ -6,7 +6,6 @@ from pathlib2 import Path
 from joblib import Parallel, delayed
 import ephys
 import ephys.clust
-from google_drive_downloader import GoogleDriveDownloader as gdd
 
 
 # adapted from klustakwik
@@ -23,7 +22,7 @@ def _read_python(path):
 
 def calc_loc(block_path, squared=True):
     columns = ['block_path', 'AP', 'ML', 'Z', 'cluster', 'cluster_pos', 'cluster_accuracy']
-    spikes = morphs.data.load.ephys_data(block_path, collapse_endpoints=True)
+    spikes = morphs.load.ephys_data(block_path, collapse_endpoints=True)
     if len(spikes) == 0:
         return pd.DataFrame(columns=columns)
     waveforms, cluster_map = ephys.clust.compute_cluster_waveforms_fast(block_path, spikes)
@@ -46,7 +45,7 @@ def calc_loc(block_path, squared=True):
     i_cluster_map = {v: k for k, v in cluster_map.items()}
     d['cluster'] = [i_cluster_map[i] for i in range(len(cluster_map))]
     d['cluster_pos'] = y_hats
-    _, cluster_accuracies = morphs.data.load.cluster_accuracies()
+    _, cluster_accuracies = morphs.load.cluster_accuracies()
     d['cluster_accuracy'] = cluster_accuracies[block_path].loc[d['cluster']]['accuracy'].values
     return pd.DataFrame(data=d, columns=columns)
 
@@ -62,16 +61,8 @@ def generate_all_loc(parallel=False, n_jobs=morphs.parallel.N_JOBS):
     all_locs_df.to_pickle(morphs.paths.LOCATIONS_PKL)
 
 
+@morphs.utils.load._load(morphs.paths.LOCATIONS_PKL, generate_all_loc,
+                         download_func=morphs.utils.load._download(morphs.paths.LOCATIONS_PKL,
+                                                                   '1wLoMiKJjKPQbNF_qplqrMzHLyFCyFXn3'))
 def load_all_loc(prefer_download=True):
-    if not morphs.paths.LOCATIONS_PKL.exists():
-        if prefer_download:
-            download_all_loc()
-        else:
-            generate_all_loc()
-    return morphs.data.load._pickle(morphs.paths.LOCATIONS_PKL.as_posix())
-
-
-def download_all_loc():
-    morphs.paths.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
-    gdd.download_file_from_google_drive(file_id='1wLoMiKJjKPQbNF_qplqrMzHLyFCyFXn3',
-                                        dest_path=morphs.paths.LOCATIONS_PKL.as_posix())
+    return morphs.utils.load._pickle(morphs.paths.LOCATIONS_PKL.as_posix())

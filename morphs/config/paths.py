@@ -12,6 +12,7 @@ BEHAVE_DIR = DATA_DIR / 'behavior'
 BEHAVE_PKL = BEHAVE_DIR / 'behave.pkl'
 EPHYS_DIR = DATA_DIR / 'ephys'
 PROCESSED_DIR = DATA_DIR / "processed"
+EPHYS_MEMO_DIR = PROCESSED_DIR / 'ephys_memo'
 PSYCHOMETRIC_PKL = PROCESSED_DIR / "psychometrics.pkl"
 LOCATIONS_PKL = PROCESSED_DIR / 'unit_locations.pkl'
 ACCURACIES_PKL = PROCESSED_DIR / "all_accuracies.pkl"
@@ -51,3 +52,11 @@ def num_shuffle_dir(num_shuffles):
 
 def num_shuffle_pkl(num_shuffles):
     return NEUROMETRIC_NULL_DIR / ('neurometric_null_dist_' + str(num_shuffles) + '.pkl')
+
+
+def ephys_pkl(block_path, collapse_endpoints):
+    fname = morphs.data.parse.blockpath_name(block_path)
+    if collapse_endpoints:
+        fname += '_collapsed'
+    fname += '.pkl'
+    return EPHYS_MEMO_DIR / fname

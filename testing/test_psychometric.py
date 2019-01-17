@@ -13,7 +13,7 @@ def test_load_download_behavior_df():
 
 @pytest.mark.run(order=1)
 def test_behav_data_inverted():
-    behavior_df = morphs.data.load.behavior_df()
+    behavior_df = morphs.load.behavior_df()
     morphs.data.parse.stim_id(behavior_df)
     behavior_df = morphs.data.parse.behav_data_inverted(behavior_df)
 

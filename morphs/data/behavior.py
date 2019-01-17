@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from __future__ import print_function
 import morphs
 import pandas as pd
-from google_drive_downloader import GoogleDriveDownloader as gdd
 
 
 def reduce_behave_data(df):
@@ -29,17 +28,9 @@ def gen_behavior_df():
     behavior_df.to_pickle(morphs.paths.BEHAVE_PKL.as_posix())
 
 
+@morphs.utils.load._load(morphs.paths.BEHAVE_PKL, gen_behavior_df,
+                         download_func=morphs.utils.load._download(morphs.paths.BEHAVE_PKL,
+                                                                   '1wIOg1y0JpyeVgyDFrgOtzYv5XSymA-GX'))
 def load_behavior_df(prefer_download=True):
     '''Loads behavior df (and downloads it if it doesnt exist)'''
-    if not morphs.paths.BEHAVE_PKL.exists():
-        if prefer_download:
-            download_behavior_df()
-        else:
-            gen_behavior_df()
     return pd.read_pickle(morphs.paths.BEHAVE_PKL.as_posix())
-
-
-def download_behavior_df():
-    morphs.paths.BEHAVE_DIR.mkdir(parents=True, exist_ok=True)
-    gdd.download_file_from_google_drive(file_id='1wIOg1y0JpyeVgyDFrgOtzYv5XSymA-GX',
-                                        dest_path=morphs.paths.BEHAVE_PKL.as_posix())

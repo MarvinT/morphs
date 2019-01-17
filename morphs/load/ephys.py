@@ -1,21 +1,26 @@
-'''Collection of loading scripts'''
 from __future__ import absolute_import
 from __future__ import print_function
 import numpy as np
+import pandas as pd
 from ephys import core, rigid_pandas
-import pickle
-
 import morphs
-from morphs.data.accuracies import load_cluster_accuracies as cluster_accuracies
-from morphs.data.behavior import load_behavior_df as behavior_df
-from morphs.data.psychometric import load_psychometric_params as psychometric_params
-from morphs.data.neurometric import load_neurometric_null_all as neurometric_null_all
-from morphs.data.localize import load_all_loc as all_loc
-from morphs.data.spectrogram import load_morph_spectrograms as morph_spectrograms
 
 
-def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False):
-    '''Loads ephys data and parses stimuli for this project'''
+def calculate_ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False):
+    '''
+    Loads ephys data and parses stimuli for this project
+
+    Parameters
+    ------
+    block_path : str
+    good_clusters : None or list of ints
+        removes spikes that aren't from the provided list of cluster ids
+    collapse_endpoints : boolean
+        maps all of the morph endpoints on to the template name [a-h]
+    shuffle_endpoints : boolean
+        shuffles all of the stimuli labels of a each template
+        not compatible with collapse_endpoints
+    '''
     assert not (collapse_endpoints and shuffle_endpoints)
     spikes = core.load_spikes(block_path)
 
@@ -76,10 +81,47 @@ def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle
     return spikes
 
 
-def _pickle(pickle_file):
-    try:
-        with open(pickle_file, 'rb') as f:
-            return pickle.load(f)
-    except UnicodeDecodeError as e:
-        with open(pickle_file, 'rb') as f:
-            return pickle.load(f, encoding='latin1')
+def ephys_data(block_path, good_clusters=None, collapse_endpoints=False, shuffle_endpoints=False, memoize=True):
+    '''
+    saves and loads processed ephys data if shuffle_endpoints==False for faster analysis
+    shuffled data isn't saved so that each time you run it you can get a new sample
+
+    Parameters
+    ------
+    block_path : str
+    good_clusters : None or list of ints
+        removes spikes that aren't from the provided list of cluster ids
+    collapse_endpoints : boolean
+        maps all of the morph endpoints on to the template name [a-h]
+    shuffle_endpoints : boolean
+        shuffles all of the stimuli labels of a each template
+        not compatible with collapse_endpoints
+    memoize : boolean
+        whether to save the processed spikes dataframe for later use
+    '''
+    if shuffle_endpoints and memoize:
+        print("I won't memoize shuffled data so each time you run it you can get a new sample.")
+        memoize = False
+    if not memoize:
+        return calculate_ephys_data(block_path, good_clusters=good_clusters,
+                                    collapse_endpoints=collapse_endpoints,
+                                    shuffle_endpoints=shuffle_endpoints)
+
+    file_loc = morphs.paths.ephys_pkl(block_path, collapse_endpoints)
+    if file_loc.exists():
+        spikes = pd.read_pickle(file_loc.as_posix())
+    else:
+        spikes = calculate_ephys_data(block_path, good_clusters=None,
+                                      collapse_endpoints=collapse_endpoints,
+                                      shuffle_endpoints=shuffle_endpoints)
+        file_loc.parent.mkdir(parents=True, exist_ok=True)
+        spikes.to_pickle(file_loc.as_posix())
+    if good_clusters is not None:
+        spikes = spikes[spikes.cluster.isin(good_clusters)]
+    return spikes
+
+
+if __name__ == '__main__':
+    for block_path in morphs.paths.blocks():
+        _ = ephys_data(block_path, collapse_endpoints=False)
+        _ = ephys_data(block_path, collapse_endpoints=True)

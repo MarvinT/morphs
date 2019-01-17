@@ -1,16 +1,13 @@
 from __future__ import absolute_import
-from google_drive_downloader import GoogleDriveDownloader as gdd
 import morphs
 import pytest
 
 
 @pytest.mark.run(order=0)
 def test_download_ephys_data():
-    target = morphs.paths.EPHYS_DIR / 'B1096' / 'kwik' / \
-        'Pen04_Lft_AP2500_ML50__Site02_Z2500__B1096_cat_P04_S02_1'
-    target.mkdir(parents=True, exist_ok=True)
-    dest_path = target / 'B1096_cat_P04_S02_1.kwik'
-    gdd.download_file_from_google_drive(file_id='12bp8fHCC51PWOiX8QxziY7oM7sOxQetA',
-                                        dest_path=dest_path.as_posix())
-    assert dest_path.exists()
+    dest_file = morphs.paths.EPHYS_DIR / 'B1096' / 'kwik' / \
+        'Pen04_Lft_AP2500_ML50__Site02_Z2500__B1096_cat_P04_S02_1' / \
+        'B1096_cat_P04_S02_1.kwik'
+    morphs.utils.load._download(dest_file, '12bp8fHCC51PWOiX8QxziY7oM7sOxQetA')()
+    assert dest_file.exists()
     assert len(morphs.paths.blocks()) > 0
