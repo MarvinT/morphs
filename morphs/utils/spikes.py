@@ -26,7 +26,7 @@ def filtered_response(spk_times, tau=.01):
     return lambda t: np.sum(np.exp(-(spk_times - t.reshape((1, -1))) ** 2 / (2 * tau * tau)), 0) / norm_factor
 
 
-def create_neural_rep(spikes, stim_length=.4, max_id_len=None, num_samples=50):
+def create_neural_rep(spikes, stim_length=.4, max_id_len=None, t=None, num_samples=50):
     '''
     Returns a time-varying neural population representation for each stimuli presentation
 
@@ -39,9 +39,13 @@ def create_neural_rep(spikes, stim_length=.4, max_id_len=None, num_samples=50):
     max_id_len : int > 0 or None
         Max string length of the stim_ids
         If None (default) will calculate it.
+    t : np.array or None
+        times to use for evaluating the instantaneous spike rates
+        defaults to t = np.linspace(0, stim_length, num_samples) if None
     num_samples : int > 0
         number of time samples to use for each stimuli
         default = 50
+        not used if t is not None
 
     Returns
     ------
@@ -53,10 +57,13 @@ def create_neural_rep(spikes, stim_length=.4, max_id_len=None, num_samples=50):
         len = number of stimuli presented
     '''
     if max_id_len is None:
-        spikes['stim_id'].str.len().max()
+        max_id_len = spikes['stim_id'].str.len().max()
     clusters = spikes.cluster.unique()
     clust_map = {clust: i for i, clust in enumerate(clusters)}
-    t = np.linspace(0, stim_length, num_samples)
+    if t is None:
+        t = np.linspace(0, stim_length, num_samples)
+    else:
+        num_samples = len(t)
     num_exemplars = len(spikes.groupby(['stim_id', 'recording', 'stim_presentation']))
     X = np.zeros((num_exemplars, num_samples * len(clusters)))
     labels = np.empty(num_exemplars, dtype='U%d' % (max_id_len))
