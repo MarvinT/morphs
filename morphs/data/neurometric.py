@@ -3,10 +3,9 @@ from __future__ import print_function
 import pandas as pd
 import numpy as np
 import itertools
-import pickle
 import morphs
 import click
-import sklearn as skl
+import sklearn
 import sklearn.linear_model
 from sklearn.linear_model import LogisticRegression
 from joblib import Parallel, delayed
