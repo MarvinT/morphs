@@ -227,7 +227,7 @@ def load_neurometric_null_block(block_path, num_shuffles, cluster_accuracies, ps
     if not pkl_path.exists():
         generate_neurometric_null_block(block_path, num_shuffles,
                                         cluster_accuracies, psychometric_params, n_jobs=n_jobs)
-    pd.read_pickle(pkl_path.as_posix())
+    return pd.read_pickle(pkl_path.as_posix())
 
 
 def generate_neurometric_null_all(num_shuffles, n_jobs=morphs.parallel.N_JOBS):
@@ -243,7 +243,7 @@ def generate_neurometric_null_all(num_shuffles, n_jobs=morphs.parallel.N_JOBS):
 @morphs.utils.load._load(morphs.paths.num_shuffle_pkl, generate_neurometric_null_all)
 def load_neurometric_null_all(num_shuffles):
     '''loads pickle file containing each ephys dataset fit to each subj for a given num_shuffles'''
-    pd.read_pickle(morphs.paths.num_shuffle_pkl(num_shuffles).as_posix())
+    return pd.read_pickle(morphs.paths.num_shuffle_pkl(num_shuffles).as_posix())
 
 
 @click.command()
