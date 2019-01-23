@@ -13,6 +13,7 @@ BEHAVE_PKL = BEHAVE_DIR / 'behave.pkl'
 EPHYS_DIR = DATA_DIR / 'ephys'
 PROCESSED_DIR = DATA_DIR / "processed"
 EPHYS_MEMO_DIR = PROCESSED_DIR / 'ephys_memo'
+SINGLE_UNIT_TEMPLATES_PKL = PROCESSED_DIR / "single_unit_templates.pkl"
 PSYCHOMETRIC_PKL = PROCESSED_DIR / "psychometrics.pkl"
 LOCATIONS_PKL = PROCESSED_DIR / 'unit_locations.pkl'
 ACCURACIES_PKL = PROCESSED_DIR / "all_accuracies.pkl"
