@@ -4,8 +4,6 @@ import morphs
 from six import exec_
 from pathlib2 import Path
 from joblib import Parallel, delayed
-import ephys
-import ephys.clust
 
 
 # adapted from klustakwik
@@ -22,10 +20,10 @@ def _read_python(path):
 
 def calc_loc(block_path, squared=True):
     columns = ['block_path', 'AP', 'ML', 'Z', 'cluster', 'cluster_pos', 'cluster_accuracy']
-    spikes = morphs.load.ephys_data(block_path, collapse_endpoints=True)
-    if len(spikes) == 0:
+    waveform_dict = morphs.load.waveforms()
+    waveforms, cluster_map = waveform_dict[block_path]
+    if waveforms is None:
         return pd.DataFrame(columns=columns)
-    waveforms, cluster_map = ephys.clust.compute_cluster_waveforms_fast(block_path, spikes)
     amps = (waveforms[:, 0, :] + waveforms[:, -1, :]) / 2 - np.min(waveforms, axis=1)
     amps /= np.max(amps, axis=0)
     if squared:
