@@ -85,3 +85,9 @@ def generate_ks_df(num_shuffles, parallel=True):
 @morphs.utils.load._load(morphs.paths.ks_df_pkl, generate_ks_df)
 def load_ks_df(num_shuffles):
     return pd.read_pickle(morphs.paths.ks_df_pkl(num_shuffles).as_posix())
+
+
+if __name__ == '__main__':
+    for path in morphs.paths.NEUROMETRIC_NULL_DIR.glob('*.pkl'):
+        num_shuffles = int(path.name.split('.')[0].split('_')[-1])
+        generate_ks_df(num_shuffles)
