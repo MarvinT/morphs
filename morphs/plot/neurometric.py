@@ -28,10 +28,13 @@ def _4pl(x, y, color=None, **kwargs):
 
 
 def held_out(labels, representations, behavior_subj, psychometric_params, **kwargs):
-    label_df = morphs.data.neurometric.make_label_df(labels, behavior_subj, psychometric_params)
-    behavior_df = morphs.data.neurometric.make_behavior_df(behavior_subj, psychometric_params)
-    merged_df = morphs.data.neurometric._merge_df(label_df, behavior_df)
-    held_out_df = morphs.data.neurometric.gen_held_out_df(merged_df, representations, melt=True)
+    label_df = morphs.data.neurometric.null.make_label_df(
+        labels, behavior_subj, psychometric_params)
+    behavior_df = morphs.data.neurometric.null.make_behavior_df(
+        behavior_subj, psychometric_params)
+    merged_df = morphs.data.neurometric.null._merge_df(label_df, behavior_df)
+    held_out_df = morphs.data.neurometric.null.gen_held_out_df(
+        merged_df, representations, melt=True)
     g = grid(held_out_df, **kwargs)
     return held_out_df, g
 
