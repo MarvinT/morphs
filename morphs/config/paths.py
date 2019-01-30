@@ -6,21 +6,30 @@ import morphs
 
 PROJECT_DIR = Path(__file__).resolve().parents[2]
 DATA_DIR = PROJECT_DIR / "data"
+
 STIM_DIR = DATA_DIR / 'stimuli'
 SPECT_PKL = STIM_DIR / 'spectrograms.pkl'
+
 BEHAVE_DIR = DATA_DIR / 'behavior'
 BEHAVE_PKL = BEHAVE_DIR / 'behave.pkl'
+
 EPHYS_DIR = DATA_DIR / 'ephys'
+
 PROCESSED_DIR = DATA_DIR / "processed"
-EPHYS_MEMO_DIR = PROCESSED_DIR / 'ephys_memo'
 WAVEFORMS_PKL = PROCESSED_DIR / 'waveforms.pkl'
 SINGLE_UNIT_TEMPLATES_PKL = PROCESSED_DIR / "single_unit_templates.pkl"
 PSYCHOMETRIC_PKL = PROCESSED_DIR / "psychometrics.pkl"
 LOCATIONS_PKL = PROCESSED_DIR / 'unit_locations.pkl'
 ACCURACIES_PKL = PROCESSED_DIR / "all_accuracies.pkl"
+
 NEUROMETRIC_NULL_DIR = PROCESSED_DIR / "neurometric_null"
 
+KS_DF_DIR = PROCESSED_DIR / "KS_df"
+
+EPHYS_MEMO_DIR = PROCESSED_DIR / 'ephys_memo'
+
 REPORTS_DIR = PROJECT_DIR / 'reports'
+
 FIGURES_DIR = REPORTS_DIR / 'figures'
 
 
@@ -54,6 +63,10 @@ def num_shuffle_dir(num_shuffles):
 
 def num_shuffle_pkl(num_shuffles):
     return NEUROMETRIC_NULL_DIR / ('neurometric_null_dist_' + str(num_shuffles) + '.pkl')
+
+
+def ks_df_pkl(num_shuffles):
+    return KS_DF_DIR / ('ks_df_' + str(num_shuffles) + '.pkl')
 
 
 def ephys_pkl(block_path, collapse_endpoints):

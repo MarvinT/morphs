@@ -8,8 +8,16 @@ from click.testing import CliRunner
 def test_load_generate_load_neurometric_null_all():
     num_shuffles = 8
     assert not morphs.paths.num_shuffle_pkl(num_shuffles).exists()
-    morphs.data.neurometric.load_neurometric_null_all(num_shuffles)
+    morphs.data.load.neurometric_null_all(num_shuffles)
     assert morphs.paths.num_shuffle_pkl(num_shuffles).exists()
+
+
+@pytest.mark.run(order=3)
+def test_load_generate_load_ks_df():
+    num_shuffles = 8
+    assert not morphs.paths.ks_df_pkl(num_shuffles).exists()
+    morphs.data.load.ks_df(num_shuffles)
+    assert morphs.paths.ks_df_pkl(num_shuffles).exists()
 
 
 @pytest.mark.run(order=-1)
