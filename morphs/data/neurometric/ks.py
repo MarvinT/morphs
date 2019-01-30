@@ -79,6 +79,7 @@ def generate_ks_df(num_shuffles, parallel=True):
         else:
             all_ks_df.loc[group.index, 'class'] = 'diff training cond'
 
+    morphs.paths.ks_df_pkl(num_shuffles).parent.mkdir(parents=True, exist_ok=True)
     all_ks_df.to_pickle(morphs.paths.ks_df_pkl(num_shuffles))
 
 

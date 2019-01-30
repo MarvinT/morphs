@@ -105,3 +105,7 @@ def effective_morph(df, behavior_subj):
 
 def _in_pattern(string):
     return r'[' + string + r']'
+
+
+def num_shuffles(path):
+    return int(path.name.split('.')[0].split('_')[-1])
