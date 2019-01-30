@@ -25,7 +25,7 @@ def shuffle_ks_df(samples_df):
         grouped = shuffle_group.groupby(['shuffle_index', 'subj'])
         temp_results = np.zeros(len(grouped))
         temp_p_results = np.zeros(len(grouped))
-        temp_subj_results = ['' for i in xrange(len(grouped))]
+        temp_subj_results = ['' for i in range(len(grouped))]
         for i, ((shuffle_index, subj), group) in enumerate(grouped):
             temp_results[i], temp_p_results[i] = sp.stats.mstats.ks_twosamp(
                 group['errors'].values, shuffled, alternative='greater')
