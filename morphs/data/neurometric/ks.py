@@ -89,5 +89,5 @@ def load_ks_df(num_shuffles):
 
 if __name__ == '__main__':
     for path in morphs.paths.NEUROMETRIC_NULL_DIR.glob('*.pkl'):
-        num_shuffles = int(path.name.split('.')[0].split('_')[-1])
+        num_shuffles = morphs.data.parse.num_shuffles(path)
         generate_ks_df(num_shuffles)
