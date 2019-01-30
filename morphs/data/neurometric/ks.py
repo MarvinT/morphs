@@ -56,7 +56,7 @@ def merge_ks_dfs(shuffled_df, unshuffle_df, reset_index=True):
 
 
 def generate_ks_df(num_shuffles, parallel=True):
-    all_samples_df = morphs.data.load.neurometric_null_all(num_shuffles)
+    all_samples_df = morphs.load.neurometric_null_all(num_shuffles)
 
     if parallel:
         all_ks = Parallel(n_jobs=morphs.parallel.N_JOBS)(delayed(gen_block_ks_df)(block, block_group)
