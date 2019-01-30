@@ -35,7 +35,6 @@ def _download(dest_file, file_id):
         file_id for Google Drive file
     '''
     def download():
-        dest_file.parent.mkdir(parents=True, exist_ok=True)
         gdd.download_file_from_google_drive(file_id=file_id,
                                             dest_path=dest_file.as_posix())
     return download
@@ -83,6 +82,7 @@ def _load(file_loc, gen_func, download_func=None):
                 exists = file_loc(args[0]).exists()
                 filename = file_loc(args[0])
             if not exists:
+                filename.parent.mkdir(parents=True, exist_ok=True)
                 if prefer_download and download_func:
                     print('downloading, alternatively set prefer_download=False to generate the data yourself')
                     download_func(*args, **kwargs)
