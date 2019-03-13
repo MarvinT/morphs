@@ -9,4 +9,5 @@ from morphs.data.localize import load_all_loc as all_loc
 from morphs.data.spectrogram import load_morph_spectrograms as morph_spectrograms
 from morphs.data.singleunit import load_single_unit_templates as single_unit_templates
 from morphs.data.waveform import load_waveforms as waveforms
+from morphs.data.pairwise import load_pop_pair_df as pop_pair_df
 from morphs.load.ephys import ephys_data
