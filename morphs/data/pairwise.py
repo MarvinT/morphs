@@ -48,7 +48,7 @@ def calculate_pair_df(X, labels, reduced=False):
 
 
 def calculate_pop_pair_df(block_path):
-    good_clusters = morphs.data.accuracies.good_clusters(cluster_accuracies[block_path])
+    good_clusters = morphs.data.accuracies.good_clusters(block_path)
     spikes = morphs.load.ephys_data(block_path, good_clusters=good_clusters)
     X, labels = morphs.spikes.create_neural_rep(spikes, max_id_len=5)
     pair_df = calculate_pair_df(X, labels, reduced=True)
