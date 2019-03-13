@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import itertools
 from joblib import Parallel, delayed
+import click
 
 
 def calculate_pair_df(X, labels, reduced=False):
@@ -67,10 +68,10 @@ def calculate_pop_pair_df(block_path):
     return pair_df
 
 
-def gen_pop_pair_df(parallel=True):
+def gen_pop_pair_df(parallel=False, n_jobs=morphs.parallel.N_JOBS):
     if parallel:
-        all_pairs = Parallel(n_jobs=morphs.parallel.N_JOBS)(delayed(calculate_pop_pair_df)(block)
-                                                            for block in morphs.data.accuracies.good_recs())
+        all_pairs = Parallel(n_jobs=n_jobs)(delayed(calculate_pop_pair_df)(block)
+                                            for block in morphs.data.accuracies.good_recs())
     else:
         all_pairs = [calculate_pop_pair_df(block)
                      for block in morphs.data.accuracies.good_recs()]
@@ -84,5 +85,12 @@ def load_pop_pair_df():
     return pd.read_pickle(morphs.paths.POP_PAIR_PKL.as_posix())
 
 
+@click.command()
+@click.option('--parallel', '-p', is_flag=True, help='whether to parallelize each block to its own process')
+@click.option('--num_jobs', default=morphs.parallel.N_JOBS, help='number of parallel cores to use')
+def _main(parallel, num_jobs):
+    gen_pop_pair_df(parallel=parallel, n_jobs=num_jobs)
+
+
 if __name__ == '__main__':
-    gen_pop_pair_df()
+    _main()
