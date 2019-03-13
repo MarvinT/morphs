@@ -40,8 +40,6 @@ def calculate_pair_df(X, labels, reduced=False):
 
     for col in ['lesser_index', 'greater_index', 'lesser_dim', 'greater_dim']:
         del pair_df[col]
-    for col in ['greater_morph_pos', 'lesser_morph_pos', 'morph_dist']:
-        pair_df[col] = pair_df[col].astype('uint8')
     pair_df['morph_dim'] = pair_df['morph_dim'].astype('category')
 
     return pair_df
