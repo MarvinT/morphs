@@ -54,17 +54,17 @@ def calculate_pop_pair_df(block_path):
     pair_df = calculate_pair_df(X, labels, reduced=True)
     pair_df['block_path'] = block_path
     pair_df['block_path'] = pair_df['block_path'].astype('category')
-    pair_df['block_path'].cat.set_categories(morphs.data.accuracies.good_recs(cluster_accuracies))
+    pair_df['block_path'].cat.set_categories(morphs.data.accuracies.good_recs())
     return pair_df
 
 
 def gen_pop_pair_df(parallel=True):
     if parallel:
         all_pairs = Parallel(n_jobs=morphs.parallel.N_JOBS)(delayed(calculate_pop_pair_df)(block)
-                                                            for block in morphs.data.accuracies.good_recs(cluster_accuracies))
+                                                            for block in morphs.data.accuracies.good_recs())
     else:
         all_pairs = [calculate_pop_pair_df(block)
-                     for block in morphs.data.accuracies.good_recs(cluster_accuracies)]
+                     for block in morphs.data.accuracies.good_recs()]
     all_pairs_df = pd.concat(all_pairs, ignore_index=True)
     morphs.paths.POP_PAIR_PKL.parent.mkdir(parents=True, exist_ok=True)
     all_pairs_df.to_pickle(morphs.paths.POP_PAIR_PKL)

@@ -9,10 +9,7 @@ def generate_single_unit_templates():
     psth = {}
     t = np.linspace(-.2, .6, 1000)
 
-    accuracies, cluster_accuracies = morphs.load.cluster_accuracies()
-    good_recs = morphs.data.accuracies.good_recs(cluster_accuracies)
-
-    for block_path in good_recs:
+    for block_path in morphs.data.accuracies.good_recs():
         print(morphs.data.parse.blockpath_name(block_path))
         good_clusters = morphs.data.accuracies.good_clusters(block_path)
         spikes = morphs.load.ephys_data(
