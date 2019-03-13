@@ -29,14 +29,14 @@ def calculate_pair_df(X, labels, reduced=False):
     pair_df['spect_euclidean_dist'] = (
         pair_df['morph_dim'].str.cat(pair_df['greater_morph_pos'].map(lambda x: '%03d' % (x))).map(spect_reps) -
         pair_df['morph_dim'].str.cat(pair_df['lesser_morph_pos'].map(lambda x: '%03d' % (x))).map(spect_reps)).apply(np.linalg.norm)
-    pair_df['neural_euclidian_dist'] = np.linalg.norm(
+    pair_df['neural_euclidian_dist'] = blocked_norm(
         X[pair_df['greater_index'].values, :] -
-        X[pair_df['lesser_index'].values, :], axis=1)
+        X[pair_df['lesser_index'].values, :])
     if reduced:
         X_red = morphs.data.neurometric.logistic_dim_reduction(X, labels)
-        pair_df['red_neural_euclidian_dist'] = np.linalg.norm(
+        pair_df['red_neural_euclidian_dist'] = blocked_norm(
             X_red[pair_df['greater_index'].values, :] -
-            X_red[pair_df['lesser_index'].values, :], axis=1)
+            X_red[pair_df['lesser_index'].values, :])
 
     for col in ['lesser_index', 'greater_index', 'lesser_dim', 'greater_dim']:
         del pair_df[col]
@@ -45,6 +45,17 @@ def calculate_pair_df(X, labels, reduced=False):
     pair_df['morph_dim'] = pair_df['morph_dim'].astype('category')
 
     return pair_df
+
+
+def blocked_norm(arr, block_size=2000, out=None):
+    if out is None:
+        ret = np.empty(arr.shape[0])
+    else:
+        ret = out
+    for i in range(0, arr.shape[0], block_size):
+        u = min(i + block_size, arr.shape[0])
+        ret[i:u] = np.linalg.norm(arr[i:u], axis=1)
+    return ret
 
 
 def calculate_pop_pair_df(block_path):
