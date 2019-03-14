@@ -89,7 +89,7 @@ def _load(file_loc, gen_func, download_func=None):
                 else:
                     print('generating')
                     gen_func(*args, **kwargs)
-            small_file = filename.stat().st_size < 200 * 1024 ** 2  # 200 Mb
+            small_file = filename.stat().st_size < 75 * 1024 ** 2  # 75 Mb
             memoize = kwargs.pop('memoize', small_file)
             if memoize:
                 if filename in memoized_values:
