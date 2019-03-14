@@ -82,7 +82,7 @@ def calculate_pop_pair_df(block_path):
 
 
 def gen_pop_pair_df(parallel=False, n_jobs=morphs.parallel.N_JOBS):
-    if parallel:
+    if parallel and n_jobs > 1:
         all_pairs = Parallel(n_jobs=n_jobs)(delayed(calculate_pop_pair_df)(block)
                                             for block in morphs.data.accuracies.good_recs())
     else:

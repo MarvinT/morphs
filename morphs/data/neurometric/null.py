@@ -36,7 +36,7 @@ def hold_one_out_neurometric_fit_dist(representations, labels, behavior_subj, ps
     label_df = make_label_df(labels, behavior_subj, psychometric_params)
     behavior_df = make_behavior_df(behavior_subj, psychometric_params)
 
-    if parallel:
+    if parallel and n_jobs > 1:
         all_samples = Parallel(n_jobs=n_jobs)(delayed(_calc_samples)(representations, label_df, behavior_df,
                                                                      idx, shuffle=shuffle) for idx, shuffle in [(i, i != 0) for i in range(shuffle_count + 1)])
     else:

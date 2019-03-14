@@ -49,7 +49,7 @@ def calc_loc(block_path, squared=True):
 
 
 def generate_all_loc(parallel=False, n_jobs=morphs.parallel.N_JOBS):
-    if parallel:
+    if parallel and n_jobs > 1:
         all_locs = Parallel(n_jobs=n_jobs)(delayed(calc_loc)(block_path)
                                            for block_path in morphs.paths.blocks())
     else:

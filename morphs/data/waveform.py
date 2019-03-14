@@ -15,7 +15,7 @@ def calc_waveforms(block_path):
 
 
 def generate_waveforms(parallel=False, n_jobs=morphs.parallel.N_JOBS):
-    if parallel:
+    if parallel and n_jobs > 1:
         waveforms = Parallel(n_jobs=n_jobs)(delayed(calc_waveforms)(block_path)
                                             for block_path in morphs.paths.blocks())
     else:
