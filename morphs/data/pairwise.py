@@ -76,6 +76,8 @@ def gen_pop_pair_df(parallel=False, n_jobs=morphs.parallel.N_JOBS):
         all_pairs = [calculate_pop_pair_df(block)
                      for block in morphs.data.accuracies.good_recs()]
     all_pairs_df = pd.concat(all_pairs, ignore_index=True)
+    all_pairs_df['block_path'] = all_pairs_df['block_path'].astype('category')
+
     morphs.paths.POP_PAIR_PKL.parent.mkdir(parents=True, exist_ok=True)
     all_pairs_df.to_pickle(morphs.paths.POP_PAIR_PKL)
 
