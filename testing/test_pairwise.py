@@ -10,6 +10,7 @@ def test_load_gen_pop_pair_df():
     assert not morphs.paths.POP_PAIR_PKL.exists()
     df = morphs.load.pop_pair_df()
     assert morphs.paths.POP_PAIR_PKL.exists()
+    assert df['block_path'].dtype.name == 'category'
 
 
 def test_blocked_norm():
