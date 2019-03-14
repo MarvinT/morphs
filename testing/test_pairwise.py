@@ -13,5 +13,5 @@ def test_load_gen_pop_pair_df():
 
 
 def test_blocked_norm():
-    a = np.random.rand(1000000, 100)
+    a = np.random.rand(100000, 100)
     assert np.allclose(np.linalg.norm(a, axis=1), morphs.data.pairwise.blocked_norm(a))
