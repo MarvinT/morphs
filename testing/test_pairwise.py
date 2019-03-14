@@ -11,6 +11,7 @@ def test_load_gen_pop_pair_df():
     df = morphs.load.pop_pair_df()
     assert morphs.paths.POP_PAIR_PKL.exists()
     assert df['block_path'].dtype.name == 'category'
+    assert np.all(df['greater_morph_pos'] >= df['lesser_morph_pos'])
 
 
 def test_blocked_norm():
