@@ -4,7 +4,7 @@ python:
   - "3.5"
   - "3.6"
 script:
-  - pytest testing/ --forked --cov=morphs 
+  - pytest testing/ --cov=morphs 
   - pytest notebooks/ --cov=morphs --nbval-lax --current-env --cov-append
 after_success:
   - coveralls
