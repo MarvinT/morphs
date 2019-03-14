@@ -19,6 +19,7 @@ pytest-ordering
 pytest-cov
 python-coveralls
 nbval
+pytest-forked
 
 imageio
 seaborn
