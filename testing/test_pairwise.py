@@ -24,8 +24,8 @@ def test_blocked_diff_norm():
     test_size = 100000
     a = np.random.rand(test_size, 100)
     ind0 = np.random.permutation(test_size)
-    ind1 = ind0[test_size / 2:]
-    ind0 = ind0[:test_size / 2]
+    ind1 = ind0[int(test_size / 2):]
+    ind0 = ind0[:int(test_size / 2)]
     assert np.allclose(
         np.linalg.norm(a[ind0, :] - a[ind1, :], axis=1),
         morphs.data.pairwise.blocked_diff_norm(a, ind0, ind1))
