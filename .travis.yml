@@ -4,7 +4,8 @@ python:
   - "3.5"
   - "3.6"
 script:
-  - pytest --cov=morphs --nbval-lax --current-env
+  - pytest testing/ --cov=morphs 
+  - pytest notebooks/ --cov=morphs --nbval-lax --current-env --cov-append
 after_success:
   - coveralls
 sudo: required

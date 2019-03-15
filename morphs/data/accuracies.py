@@ -90,14 +90,17 @@ def load_cluster_accuracies():
     return accuracies, cluster_accuracies
 
 
-def good_clusters(block_cluster_accuracies, cutoff=CLUSTER_ACCURACY_CUTOFF):
+def good_clusters(block_path, cutoff=CLUSTER_ACCURACY_CUTOFF):
     '''returns a df of clusters that have accuracy > cutoff'''
+    accuracies, cluster_accuracies = morphs.load.cluster_accuracies()
+    block_cluster_accuracies = cluster_accuracies[block_path]
     return block_cluster_accuracies[block_cluster_accuracies.accuracy > cutoff].index.values
 
 
-def good_recs(cluster_accuracies, cutoff=CLUSTER_ACCURACY_CUTOFF):
+def good_recs(cutoff=CLUSTER_ACCURACY_CUTOFF):
     '''returns a list of blocks that have good clusters'''
-    return [block_path for block_path in cluster_accuracies if len(good_clusters(cluster_accuracies[block_path], cutoff=cutoff)) > 0]
+    accuracies, cluster_accuracies = morphs.load.cluster_accuracies()
+    return [block_path for block_path in cluster_accuracies if len(good_clusters(block_path, cutoff=cutoff)) > 0]
 
 
 if __name__ == '__main__':

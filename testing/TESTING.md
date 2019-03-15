@@ -13,6 +13,7 @@
 
 ### order=2
 - generate num_shuffle_pkl(8)
+- generate POP_PAIR_PKL
 
 ### order=3
 - generate ks_df(8)
