@@ -1,11 +1,14 @@
 from __future__ import absolute_import
 from __future__ import print_function
+from __future__ import division
 import morphs
 import pandas as pd
 import itertools
 from joblib import Parallel, delayed
 import click
 from scipy.spatial.distance import euclidean, correlation, cosine, pdist
+import datetime
+import resource
 
 
 def calculate_pair_df(X, labels, reduced=False, del_columns=True):
@@ -116,7 +119,11 @@ def load_pop_pair_df():
 @click.option('--parallel', '-p', is_flag=True, help='whether to parallelize each block to its own process')
 @click.option('--num_jobs', default=morphs.parallel.N_JOBS, help='number of parallel cores to use')
 def _main(parallel, num_jobs):
+    tstart = datetime.datetime.now()
     gen_pop_pair_df(parallel=parallel, n_jobs=num_jobs)
+    print('peak memory usage: %f GB' %
+          (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 / 1024))
+    print('time: %s' % (datetime.datetime.now() - tstart))
 
 
 if __name__ == '__main__':
