@@ -2,7 +2,6 @@ from __future__ import absolute_import
 from __future__ import print_function
 import morphs
 import pandas as pd
-import numpy as np
 import itertools
 from joblib import Parallel, delayed
 import click
@@ -81,29 +80,6 @@ def calculate_pair_df(X, labels, reduced=False, del_columns=True):
     pair_df['morph_dim'] = pair_df['morph_dim'].astype('category')
 
     return pair_df
-
-
-def blocked_norm(arr, block_size=2000, out=None):
-    '''not used anymore... and these should go to utils somewhere...'''
-    if out is None:
-        ret = np.empty(arr.shape[0])
-    else:
-        ret = out
-    for i in range(0, arr.shape[0], block_size):
-        u = min(i + block_size, arr.shape[0])
-        ret[i:u] = np.linalg.norm(arr[i:u], axis=1)
-    return ret
-
-
-def blocked_diff_norm(data, ind0, ind1, block_size=2000, out=None):
-    if out is None:
-        ret = np.empty(len(ind1))
-    else:
-        ret = out
-    for i in range(0, len(ind1), block_size):
-        u = min(i + block_size, len(ind1))
-        ret[i:u] = np.linalg.norm(data[ind0[i:u], :] - data[ind1[i:u], :], axis=1)
-    return ret
 
 
 def calculate_pop_pair_df(block_path):
