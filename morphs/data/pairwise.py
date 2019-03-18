@@ -6,11 +6,10 @@ import numpy as np
 import itertools
 from joblib import Parallel, delayed
 import click
-import scipy as sp
-from scipy.spatial.distance import euclidean, correlation, cosine
+from scipy.spatial.distance import euclidean, correlation, cosine, pdist
 
 
-def calculate_pair_df(X, labels, reduced=False):
+def calculate_pair_df(X, labels, reduced=False, del_columns=True):
     metrics = [
         (euclidean, 'euclidean'),
         (correlation, 'correlation'),
@@ -23,10 +22,41 @@ def calculate_pair_df(X, labels, reduced=False):
     label_df = pd.DataFrame(data={'stim_id': labels})
     morphs.data.parse.stim_id(label_df)
 
+    if reduced:
+        X_red = morphs.data.neurometric.logistic_dim_reduction(
+            X, labels
+        )
+
     df_list = []
     for morph_dim, group in label_df.groupby('morph_dim'):
-        df_list.append(pd.DataFrame.from_records([(morph_dim, i1, i2) for i1, i2 in itertools.combinations(group.index.values, 2)],
-                                                 columns=('morph_dim', 'lesser_index', 'greater_index')))
+        morph_pair_df = pd.DataFrame.from_records(
+            [
+                (morph_dim, i1, i2)
+                for i1, i2 in itertools.combinations(
+                    group.index.values, 2
+                )
+            ],
+            columns=(
+                'morph_dim',
+                'lesser_index',
+                'greater_index',
+            ),
+        )
+        for dist, dist_name in metrics:
+            morph_pair_df[
+                'neural_%s_dist' % (dist_name)
+            ] = pdist(
+                X[group.index.values, :],
+                metric=dist_name
+            )
+            if reduced:
+                morph_pair_df[
+                    'red_neural_%s_dist' % (dist_name)
+                ] = pdist(
+                    X_red[group.index.values, :],
+                    metric=dist_name,
+                )
+        df_list.append(morph_pair_df)
     pair_df = pd.concat(df_list, ignore_index=True)
     morphs.data.parse.morph_dim(pair_df)
 
@@ -45,23 +75,9 @@ def calculate_pair_df(X, labels, reduced=False):
                 group.index, 'spect_%s_dist' % (dist_name)
             ] = dist(lsr, gsr)
 
-    for dist, dist_name in metrics:
-        pair_df['neural_%s_dist' % (dist_name)] = blocked_diff_norm(
-            X,
-            pair_df['greater_index'].values,
-            pair_df['lesser_index'].values,
-            metric=dist_name)
-    if reduced:
-        X_red = morphs.data.neurometric.logistic_dim_reduction(X, labels)
-        for dist, dist_name in metrics:
-            pair_df['red_neural_%s_dist' % (dist_name)] = blocked_diff_norm(
-                X_red,
-                pair_df['greater_index'].values,
-                pair_df['lesser_index'].values,
-                metric=dist_name)
-
-    for col in ['lesser_index', 'greater_index', 'lesser_dim', 'greater_dim']:
-        del pair_df[col]
+    if del_columns:
+        for col in ['lesser_index', 'greater_index', 'lesser_dim', 'greater_dim']:
+            del pair_df[col]
     pair_df['morph_dim'] = pair_df['morph_dim'].astype('category')
 
     return pair_df
@@ -79,15 +95,14 @@ def blocked_norm(arr, block_size=2000, out=None):
     return ret
 
 
-def blocked_diff_norm(data, ind0, ind1, metric='euclidean', block_size=2000, out=None):
+def blocked_diff_norm(data, ind0, ind1, block_size=2000, out=None):
     if out is None:
         ret = np.empty(len(ind1))
     else:
         ret = out
     for i in range(0, len(ind1), block_size):
         u = min(i + block_size, len(ind1))
-        # ret[i:u] = np.linalg.norm(data[ind0[i:u], :] - data[ind1[i:u], :], axis=1)
-        ret[i:u] = sp.spatial.distance.cdist(data[ind0[i:u], :], data[ind1[i:u], :], metric=metric)
+        ret[i:u] = np.linalg.norm(data[ind0[i:u], :] - data[ind1[i:u], :], axis=1)
     return ret
 
 
