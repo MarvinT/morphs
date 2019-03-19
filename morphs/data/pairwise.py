@@ -18,7 +18,7 @@ def calculate_pair_df(X, labels, reduced=False, del_columns=True):
         (cosine, 'cosine'),
     ]
     spects = morphs.load.morph_spectrograms()
-    spect_reps = {'%s%s%03d' % (l, g, i): spects[l][g][i][:, :, 0]
+    spect_reps = {'%s%s%03d' % (l, g, i): spects[l][g][i][:, :, 0].astype(float)
                   for l in spects for g in spects[l] for i in spects[l][g]}
 
     label_df = pd.DataFrame(data={'stim_id': labels})
