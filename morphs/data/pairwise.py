@@ -1,25 +1,64 @@
 from __future__ import absolute_import
 from __future__ import print_function
+from __future__ import division
 import morphs
 import pandas as pd
-import numpy as np
 import itertools
 from joblib import Parallel, delayed
 import click
+from scipy.spatial.distance import euclidean, correlation, cosine, pdist
+import datetime
+import resource
 
 
-def calculate_pair_df(X, labels, reduced=False):
+def calculate_pair_df(X, labels, reduced=False, del_columns=True):
+    metrics = [
+        (euclidean, 'euclidean'),
+        (correlation, 'correlation'),
+        (cosine, 'cosine'),
+    ]
     spects = morphs.load.morph_spectrograms()
-    spect_reps = {'%s%s%03d' % (l, g, i): spects[l][g][i][:, :, 0]
+    spect_reps = {'%s%s%03d' % (l, g, i): spects[l][g][i][:, :, 0].astype(float)
                   for l in spects for g in spects[l] for i in spects[l][g]}
 
     label_df = pd.DataFrame(data={'stim_id': labels})
     morphs.data.parse.stim_id(label_df)
 
+    if reduced:
+        X_red = morphs.data.neurometric.logistic_dim_reduction(
+            X, labels
+        )
+
     df_list = []
     for morph_dim, group in label_df.groupby('morph_dim'):
-        df_list.append(pd.DataFrame.from_records([(morph_dim, i1, i2) for i1, i2 in itertools.combinations(group.index.values, 2)],
-                                                 columns=('morph_dim', 'lesser_index', 'greater_index')))
+        morph_pair_df = pd.DataFrame.from_records(
+            [
+                (morph_dim, i1, i2)
+                for i1, i2 in itertools.combinations(
+                    group.index.values, 2
+                )
+            ],
+            columns=(
+                'morph_dim',
+                'lesser_index',
+                'greater_index',
+            ),
+        )
+        for dist, dist_name in metrics:
+            morph_pair_df[
+                'neural_%s_dist' % (dist_name)
+            ] = pdist(
+                X[group.index.values, :],
+                metric=dist_name
+            )
+            if reduced:
+                morph_pair_df[
+                    'red_neural_%s_dist' % (dist_name)
+                ] = pdist(
+                    X_red[group.index.values, :],
+                    metric=dist_name,
+                )
+        df_list.append(morph_pair_df)
     pair_df = pd.concat(df_list, ignore_index=True)
     morphs.data.parse.morph_dim(pair_df)
 
@@ -27,47 +66,23 @@ def calculate_pair_df(X, labels, reduced=False):
         pair_df[index + '_morph_pos'] = label_df.loc[pair_df[index + '_index'].values, 'morph_pos'].values
 
     pair_df['morph_dist'] = pair_df['greater_morph_pos'] - pair_df['lesser_morph_pos']
-    pair_df['spect_euclidean_dist'] = (
-        pair_df['morph_dim'].str.cat(pair_df['greater_morph_pos'].map(lambda x: '%03d' % (x))).map(spect_reps) -
-        pair_df['morph_dim'].str.cat(pair_df['lesser_morph_pos'].map(lambda x: '%03d' % (x))).map(spect_reps)).apply(np.linalg.norm)
-    pair_df['neural_euclidian_dist'] = blocked_diff_norm(
-        X,
-        pair_df['greater_index'].values,
-        pair_df['lesser_index'].values)
-    if reduced:
-        pair_df['red_neural_euclidian_dist'] = blocked_diff_norm(
-            morphs.data.neurometric.logistic_dim_reduction(X, labels),
-            pair_df['greater_index'].values,
-            pair_df['lesser_index'].values)
 
-    for col in ['lesser_index', 'greater_index', 'lesser_dim', 'greater_dim']:
-        del pair_df[col]
+    for (morph_dim, lmp, gmp), group in pair_df.groupby(
+        ['morph_dim', 'lesser_morph_pos', 'greater_morph_pos']
+    ):
+        lsr = spect_reps['%s%03d' % (morph_dim, lmp)].reshape(-1)
+        gsr = spect_reps['%s%03d' % (morph_dim, gmp)].reshape(-1)
+        for dist, dist_name in metrics:
+            pair_df.loc[
+                group.index, 'spect_%s_dist' % (dist_name)
+            ] = dist(lsr, gsr)
+
+    if del_columns:
+        for col in ['lesser_index', 'greater_index', 'lesser_dim', 'greater_dim']:
+            del pair_df[col]
     pair_df['morph_dim'] = pair_df['morph_dim'].astype('category')
 
     return pair_df
-
-
-def blocked_norm(arr, block_size=2000, out=None):
-    '''not used anymore... and these should go to utils somewhere...'''
-    if out is None:
-        ret = np.empty(arr.shape[0])
-    else:
-        ret = out
-    for i in range(0, arr.shape[0], block_size):
-        u = min(i + block_size, arr.shape[0])
-        ret[i:u] = np.linalg.norm(arr[i:u], axis=1)
-    return ret
-
-
-def blocked_diff_norm(data, ind0, ind1, block_size=2000, out=None):
-    if out is None:
-        ret = np.empty(len(ind1))
-    else:
-        ret = out
-    for i in range(0, len(ind1), block_size):
-        u = min(i + block_size, len(ind1))
-        ret[i:u] = np.linalg.norm(data[ind0[i:u], :] - data[ind1[i:u], :], axis=1)
-    return ret
 
 
 def calculate_pop_pair_df(block_path):
@@ -104,7 +119,11 @@ def load_pop_pair_df():
 @click.option('--parallel', '-p', is_flag=True, help='whether to parallelize each block to its own process')
 @click.option('--num_jobs', default=morphs.parallel.N_JOBS, help='number of parallel cores to use')
 def _main(parallel, num_jobs):
+    tstart = datetime.datetime.now()
     gen_pop_pair_df(parallel=parallel, n_jobs=num_jobs)
+    print('peak memory usage: %f GB' %
+          (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 / 1024))
+    print('time: %s' % (datetime.datetime.now() - tstart))
 
 
 if __name__ == '__main__':
