@@ -83,8 +83,7 @@ def gen_cluster_accuracies():
 @morphs.utils.load._load(morphs.paths.ACCURACIES_PKL, gen_cluster_accuracies)
 def load_cluster_accuracies():
     '''Loads pickle file containing the accuracy for each cluster in each recording block'''
-    with open(morphs.paths.ACCURACIES_PKL.as_posix(), 'rb') as f:
-        accuracies = pickle.load(f)
+    accuracies = morphs.utils.load._pickle(morphs.paths.ACCURACIES_PKL)
     cluster_accuracies = {block_path: accuracies[block_path].groupby(
         'cluster').agg(np.mean).sort_values('accuracy') for block_path in accuracies}
     return accuracies, cluster_accuracies

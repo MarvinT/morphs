@@ -27,8 +27,7 @@ def generate_single_unit_templates():
 
 @morphs.utils.load._load(morphs.paths.SINGLE_UNIT_TEMPLATES_PKL, generate_single_unit_templates)
 def load_single_unit_templates():
-    with open(morphs.paths.SINGLE_UNIT_TEMPLATES_PKL.as_posix(), 'rb') as f:
-        return pickle.load(f)
+    return morphs.utils.load._pickle(morphs.paths.SINGLE_UNIT_TEMPLATES_PKL)
 
 
 if __name__ == '__main__':
