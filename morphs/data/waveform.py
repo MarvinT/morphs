@@ -32,8 +32,7 @@ def load_waveforms():
     waveform_dict = morphs.load.waveforms()
     waveforms, cluster_map = waveform_dict[block_path]
     '''
-    with open(morphs.paths.WAVEFORMS_PKL.as_posix(), 'rb') as f:
-        return pickle.load(f)
+    return morphs.utils.load._pickle(morphs.paths.WAVEFORMS_PKL)
 
 
 if __name__ == '__main__':

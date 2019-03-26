@@ -71,7 +71,10 @@ def behav_data_inverted(df):
 def bird_id(block_path):
     '''extracts bird id from block_path'''
     name = blockpath_name(block_path)
-    return name.split('__')[-1].split('_')[0]
+    bird_id = name.split('__')[-1].split('_')[0]
+    if bird_id == 'st1107':
+        bird_id = 'B1107'
+    return bird_id
 
 
 def blockpath_name(block_path):

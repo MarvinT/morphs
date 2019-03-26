@@ -34,8 +34,7 @@ def generate_psychometric_params():
 @morphs.utils.load._load(morphs.paths.PSYCHOMETRIC_PKL, generate_psychometric_params)
 def load_psychometric_params():
     '''loads pickle file containing the fit psychometric parameters for each bird'''
-    with open(morphs.paths.PSYCHOMETRIC_PKL.as_posix(), 'rb') as f:
-        return pickle.load(f)
+    return morphs.utils.load._pickle(morphs.paths.PSYCHOMETRIC_PKL)
 
 
 if __name__ == '__main__':

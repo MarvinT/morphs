@@ -16,10 +16,10 @@ def _pickle(pickle_file):
         path to pickle file to load
     '''
     try:
-        with open(pickle_file, 'rb') as f:
+        with open(pickle_file.as_posix(), 'rb') as f:
             return pickle.load(f)
     except UnicodeDecodeError:
-        with open(pickle_file, 'rb') as f:
+        with open(pickle_file.as_posix(), 'rb') as f:
             return pickle.load(f, encoding='latin1')
 
 
