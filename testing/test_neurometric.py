@@ -19,11 +19,14 @@ def test_combine_neuro_null_all():
     num_shuffles = 8
     all_samples_df = morphs.load.neurometric_null_all(num_shuffles)
 
-    nshuffle_dir = morphs.paths.num_shuffle_dir(num_shuffles).glob('*.pkl')
-    all_samples_df2 = pd.concat([morphs.utils.load._pickle(pkl_path)
-                                 for pkl_path in nshuffle_dir])
+    nshuffle_dir = morphs.paths.num_shuffle_dir(num_shuffles).glob("*.pkl")
+    all_samples_df2 = pd.concat(
+        [morphs.utils.load._pickle(pkl_path) for pkl_path in nshuffle_dir]
+    )
     assert len(all_samples_df) == len(all_samples_df2)
-    assert np.all(np.sort(all_samples_df['errors']) == np.sort(all_samples_df2['errors']))
+    assert np.all(
+        np.sort(all_samples_df["errors"]) == np.sort(all_samples_df2["errors"])
+    )
 
 
 @pytest.mark.run(order=3)
@@ -37,4 +40,4 @@ def test_load_generate_load_ks_df():
 @pytest.mark.run(order=-1)
 def test_neurometric_main():
     runner = CliRunner()
-    result = runner.invoke(morphs.data.neurometric.null._main, ['--num_shuffles=8'])
+    result = runner.invoke(morphs.data.neurometric.null._main, ["--num_shuffles=8"])

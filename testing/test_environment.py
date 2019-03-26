@@ -10,6 +10,7 @@ REQUIRED_PYTHON = "python"
 def test_import():
     import morphs
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     test_main()
     test_import()
