@@ -1,4 +1,4 @@
-'''Collection of loading helper functions'''
+"""Collection of loading helper functions"""
 from __future__ import absolute_import
 from __future__ import print_function
 import pickle
@@ -7,24 +7,24 @@ from google_drive_downloader import GoogleDriveDownloader as gdd
 
 
 def _pickle(pickle_file):
-    '''
+    """
     Loads a pickle file that works in both py 2 and 3
 
     Parameters
     ------
     pickle_file : str
         path to pickle file to load
-    '''
+    """
     try:
-        with open(pickle_file.as_posix(), 'rb') as f:
+        with open(pickle_file.as_posix(), "rb") as f:
             return pickle.load(f)
     except UnicodeDecodeError:
-        with open(pickle_file.as_posix(), 'rb') as f:
-            return pickle.load(f, encoding='latin1')
+        with open(pickle_file.as_posix(), "rb") as f:
+            return pickle.load(f, encoding="latin1")
 
 
 def _download(dest_file, file_id):
-    '''
+    """
     returns a function that downloads file from Google Drive
 
     Parameters
@@ -33,15 +33,18 @@ def _download(dest_file, file_id):
         destination to save the file
     file_id : str
         file_id for Google Drive file
-    '''
+    """
+
     def download():
-        gdd.download_file_from_google_drive(file_id=file_id,
-                                            dest_path=dest_file.as_posix())
+        gdd.download_file_from_google_drive(
+            file_id=file_id, dest_path=dest_file.as_posix()
+        )
+
     return download
 
 
 def _load(file_loc, gen_func, download_func=None):
-    '''
+    """
     Creates a decorator that automatically downloads or generates processed data
     The wrapped function should just load and return the data
 
@@ -68,13 +71,14 @@ def _load(file_loc, gen_func, download_func=None):
             defaults to iff cached_file.size < 1 Gb
             whether to store loaded data in memory 
             in case you are loading this file/data again
-    '''
+    """
+
     def decorator_load(func):
         memoized_values = {}
 
         @functools.wraps(func)
         def wrapper_load(*args, **kwargs):
-            prefer_download = kwargs.pop('prefer_download', True)
+            prefer_download = kwargs.pop("prefer_download", True)
             try:
                 exists = file_loc.exists()
                 filename = file_loc
@@ -84,13 +88,15 @@ def _load(file_loc, gen_func, download_func=None):
             if not exists:
                 filename.parent.mkdir(parents=True, exist_ok=True)
                 if prefer_download and download_func:
-                    print('downloading, alternatively set prefer_download=False to generate the data yourself')
+                    print(
+                        "downloading, alternatively set prefer_download=False to generate the data yourself"
+                    )
                     download_func(*args, **kwargs)
                 else:
-                    print('generating')
+                    print("generating")
                     gen_func(*args, **kwargs)
             small_file = filename.stat().st_size < 75 * 1024 ** 2  # 75 Mb
-            memoize = kwargs.pop('memoize', small_file)
+            memoize = kwargs.pop("memoize", small_file)
             if memoize:
                 if filename in memoized_values:
                     return memoized_values[filename]
@@ -99,5 +105,7 @@ def _load(file_loc, gen_func, download_func=None):
                     return memoized_values[filename]
             else:
                 return func(*args, **kwargs)
+
         return wrapper_load
+
     return decorator_load

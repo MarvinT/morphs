@@ -21,8 +21,9 @@ def test_collapse_endpoints():
     assert morphs.paths.ACCURACIES_PKL.exists()
     accuracies, cluster_accuracies = morphs.data.accuracies.load_cluster_accuracies()
     cluster = cluster_accuracies[block_path].index[-1]
-    spikes = morphs.load.ephys_data(block_path, good_clusters=[cluster],
-                                    collapse_endpoints=True)
+    spikes = morphs.load.ephys_data(
+        block_path, good_clusters=[cluster], collapse_endpoints=True
+    )
     assert len(spikes) > 0
 
 
@@ -33,6 +34,7 @@ def test_shuffle_endpoints():
     assert morphs.paths.ACCURACIES_PKL.exists()
     accuracies, cluster_accuracies = morphs.data.accuracies.load_cluster_accuracies()
     cluster = cluster_accuracies[block_path].index[-1]
-    spikes = morphs.load.ephys_data(block_path, good_clusters=[cluster],
-                                    shuffle_endpoints=True)
+    spikes = morphs.load.ephys_data(
+        block_path, good_clusters=[cluster], shuffle_endpoints=True
+    )
     assert len(spikes) > 0
