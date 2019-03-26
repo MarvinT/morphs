@@ -20,7 +20,7 @@ def test_combine_neuro_null_all():
     all_samples_df = morphs.load.neurometric_null_all(num_shuffles)
 
     nshuffle_dir = morphs.paths.num_shuffle_dir(num_shuffles).glob('*.pkl')
-    all_samples_df2 = pd.concat([morphs.utils.load._pickle(pkl_path.as_posix())
+    all_samples_df2 = pd.concat([morphs.utils.load._pickle(pkl_path)
                                  for pkl_path in nshuffle_dir])
     assert len(all_samples_df) == len(all_samples_df2)
     assert np.all(np.sort(all_samples_df['errors']) == np.sort(all_samples_df2['errors']))
