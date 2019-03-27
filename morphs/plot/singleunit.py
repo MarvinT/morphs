@@ -48,7 +48,7 @@ def _morph_viz(tau=0.01, stim_length=0.4, n_dim=50, smooth=False, **kwargs):
             .apply(lambda x: morphs.spikes.filtered_response(x.values, tau=tau)(t))
             .mean()
         )
-        points[i * n_dim : (i + 1) * n_dim, :] = np.array(
+        points[i * n_dim: (i + 1) * n_dim, :] = np.array(
             list(zip(t, itertools.repeat(morph_pos), temp))
         )
 
@@ -99,12 +99,6 @@ def _morph_xcor_viz(tau=0.01, stim_length=0.4, n_dim=50, **kwargs):
             .mean()
         )
         morph_pos_list[i] = morph_pos
-    x, y = np.meshgrid(morph_pos_list, morph_pos_list)
-    z = np.corrcoef(grid)
-    x, y, z = x.reshape(-1), y.reshape(-1), z.reshape(-1)
-    grid_x, grid_y = np.mgrid[1:129, 1:129]
-    interpolated_grid = sp.interpolate.griddata(
-        (x, y), z, (grid_x, grid_y), method="nearest"
-    )
+    xyz = morphs.data.xcor.corrcoef_to_xyz_sf(grid, morph_pos_list)
     ax = plt.gca()
-    ax.imshow(interpolated_grid)
+    ax.imshow(morphs.data.xcor.interpolate_grid(xyz))
