@@ -1,11 +1,11 @@
 from __future__ import absolute_import
 from __future__ import division
 import numpy as np
-import scipy as sp
 import seaborn as sns
 import matplotlib.pyplot as plt
 import itertools
 import morphs
+from morphs.data import xcor
 
 
 def morph_viz(
@@ -99,6 +99,6 @@ def _morph_xcor_viz(tau=0.01, stim_length=0.4, n_dim=50, **kwargs):
             .mean()
         )
         morph_pos_list[i] = morph_pos
-    xyz = morphs.data.xcor.corrcoef_to_xyz_sf(grid, morph_pos_list)
+    xyz = xcor.corrcoef_to_xyz_sf(grid, morph_pos_list)
     ax = plt.gca()
-    ax.imshow(morphs.data.xcor.interpolate_grid(xyz))
+    ax.imshow(xcor.interpolate_grid(xyz))
