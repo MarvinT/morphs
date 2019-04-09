@@ -9,10 +9,11 @@ xyz_vector_form: xyz
   may include non-zero "diagonal" elements
 xyz_square_form: xyz
   [n*n, 3]
-sp_vector_form: scipy vector_form
-  [n], [n*(n-1)]
 sp_square_form:
   [n], [n, n]
+sp_vector_form: scipy vector_form
+  [n], [n*(n-1)]
+  sp_square_form[0], sp.spatial.distance.squareform(sp_square_form[1])
 """
 
 
@@ -50,3 +51,14 @@ def interpolate_grid(xyz):
     return sp.interpolate.griddata(
         xyz[:, :2], xyz[:, 2], (grid_x, grid_y), method="nearest"
     )
+
+
+def xyz_to_sp(xyz):
+    "xyz_square_form to sp_square_form"
+    morph_pos_list = np.unique(xyz[:, 0]).astype(int)
+    morph_pos_map = {morph_pos: i for i, morph_pos in enumerate(morph_pos_list)}
+    grid = np.zeros((len(morph_pos_list), len(morph_pos_list)))
+    for i in range(xyz.shape[0]):
+        x, y, z = xyz[i, :]
+        grid[morph_pos_map[int(x)], morph_pos_map[int(y)]] = z
+    return morph_pos_list, grid
