@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 import numpy as np
+import morphs
 from morphs.data.derivative import f_poly, p0_poly, fit_derivative
 
 
@@ -21,5 +22,6 @@ def test_fit_derivative():
         for morph_dim, morph_dim_group in block_group.groupby("morph_dim"):
             for order in range(8):
                 popt, pcov = fit_derivative(morph_dim_group, p0=p0_poly(order))
+                assert len(popt) == order + 1
             break
         break
