@@ -48,7 +48,7 @@ def _morph_viz(tau=0.01, stim_length=0.4, n_dim=50, smooth=False, **kwargs):
             .apply(lambda x: morphs.spikes.filtered_response(x.values, tau=tau)(t))
             .mean()
         )
-        points[i * n_dim: (i + 1) * n_dim, :] = np.array(
+        points[i * n_dim : (i + 1) * n_dim, :] = np.array(
             list(zip(t, itertools.repeat(morph_pos), temp))
         )
 

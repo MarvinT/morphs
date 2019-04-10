@@ -5,9 +5,9 @@ from morphs.data.derivative import f_poly, p0_poly, fit_derivative
 
 def test_f_poly():
     x = np.linspace(1, 128)
-    assert f_poly(x, [-5, 0, -.5, 1]).shape == x.shape
+    assert f_poly(x, [-5, 0, -0.5, 1]).shape == x.shape
     x.reshape((-1, 1))
-    assert f_poly(x, [-5, 0, -.5, 1]).shape == x.shape
+    assert f_poly(x, [-5, 0, -0.5, 1]).shape == x.shape
     x = np.array([1, 128])
     temp = f_poly(x, [0, 1])
     assert temp[0] == np.exp(-1), "centering not working"

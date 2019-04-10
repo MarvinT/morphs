@@ -20,17 +20,25 @@ def p0_poly(order, p_opt):
 
 
 def integrate_intervals(p, sampled_points, f=f_poly):
-    return np.array([sp.integrate.quad(f, a, b, args=(p,))[0] for a, b in zip(sampled_points[:-1], sampled_points[1:])])
+    return np.array(
+        [
+            sp.integrate.quad(f, a, b, args=(p,))[0]
+            for a, b in zip(sampled_points[:-1], sampled_points[1:])
+        ]
+    )
 
 
 def create_curve_fit_f(sampled_points, f=f_poly):
     def curve_fit_f(contains_interval, *p):
         interval_vals = integrate_intervals(p, sampled_points, f=f)
         return contains_interval.dot(interval_vals)
+
     return curve_fit_f
 
 
-def fit_derivative(group, p0, y_label="red_neural_cosine_dist", f=f_poly, bounds=(-np.inf, np.inf)):
+def fit_derivative(
+    group, p0, y_label="red_neural_cosine_dist", f=f_poly, bounds=(-np.inf, np.inf)
+):
     y = group[y_label].values
     sampled_points = group["lesser_morph_pos"].unique()
     assert np.all(np.diff(sampled_points) >= 0), "sampled points not sorted"
@@ -43,6 +51,8 @@ def fit_derivative(group, p0, y_label="red_neural_cosine_dist", f=f_poly, bounds
 
     curve_fit_f = create_curve_fit_f(sampled_points, f=f)
     try:
-        return sp.optimize.curve_fit(curve_fit_f, contains_interval, y, p0=p0, bounds=bounds)
+        return sp.optimize.curve_fit(
+            curve_fit_f, contains_interval, y, p0=p0, bounds=bounds
+        )
     except RuntimeError:
         return np.nan * p0, None
