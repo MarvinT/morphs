@@ -97,7 +97,7 @@ def gen_derivative_dict(parallel=False, n_jobs=morphs.parallel.N_JOBS):
         ]
 
     deriv_dict = {block: {} for block in pair_df["block_path"].unique()}
-    for block_path, morph_dim, dd in all_dds:
+    for dd, block_path, morph_dim in all_dds:
         deriv_dict[block_path][morph_dim] = dd
 
     morphs.paths.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
