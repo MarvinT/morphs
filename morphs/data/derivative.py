@@ -1,7 +1,14 @@
 from __future__ import absolute_import
 from __future__ import division
+from __future__ import print_function
 import numpy as np
 import scipy as sp
+import morphs
+import pickle
+from joblib import Parallel, delayed
+import click
+import datetime
+import resource
 
 
 def f_poly(x, p, zero_center=True):
@@ -57,3 +64,71 @@ def fit_derivative(
         )
     except RuntimeError:
         return np.nan * p0, None
+
+
+def fit_all_derivatives(group, idxs=range(7), p0_func=p0_poly, **kwargs):
+    deriv_dict = {}
+    popt = np.array([])
+    for i in idxs:
+        p0, bounds = p0_func(i, popt)
+        popt, pcov = fit_derivative(group, p0=p0, bounds=bounds, **kwargs)
+        deriv_dict[i] = popt
+    return deriv_dict
+
+
+def _par_fad(group, block_path, morph_dim, **kwargs):
+    """a wrapper for parallelization of fit_all_derivatives"""
+    return fit_all_derivatives(group, **kwargs), block_path, morph_dim
+
+
+def gen_derivative_dict(parallel=False, n_jobs=morphs.parallel.N_JOBS):
+    pair_df = morphs.load.pop_pair_df()
+    morphs.data.parse.morph_dim(pair_df)
+
+    if parallel and n_jobs > 1:
+        all_dds = Parallel(n_jobs=n_jobs)(
+            delayed(_par_fad)(group, block_path, morph_dim)
+            for (block_path, morph_dim), group in pair_df.groupby(["block_path", "morph_dim"])
+        )
+    else:
+        all_dds = [
+            _par_fad(group, block_path, morph_dim)
+            for (block_path, morph_dim), group in pair_df.groupby(["block_path", "morph_dim"])
+        ]
+
+    deriv_dict = {block: {} for block in pair_df["block_path"].unique()}
+    for block_path, morph_dim, dd in all_dds:
+        deriv_dict[block_path][morph_dim] = dd
+
+    morphs.paths.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+    with open(morphs.paths.DERIVATIVE_PKL.as_posix(), "wb") as f:
+        pickle.dump(accuracies, f)
+
+
+@morphs.utils.load._load(morphs.paths.DERIVATIVE_PKL, gen_derivative_dict)
+def load_derivative_dict():
+    return morphs.utils.load._pickle(morphs.paths.DERIVATIVE_PKL.as_posix())
+
+
+@click.command()
+@click.option(
+    "--parallel",
+    "-p",
+    is_flag=True,
+    help="whether to parallelize each morph_dim to its own process",
+)
+@click.option(
+    "--num_jobs", default=morphs.parallel.N_JOBS, help="number of parallel cores to use"
+)
+def _main(parallel, num_jobs):
+    tstart = datetime.datetime.now()
+    gen_derivative_dict(parallel=parallel, n_jobs=num_jobs)
+    print(
+        "peak memory usage: %f GB"
+        % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 / 1024)
+    )
+    print("time: %s" % (datetime.datetime.now() - tstart))
+
+
+if __name__ == "__main__":
+    _main()
