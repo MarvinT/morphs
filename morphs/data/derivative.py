@@ -48,6 +48,7 @@ def create_curve_fit_f(sampled_points, f=f_poly):
 def fit_derivative(
     group, p0, y_label="red_neural_cosine_dist", f=f_poly, bounds=(-np.inf, np.inf)
 ):
+    group = group.dropna(subset=[y_label])
     y = group[y_label].values
     sampled_points = group["lesser_morph_pos"].unique()
     assert np.all(np.diff(sampled_points) >= 0), "sampled points not sorted"
