@@ -108,7 +108,7 @@ def gen_derivative_dict(parallel=True, n_jobs=morphs.parallel.N_JOBS):
 
 @morphs.utils.load._load(morphs.paths.DERIVATIVE_PKL, gen_derivative_dict)
 def load_derivative_dict():
-    return morphs.utils.load._pickle(morphs.paths.DERIVATIVE_PKL.as_posix())
+    return morphs.utils.load._pickle(morphs.paths.DERIVATIVE_PKL)
 
 
 @click.command()
