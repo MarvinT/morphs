@@ -2,7 +2,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 import numpy as np
-import scipy as sp
+from scipy.integrate import quad
+from scipy.optimize import curve_fit
 import morphs
 import pickle
 from joblib import Parallel, delayed
@@ -30,7 +31,7 @@ def p0_poly(order, *args):
 def integrate_intervals(p, sampled_points, f=f_poly):
     return np.array(
         [
-            sp.integrate.quad(f, a, b, args=(p,))[0]
+            quad(f, a, b, args=(p,))[0]
             for a, b in zip(sampled_points[:-1], sampled_points[1:])
         ]
     )
@@ -59,7 +60,7 @@ def fit_derivative(
 
     curve_fit_f = create_curve_fit_f(sampled_points, f=f)
     try:
-        return sp.optimize.curve_fit(
+        return curve_fit(
             curve_fit_f, contains_interval, y, p0=p0, bounds=bounds
         )
     except RuntimeError:
