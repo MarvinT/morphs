@@ -10,4 +10,5 @@ from morphs.data.spectrogram import load_morph_spectrograms as morph_spectrogram
 from morphs.data.singleunit import load_single_unit_templates as single_unit_templates
 from morphs.data.waveform import load_waveforms as waveforms
 from morphs.data.pairwise import load_pop_pair_df as pop_pair_df
+from morphs.data.derivative import load_derivative_dict as derivative_dict
 from morphs.load.ephys import ephys_data
