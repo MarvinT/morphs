@@ -23,7 +23,7 @@ def p0_poly(order, *args):
     bounds = (-np.inf, np.inf)
     if len(args) > 0:
         p_opt = args[0]
-        if len(p_opt) + 1 == order:
+        if np.all(np.isfinite(p_opt)) and len(p_opt) + 1 == order:
             return np.append(p_opt, [1]), bounds
     return np.ones(order + 1), bounds
 
@@ -103,7 +103,7 @@ def gen_derivative_dict(parallel=True, n_jobs=morphs.parallel.N_JOBS):
 
     morphs.paths.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     with open(morphs.paths.DERIVATIVE_PKL.as_posix(), "wb") as f:
-        pickle.dump(accuracies, f)
+        pickle.dump(deriv_dict, f)
 
 
 @morphs.utils.load._load(morphs.paths.DERIVATIVE_PKL, gen_derivative_dict)
