@@ -21,7 +21,7 @@ def test_fit_derivative():
     for i, (block_path, block_group) in enumerate(pair_df.groupby("block_path")):
         for morph_dim, morph_dim_group in block_group.groupby("morph_dim"):
             for order in range(8):
-                popt, pcov = fit_derivative(morph_dim_group, p0=p0_poly(order, []))
+                popt, pcov = fit_derivative(morph_dim_group, p0=p0_poly(order))
                 assert len(popt) == order + 1
             break
         break

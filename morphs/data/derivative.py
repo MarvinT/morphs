@@ -11,12 +11,13 @@ def f_poly(x, p, zero_center=True):
     return np.exp(np.sum([p_i * x ** i for i, p_i in enumerate(p)], axis=0))
 
 
-def p0_poly(order, p_opt):
+def p0_poly(order, *args):
     bounds = (-np.inf, np.inf)
-    if len(p_opt) + 1 == order:
-        return np.append(p_opt, [1]), bounds
-    else:
-        return np.ones(order + 1), bounds
+    if len(args) > 0:
+        p_opt = args[0]
+        if len(p_opt) + 1 == order:
+            return np.append(p_opt, [1]), bounds
+    return np.ones(order + 1), bounds
 
 
 def integrate_intervals(p, sampled_points, f=f_poly):
