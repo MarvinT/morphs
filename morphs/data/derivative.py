@@ -81,7 +81,7 @@ def _par_fad(group, block_path, morph_dim, **kwargs):
     return fit_all_derivatives(group, **kwargs), block_path, morph_dim
 
 
-def gen_derivative_dict(parallel=False, n_jobs=morphs.parallel.N_JOBS):
+def gen_derivative_dict(parallel=True, n_jobs=morphs.parallel.N_JOBS):
     pair_df = morphs.load.pop_pair_df()
     morphs.data.parse.morph_dim(pair_df)
 
