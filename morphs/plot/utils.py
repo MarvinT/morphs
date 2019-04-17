@@ -71,7 +71,7 @@ def morph_grid(
     return g
 
 
-def boundary(ax, morph_dim):
+def boundary(ax, morph_dim, color_dict=morphs.subj.BEHAVE_COLOR_MAP):
     """
     plots behavioral boundaries as vertical lines on provided ax
     """
@@ -80,6 +80,6 @@ def boundary(ax, morph_dim):
         if morph_dim in psychometric_params[bsubj]:
             ax.axvline(
                 psychometric_params[bsubj][morph_dim][3],
-                color=morphs.subj.BEHAVE_COLOR_MAP[bsubj],
+                color=color_dict[bsubj],
                 label=bsubj,
             )
