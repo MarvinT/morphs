@@ -1,40 +1,28 @@
 from __future__ import absolute_import
 from __future__ import division
 import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
 import itertools
 import morphs
 from morphs.data import xcor
+from morphs.plot import morph_grid
 
 
-def morph_viz(
-    spikes,
-    tau=0.01,
-    stim_length=0.4,
-    n_dim=50,
-    smooth=False,
-    title="",
-    row_order="abcdef",
-    col_order="cdefgh",
-):
-    g = sns.FacetGrid(
+def morph_viz(spikes, tau=0.01, stim_length=0.4, n_dim=50, smooth=False, **kwargs):
+    g = morph_grid(
         spikes,
-        col="greater_dim",
-        row="lesser_dim",
-        row_order=row_order,
-        col_order=col_order,
+        _morph_viz,
+        "Stimulus Duration (s)",
+        map_kwargs={
+            "tau": tau,
+            "stim_length": stim_length,
+            "n_dim": n_dim,
+            "smooth": smooth,
+        },
+        **kwargs
     )
-    g.map_dataframe(
-        _morph_viz, tau=tau, stim_length=stim_length, n_dim=n_dim, smooth=smooth
-    )
-    g.set_titles("{row_name}     to     {col_name}")
-    g.set_axis_labels("Morph Position", "Stimulus Duration (s)")
-    if title:
-        plt.subplots_adjust(top=0.95)
-        g.fig.suptitle(title)
-    g.despine(top=True, right=True, left=True, bottom=True)
-    g.set(xticks=[], yticks=[0.0, stim_length / 2, stim_length])
+    g.set(yticks=[0.0, stim_length / 2, stim_length])
+    return g
 
 
 def _morph_viz(tau=0.01, stim_length=0.4, n_dim=50, smooth=False, **kwargs):
@@ -60,30 +48,16 @@ def _morph_viz(tau=0.01, stim_length=0.4, n_dim=50, smooth=False, **kwargs):
         ax.tripcolor(y, x, z)
 
 
-def morph_xcor_viz(
-    spikes,
-    tau=0.01,
-    stim_length=0.4,
-    n_dim=50,
-    title="",
-    row_order="abcdef",
-    col_order="cdefgh",
-):
-    g = sns.FacetGrid(
+def morph_xcor_viz(spikes, tau=0.01, stim_length=0.4, n_dim=50, **kwargs):
+    g = morph_grid(
         spikes,
-        col="greater_dim",
-        row="lesser_dim",
-        row_order=row_order,
-        col_order=col_order,
+        _morph_xcor_viz,
+        "Morph Position",
+        map_kwargs={"tau": tau, "stim_length": stim_length, "n_dim": n_dim},
+        **kwargs
     )
-    g.map_dataframe(_morph_xcor_viz, tau=tau, stim_length=stim_length, n_dim=n_dim)
-    g.set_titles("{row_name}     to     {col_name}")
-    g.set_axis_labels("Morph Position", "Morph Position")
-    if title:
-        plt.subplots_adjust(top=0.95)
-        g.fig.suptitle(title)
-    g.despine(top=True, right=True, left=True, bottom=True)
-    g.set(xticks=[], yticks=[])
+    g.set(yticks=[])
+    return g
 
 
 def _morph_xcor_viz(tau=0.01, stim_length=0.4, n_dim=50, **kwargs):

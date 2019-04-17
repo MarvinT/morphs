@@ -75,8 +75,12 @@ def generate_ks_df(num_shuffles, parallel=True, n_jobs=morphs.parallel.N_JOBS):
     # misnamed one of my recording blocks when the lab started doing ephys on different species
     all_ks_df.loc[all_ks_df["neuro_subj"] == "st1107", "neuro_subj"] = "B1107"
 
-    morphs.data.parse.ephys_class(all_ks_df, behavior_subj_label="subj",
-                                  neural_subj_label="neuro_subj", split_training_cond=True)
+    morphs.data.parse.ephys_class(
+        all_ks_df,
+        behavior_subj_label="subj",
+        neural_subj_label="neuro_subj",
+        split_training_cond=True,
+    )
 
     morphs.paths.ks_df_pkl(num_shuffles).parent.mkdir(parents=True, exist_ok=True)
     all_ks_df.to_pickle(morphs.paths.ks_df_pkl(num_shuffles))

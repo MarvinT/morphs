@@ -1,6 +1,7 @@
 import morphs
 import numpy as np
 import matplotlib.pylab as plt
+import seaborn as sns
 
 
 def savefig(
@@ -39,3 +40,32 @@ def cumulative_distribution(
     if scaled:
         y /= y[-1]
     plt.step(np.concatenate([data, data[[-1]]]), y, label=label, **kwargs)
+
+
+def morph_grid(
+    pair_df,
+    map_func,
+    ylabel,
+    map_kwargs={},
+    title="",
+    row_order="abcdef",
+    col_order="cdefgh",
+    sharey=True,
+):
+    g = sns.FacetGrid(
+        pair_df,
+        col="greater_dim",
+        row="lesser_dim",
+        row_order=row_order,
+        col_order=col_order,
+        sharey=sharey,
+    )
+    g.map_dataframe(map_func, **map_kwargs)
+    g.set_titles("{row_name}     to     {col_name}")
+    g.set_axis_labels("Morph Position", ylabel)
+    if title:
+        plt.subplots_adjust(top=0.95)
+        g.fig.suptitle(title)
+    g.despine(top=True, right=True, left=True, bottom=True)
+    g.set(xticks=[])
+    return g
