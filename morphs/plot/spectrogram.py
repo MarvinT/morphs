@@ -12,7 +12,7 @@ def single(dim, pos, spects):
     return f.figure
 
 
-def morphs(dims, spects, divisions=16, fontsize=32, width=10, aspect=8):
+def morph(dims, spects, divisions=16, fontsize=32, width=10, aspect=8):
     morphs = {
         l
         + g: np.concatenate(
