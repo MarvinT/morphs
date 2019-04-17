@@ -8,18 +8,19 @@ from morphs.data import xcor
 from morphs.plot import morph_grid
 
 
-def morph_viz(
-    spikes,
-    tau=0.01,
-    stim_length=0.4,
-    n_dim=50,
-    smooth=False,
-    **kwargs
-):
-    g = morph_grid(spikes, _morph_viz, "Stimulus Duration (s)",
-                   map_kwargs={"tau": tau, "stim_length": stim_length,
-                               "n_dim": n_dim, "smooth": smooth},
-                   **kwargs)
+def morph_viz(spikes, tau=0.01, stim_length=0.4, n_dim=50, smooth=False, **kwargs):
+    g = morph_grid(
+        spikes,
+        _morph_viz,
+        "Stimulus Duration (s)",
+        map_kwargs={
+            "tau": tau,
+            "stim_length": stim_length,
+            "n_dim": n_dim,
+            "smooth": smooth,
+        },
+        **kwargs
+    )
     g.set(yticks=[0.0, stim_length / 2, stim_length])
     return g
 
@@ -35,7 +36,7 @@ def _morph_viz(tau=0.01, stim_length=0.4, n_dim=50, smooth=False, **kwargs):
             .apply(lambda x: morphs.spikes.filtered_response(x.values, tau=tau)(t))
             .mean()
         )
-        points[i * n_dim: (i + 1) * n_dim, :] = np.array(
+        points[i * n_dim : (i + 1) * n_dim, :] = np.array(
             list(zip(t, itertools.repeat(morph_pos), temp))
         )
 
@@ -47,16 +48,14 @@ def _morph_viz(tau=0.01, stim_length=0.4, n_dim=50, smooth=False, **kwargs):
         ax.tripcolor(y, x, z)
 
 
-def morph_xcor_viz(
-    spikes,
-    tau=0.01,
-    stim_length=0.4,
-    n_dim=50,
-    **kwargs
-):
-    g = morph_grid(spikes, _morph_xcor_viz, "Morph Position",
-                   map_kwargs={"tau": tau, "stim_length": stim_length, "n_dim": n_dim},
-                   **kwargs)
+def morph_xcor_viz(spikes, tau=0.01, stim_length=0.4, n_dim=50, **kwargs):
+    g = morph_grid(
+        spikes,
+        _morph_xcor_viz,
+        "Morph Position",
+        map_kwargs={"tau": tau, "stim_length": stim_length, "n_dim": n_dim},
+        **kwargs
+    )
     g.set(yticks=[])
     return g
 

@@ -108,8 +108,8 @@ def recording_site(block_path):
     vals = {}
     for axis, (i, j) in idxs:
         vals[axis] = name.split("__")[i].split("_")[j]
-        assert vals[axis][0: len(axis)] == axis
-        vals[axis] = int(vals[axis][len(axis):])
+        assert vals[axis][0 : len(axis)] == axis
+        vals[axis] = int(vals[axis][len(axis) :])
     return tuple(vals[axis] for axis in axes)
 
 

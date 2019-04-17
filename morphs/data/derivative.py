@@ -61,9 +61,7 @@ def fit_derivative(
 
     curve_fit_f = create_curve_fit_f(sampled_points, f=f)
     try:
-        return curve_fit(
-            curve_fit_f, contains_interval, y, p0=p0, bounds=bounds
-        )
+        return curve_fit(curve_fit_f, contains_interval, y, p0=p0, bounds=bounds)
     except RuntimeError:
         return np.nan * p0, None
 
@@ -90,12 +88,16 @@ def gen_derivative_dict(parallel=True, n_jobs=morphs.parallel.N_JOBS):
     if parallel and n_jobs > 1:
         all_dds = Parallel(n_jobs=n_jobs)(
             delayed(_par_fad)(group, block_path, morph_dim)
-            for (block_path, morph_dim), group in pair_df.groupby(["block_path", "morph_dim"])
+            for (block_path, morph_dim), group in pair_df.groupby(
+                ["block_path", "morph_dim"]
+            )
         )
     else:
         all_dds = [
             _par_fad(group, block_path, morph_dim)
-            for (block_path, morph_dim), group in pair_df.groupby(["block_path", "morph_dim"])
+            for (block_path, morph_dim), group in pair_df.groupby(
+                ["block_path", "morph_dim"]
+            )
         ]
 
     deriv_dict = {block: {} for block in pair_df["block_path"].unique()}
