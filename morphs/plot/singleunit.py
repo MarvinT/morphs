@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import itertools
 import morphs
 from morphs.data import xcor
-from morphs.plot.utils import morph_grid
+from morphs.plot import morph_grid
 
 
 def morph_viz(
