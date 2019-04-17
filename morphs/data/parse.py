@@ -89,6 +89,7 @@ def bird_id(block_path):
     """extracts bird id from block_path"""
     name = blockpath_name(block_path)
     bird_id = name.split("__")[-1].split("_")[0]
+    # misnamed one of my recording blocks when the lab started doing ephys on different species
     if bird_id == "st1107":
         bird_id = "B1107"
     return bird_id
@@ -107,8 +108,8 @@ def recording_site(block_path):
     vals = {}
     for axis, (i, j) in idxs:
         vals[axis] = name.split("__")[i].split("_")[j]
-        assert vals[axis][0 : len(axis)] == axis
-        vals[axis] = int(vals[axis][len(axis) :])
+        assert vals[axis][0: len(axis)] == axis
+        vals[axis] = int(vals[axis][len(axis):])
     return tuple(vals[axis] for axis in axes)
 
 
@@ -135,3 +136,27 @@ def _in_pattern(string):
 
 def num_shuffles(path):
     return int(path.name.split(".")[0].split("_")[-1])
+
+
+def ephys_class(
+    df,
+    behavior_subj_label="behavior_subj",
+    neural_subj_label="neural_subj",
+    class_label="class",
+    split_training_cond=False,
+):
+    """Parses df to classify neural subj into naive, trained or other training conditions"""
+    for (behave_subj, subj), group in df.groupby(
+        [behavior_subj_label, neural_subj_label]
+    ):
+        if subj == behave_subj:
+            df.loc[group.index, class_label] = "self"
+        elif subj not in morphs.subj.TRAINING:
+            df.loc[group.index, class_label] = "naive"
+        elif split_training_cond:
+            if morphs.subj.TRAINING[subj] is morphs.subj.TRAINING[behave_subj]:
+                df.loc[group.index, class_label] = "same training cond"
+            else:
+                df.loc[group.index, class_label] = "diff training cond"
+        else:
+            df.loc[group.index, class_label] = "trained"
