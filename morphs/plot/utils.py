@@ -69,3 +69,17 @@ def morph_grid(
     g.despine(top=True, right=True, left=True, bottom=True)
     g.set(xticks=[])
     return g
+
+
+def boundary(ax, morph_dim, color_dict=morphs.subj.BEHAVE_COLOR_MAP):
+    """
+    plots behavioral boundaries as vertical lines on provided ax
+    """
+    psychometric_params = morphs.load.psychometric_params()
+    for bsubj in psychometric_params:
+        if morph_dim in psychometric_params[bsubj]:
+            ax.axvline(
+                psychometric_params[bsubj][morph_dim][3],
+                color=color_dict[bsubj],
+                label=bsubj,
+            )
