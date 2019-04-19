@@ -28,6 +28,13 @@ def p0_poly(order, *args):
     return np.ones(order + 1), bounds
 
 
+def f_map(popt, x=np.linspace(1, 128), normalize=True, f=f_poly):
+    y = f(x, popt)
+    if normalize:
+        y /= quad(f, 1, 128, args=(popt,))[0]
+    return y
+
+
 def integrate_intervals(p, sampled_points, f=f_poly):
     return np.array(
         [
@@ -112,6 +119,24 @@ def gen_derivative_dict(parallel=True, n_jobs=morphs.parallel.N_JOBS):
 @morphs.utils.load._load(morphs.paths.DERIVATIVE_PKL, gen_derivative_dict)
 def load_derivative_dict():
     return morphs.utils.load._pickle(morphs.paths.DERIVATIVE_PKL)
+
+
+def load_derivative_df(melt=False):
+    dd = morphs.load.derivative_dict()
+    ddf = pd.DataFrame.from_dict(
+        {(i, j): dd[i][j] for i in dd for j in dd[i]}, orient="index"
+    )
+    ddf.index.rename(["block_path", "morph_dim"], inplace=True)
+    ddf.reset_index(inplace=True)
+    if melt:
+        ddf = pd.melt(
+            ddf,
+            id_vars=["block_path", "morph_dim"],
+            var_name="order",
+            value_name="popt",
+        )
+    morphs.data.parse.morph_dim(ddf)
+    return ddf
 
 
 @click.command()
