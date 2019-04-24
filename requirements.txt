@@ -20,6 +20,7 @@ pytest-cov
 python-coveralls
 nbval
 umap-learn
+xgboost
 
 imageio
 seaborn
