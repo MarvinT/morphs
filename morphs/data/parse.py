@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 import morphs
 import os
+import numpy as np
 
 
 def morph_dim(
@@ -108,8 +109,8 @@ def recording_site(block_path):
     vals = {}
     for axis, (i, j) in idxs:
         vals[axis] = name.split("__")[i].split("_")[j]
-        assert vals[axis][0 : len(axis)] == axis
-        vals[axis] = int(vals[axis][len(axis) :])
+        assert vals[axis][0: len(axis)] == axis
+        vals[axis] = int(vals[axis][len(axis):])
     return tuple(vals[axis] for axis in axes)
 
 
@@ -160,3 +161,13 @@ def ephys_class(
                 df.loc[group.index, class_label] = "diff training cond"
         else:
             df.loc[group.index, class_label] = "trained"
+
+
+def equal_spacing(pair_df):
+    return pair_df.groupby("block_path").apply(
+        lambda path_group: np.all(
+            path_group.groupby("morph_dim").apply(
+                lambda group: len(group["lesser_morph_pos"].unique()) < 10
+            )
+        )
+    )
