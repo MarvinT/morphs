@@ -36,13 +36,12 @@ def f_map(popt, x=np.linspace(1, 128), normalize=True, f=f_poly):
     return y
 
 
+def integrate_pairs(p, pairs, f=f_poly):
+    return np.array([quad(f, a, b, args=(p,))[0] for a, b in pairs])
+
+
 def integrate_intervals(p, sampled_points, f=f_poly):
-    return np.array(
-        [
-            quad(f, a, b, args=(p,))[0]
-            for a, b in zip(sampled_points[:-1], sampled_points[1:])
-        ]
-    )
+    return integrate_pairs(p, zip(sampled_points[:-1], sampled_points[1:]), f=f)
 
 
 def create_curve_fit_f(sampled_points, f=f_poly):
