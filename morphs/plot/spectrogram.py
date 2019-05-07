@@ -1,18 +1,22 @@
-import morphs
 import matplotlib.pylab as plt
 import numpy as np
 
 
-def single(dim, pos, spects):
+def single(dim, pos, spects, invert=True):
     im = spects[dim[0]][dim[1]][pos].astype(float)
     im /= np.max(im)
+    if invert:
+        im = 1 - im
     plt.figure()
-    f = plt.imshow(im, aspect=8)
-    plt.axis("off")
+    f = plt.imshow(im, aspect=0.5, extent=(0, 0.4, np.log(850), np.log(10000)))
+    y_labels = [850, 1000, 2000, 4000, 10000]
+    y_positions = [np.log(label) for label in y_labels]
+    y_labels_str = ["850", "1k", "2k", "4k", "10k"]
+    plt.yticks(y_positions, y_labels_str)
     return f.figure
 
 
-def morph(dims, spects, divisions=16, fontsize=32, width=10, aspect=8):
+def morph(dims, spects, divisions=16, fontsize=32, width=10, aspect=8, invert=True):
     morphs = {
         l
         + g: np.concatenate(
@@ -30,6 +34,8 @@ def morph(dims, spects, divisions=16, fontsize=32, width=10, aspect=8):
                 [morphs[dim], np.ones((1, morphs[dim].shape[1], 3))], axis=0
             )
     im = np.concatenate([morphs[dim] for dim in dims], axis=0)
+    if invert:
+        im = 1 - im
 
     f = plt.figure(figsize=(width, float(width) * aspect * im.shape[0] / im.shape[1]))
     f = plt.imshow(im, aspect="auto")
