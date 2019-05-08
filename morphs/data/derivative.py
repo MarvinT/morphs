@@ -83,25 +83,25 @@ def fit_all_derivatives(group, idxs=range(7), p0_func=p0_poly, **kwargs):
     return deriv_dict
 
 
-def _par_fad(group, block_path, morph_dim, **kwargs):
+def _par_fad(group, block_path, morph_dim, max_order, **kwargs):
     """a wrapper for parallelization of fit_all_derivatives"""
-    return fit_all_derivatives(group, **kwargs), block_path, morph_dim
+    return fit_all_derivatives(group, idxs=range(max_order), **kwargs), block_path, morph_dim
 
 
-def gen_derivative_dict(parallel=True, n_jobs=morphs.parallel.N_JOBS):
+def gen_derivative_dict(parallel=True, n_jobs=morphs.parallel.N_JOBS, max_order=7):
     pair_df = morphs.load.pop_pair_df()
     morphs.data.parse.morph_dim(pair_df)
 
     if parallel and n_jobs > 1:
         all_dds = Parallel(n_jobs=n_jobs)(
-            delayed(_par_fad)(group, block_path, morph_dim)
+            delayed(_par_fad)(group, block_path, morph_dim, max_order)
             for (block_path, morph_dim), group in pair_df.groupby(
                 ["block_path", "morph_dim"]
             )
         )
     else:
         all_dds = [
-            _par_fad(group, block_path, morph_dim)
+            _par_fad(group, block_path, morph_dim, max_order)
             for (block_path, morph_dim), group in pair_df.groupby(
                 ["block_path", "morph_dim"]
             )
@@ -149,9 +149,10 @@ def load_derivative_df(melt=False):
 @click.option(
     "--num_jobs", default=morphs.parallel.N_JOBS, help="number of parallel cores to use"
 )
-def _main(parallel, num_jobs):
+@click.option("--max_order", default=7, help="(not including) max polynomial order to fit")
+def _main(parallel, num_jobs, max_order):
     tstart = datetime.datetime.now()
-    gen_derivative_dict(parallel=parallel, n_jobs=num_jobs)
+    gen_derivative_dict(parallel=parallel, n_jobs=num_jobs, max_order=max_order)
     print(
         "peak memory usage: %f GB"
         % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 / 1024)
