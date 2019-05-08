@@ -8,3 +8,7 @@ import pytest
 def test_download_wavs():
     download_wavs()
     assert morphs.paths.WAV_DIR.exists()
+
+
+def test_load_wav():
+    data, sr = morphs.load.wav("ac120")
