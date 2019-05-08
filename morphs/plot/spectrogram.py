@@ -13,8 +13,8 @@ def single(dim, pos, spects, invert=True):
     y_positions = [np.log(label) for label in y_labels]
     y_labels_str = ["850", "1k", "2k", "4k", "10k"]
     plt.yticks(y_positions, y_labels_str)
-    plt.xlabel('Time (s)')
-    plt.ylabel('Frequency (Hz)')
+    plt.xlabel("Time (s)")
+    plt.ylabel("Frequency (Hz)")
     return f.figure
 
 
