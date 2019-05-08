@@ -9,6 +9,8 @@ DATA_DIR = PROJECT_DIR / "data"
 
 STIM_DIR = DATA_DIR / "stimuli"
 SPECT_PKL = STIM_DIR / "spectrograms.pkl"
+WAV_ZIP = STIM_DIR / "wavs.zip"
+WAV_DIR = STIM_DIR / "wavs"
 
 BEHAVE_DIR = DATA_DIR / "behavior"
 BEHAVE_PKL = BEHAVE_DIR / "behave.pkl"
