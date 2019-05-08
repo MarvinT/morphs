@@ -6,6 +6,7 @@
 - no dependencies
 - download ephys data example
 - download BEHAVE_PKL
+- download wavs
 
 ### order=1
 - generate ACCURACIES_PKL

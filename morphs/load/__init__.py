@@ -12,4 +12,5 @@ from morphs.data.waveform import load_waveforms as waveforms
 from morphs.data.pairwise import load_pop_pair_df as pop_pair_df
 from morphs.data.derivative import load_derivative_dict as derivative_dict
 from morphs.data.derivative import load_derivative_df as derivative_df
+from morphs.load.wavfile import load_wav as wav
 from morphs.load.ephys import ephys_data

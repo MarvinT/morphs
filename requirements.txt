@@ -21,6 +21,7 @@ python-coveralls
 nbval
 umap-learn
 xgboost
+librosa
 
 imageio
 seaborn
