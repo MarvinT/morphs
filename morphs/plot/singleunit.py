@@ -9,8 +9,8 @@ from morphs.plot import morph_grid
 
 
 def morph_viz(spikes, tau=0.01, stim_length=0.4, n_dim=50, smooth=False, transpose=False, **kwargs):
-    xlabel = "Morph Position"
-    ylabel = "Stimulus Duration (s)"
+    xlabel = "Stimulus Duration (s)"
+    ylabel = "Morph Position"
     if transpose:
         xlabel, ylabel = ylabel, xlabel
     g = morph_grid(
@@ -27,7 +27,10 @@ def morph_viz(spikes, tau=0.01, stim_length=0.4, n_dim=50, smooth=False, transpo
         },
         **kwargs
     )
-    g.set(yticks=[0.0, stim_length / 2, stim_length])
+    if transpose:
+        g.set(yticks=[0.0, stim_length / 2, stim_length])
+    else:
+        g.set(xticks=[0.0, stim_length / 2, stim_length])
     return g
 
 
