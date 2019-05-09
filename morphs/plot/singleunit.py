@@ -33,6 +33,7 @@ def morph_viz(
         g.set(yticks=[0.0, stim_length / 2, stim_length])
     else:
         g.set(xticks=[0.0, stim_length / 2, stim_length])
+        g.set(yticks=[])
     return g
 
 
@@ -49,7 +50,7 @@ def _morph_viz(
             .apply(lambda x: morphs.spikes.filtered_response(x.values, tau=tau)(t))
             .mean()
         )
-        points[i * n_dim : (i + 1) * n_dim, :] = np.array(
+        points[i * n_dim: (i + 1) * n_dim, :] = np.array(
             list(zip(t, itertools.repeat(morph_pos), temp))
         )
 
