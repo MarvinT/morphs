@@ -46,6 +46,7 @@ def morph_grid(
     pair_df,
     map_func,
     ylabel,
+    xlabel="Morph Position",
     map_kwargs={},
     title="",
     row_order="abcdef",
@@ -62,7 +63,7 @@ def morph_grid(
     )
     g.map_dataframe(map_func, **map_kwargs)
     g.set_titles("{row_name}     to     {col_name}")
-    g.set_axis_labels("Morph Position", ylabel)
+    g.set_axis_labels(xlabel, ylabel)
     if title:
         plt.subplots_adjust(top=0.95)
         g.fig.suptitle(title)
