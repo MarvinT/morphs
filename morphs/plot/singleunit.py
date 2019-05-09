@@ -17,7 +17,7 @@ def morph_viz(spikes, tau=0.01, stim_length=0.4, n_dim=50, smooth=False, transpo
         spikes,
         _morph_viz,
         ylabel,
-        xlabel=xlabel
+        xlabel=xlabel,
         map_kwargs={
             "tau": tau,
             "stim_length": stim_length,
