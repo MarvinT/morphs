@@ -76,7 +76,7 @@ def grid(
     if legend:
         g.add_legend(title=legend_title)
     g = g.set_titles(sub_title)
-    morphs.plot.title(g)
+    morphs.plot.format_titles(g)
     g.set(xlim=(0, 128), ylim=(0, 1), xticks=[], yticks=[0.0, 0.5, 1.0])
     g.set_axis_labels("morph position", "P(right response)")
 

@@ -75,7 +75,7 @@ def grid(
     if fit_reg:
         g.map_dataframe(_4pl, "morph_pos", "greater_response")
     g = g.set_titles(sub_title)
-    morphs.plot.title(g)
+    morphs.plot.format_titles(g)
     if legend:
         g = g.add_legend(title=legend_title)
     g = g.set(xlim=(1, 128), ylim=(0, 1), xticks=[], yticks=[0.0, 0.5, 1.0])
