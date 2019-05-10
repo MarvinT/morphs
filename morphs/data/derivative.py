@@ -92,6 +92,21 @@ def _par_fad(group, block_path, morph_dim, max_order, **kwargs):
     )
 
 
+def fit_next_derivatives(group, i, prev_popt, p0_func=p0_poly, **kwargs):
+    p0, bounds = p0_func(i, prev_popt)
+    popt, pcov = fit_derivative(group, p0=p0, bounds=bounds, **kwargs)
+    return i, popt
+
+
+def _par_fnd(group, i, prev_popt, block_path, morph_dim, **kwargs):
+    """a wrapper for parallelization of fit_next_derivatives"""
+    return (
+        fit_next_derivatives(group, i, prev_popt, **kwargs),
+        block_path,
+        morph_dim,
+    )
+
+
 def gen_derivative_dict(parallel=True, n_jobs=morphs.parallel.N_JOBS, max_order=7):
     pair_df = morphs.load.pop_pair_df()
     morphs.data.parse.morph_dim(pair_df)
@@ -118,6 +133,64 @@ def gen_derivative_dict(parallel=True, n_jobs=morphs.parallel.N_JOBS, max_order=
     morphs.paths.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     with open(morphs.paths.DERIVATIVE_PKL.as_posix(), "wb") as f:
         pickle.dump(deriv_dict, f)
+
+
+def increment_derivative_dict(
+    pair_df=None, parallel=True, n_jobs=morphs.parallel.N_JOBS
+):
+    deriv_dict = load_derivative_dict()
+
+    if pair_df is None:
+        pair_df = morphs.load.pop_pair_df()
+        morphs.data.parse.morph_dim(pair_df)
+
+    prev_i = find_max_order(deriv_dict)
+
+    if parallel and n_jobs > 1:
+        all_ddus = Parallel(n_jobs=n_jobs)(
+            delayed(_par_fnd)(
+                group,
+                prev_i + 1,
+                deriv_dict[block_path][morph_dim][prev_i],
+                block_path,
+                morph_dim,
+            )
+            for (block_path, morph_dim), group in pair_df.groupby(
+                ["block_path", "morph_dim"]
+            )
+        )
+    else:
+        all_ddus = [
+            _par_fnd(
+                group,
+                prev_i + 1,
+                deriv_dict[block_path][morph_dim][prev_i],
+                block_path,
+                morph_dim,
+            )
+            for (block_path, morph_dim), group in pair_df.groupby(
+                ["block_path", "morph_dim"]
+            )
+        ]
+
+    for (i, popt), block_path, morph_dim in all_ddus:
+        deriv_dict[block_path][morph_dim][i] = popt
+
+    with open(morphs.paths.DERIVATIVE_PKL.as_posix(), "wb") as f:
+        pickle.dump(deriv_dict, f)
+
+
+def find_max_order(deriv_dict):
+    return np.max(
+        list(
+            {
+                i
+                for block_path in deriv_dict
+                for morph_dim in deriv_dict[block_path]
+                for i in deriv_dict[block_path][morph_dim]
+            }
+        )
+    )
 
 
 @morphs.utils.load._load(morphs.paths.DERIVATIVE_PKL, gen_derivative_dict)
@@ -158,7 +231,30 @@ def load_derivative_df(melt=False):
 )
 def _main(parallel, num_jobs, max_order):
     tstart = datetime.datetime.now()
-    gen_derivative_dict(parallel=parallel, n_jobs=num_jobs, max_order=max_order)
+
+    if not morphs.paths.DERIVATIVE_PKL.exists():
+        if max_order > 7:
+            prev_max_order = 6
+            needed_increments = max_order - prev_max_order - 1
+            max_order = 7
+        else:
+            needed_increments = 0
+        gen_derivative_dict(parallel=parallel, n_jobs=num_jobs, max_order=max_order)
+    else:
+        deriv_dict = load_derivative_dict()
+        prev_max_order = find_max_order(deriv_dict)
+        needed_increments = max_order - prev_max_order - 1
+
+    if needed_increments > 0:
+        pair_df = morphs.load.pop_pair_df()
+        morphs.data.parse.morph_dim(pair_df)
+        print("prev max order: ", prev_max_order)
+        for i in range(needed_increments):
+            increment_derivative_dict(
+                pair_df=pair_df, parallel=parallel, n_jobs=num_jobs
+            )
+            print("max order incremented!")
+
     print(
         "peak memory usage: %f GB"
         % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024 / 1024)
