@@ -29,11 +29,11 @@ seaborn
 statsmodels
 patsy
 
-git+git://github.com/gentnerlab/ephys-analysis@master#egg=ephys
+git+https://github.com/gentnerlab/ephys-analysis@master#egg=ephys
 # since ephys-analysis doesn't have requirements...
 h5py
 
-git+git://github.com/gentnerlab/behav-analysis@master#egg=behav
+git+https://github.com/gentnerlab/behav-analysis@master#egg=behav
 
 # backwards compatibility
 pathlib2
