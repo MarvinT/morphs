@@ -62,7 +62,8 @@ def morph_grid(
         sharey=sharey,
     )
     g.map_dataframe(map_func, **map_kwargs)
-    g.set_titles("{row_name}     to     {col_name}")
+    g.set_titles("{row_name}{col_name}")
+    title(g)
     g.set_axis_labels(xlabel, ylabel)
     if title:
         plt.subplots_adjust(top=0.95)
@@ -84,3 +85,13 @@ def boundary(ax, morph_dim, color_dict=morphs.subj.BEHAVE_COLOR_MAP):
                 color=color_dict[bsubj],
                 label=bsubj,
             )
+
+
+def title(g, upper=True, to_join=True):
+    for ax in g.axes.flat:
+        title = ax.get_title()
+        if upper:
+            title = title.upper()
+        if to_join:
+            title = "     to     ".join(title)
+        ax.set_title(title)
