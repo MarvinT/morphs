@@ -1,8 +1,15 @@
 from __future__ import absolute_import
 import numpy as np
 import morphs
+from morphs.data.derivative import (
+    f_poly,
+    p0_poly,
+    fit_derivative,
+    _main,
+    find_max_order,
+)
 import pytest
-from morphs.data.derivative import f_poly, p0_poly, fit_derivative
+from click.testing import CliRunner
 
 
 def test_f_poly():
@@ -30,8 +37,20 @@ def test_fit_derivative():
 
 
 @pytest.mark.run(order=3)
-def test_load_gen_derivative_dict():
+def test_gen_cli_derivative_dict():
+    runner = CliRunner()
     assert not morphs.paths.DERIVATIVE_PKL.exists()
+    result = runner.invoke(_main, ["--parallel", "--max_order=5"])
+    assert result.exit_code == 0
+    assert morphs.paths.DERIVATIVE_PKL.exists()
+    result2 = runner.invoke(_main, ["--parallel", "--max_order=7"])
+    assert result2.exit_code == 0
+    assert "max order incremented!" in result2.output
+    dd = morphs.load.derivative_dict()
+    assert find_max_order(dd) == 6
+
+
+def test_load_derivative_dict():
     dd = morphs.load.derivative_dict()
     assert morphs.paths.DERIVATIVE_PKL.exists()
     assert len(dd) > 0
