@@ -51,7 +51,7 @@ def grid(
     legend_title="",
     p_right_leg_label="Behavioral (True) values",
     predicted_leg_label="Predicted values",
-    sub_title="{row_name}                  {col_name}",
+    sub_title="{row_name}{col_name}",
 ):
     held_out_df["legend"] = held_out_df["legend"].map(
         {"p_right": p_right_leg_label, "predicted": predicted_leg_label}
@@ -76,6 +76,7 @@ def grid(
     if legend:
         g.add_legend(title=legend_title)
     g = g.set_titles(sub_title)
+    morphs.plot.format_titles(g)
     g.set(xlim=(0, 128), ylim=(0, 1), xticks=[], yticks=[0.0, 0.5, 1.0])
     g.set_axis_labels("morph position", "P(right response)")
 

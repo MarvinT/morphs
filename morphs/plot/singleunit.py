@@ -8,24 +8,38 @@ from morphs.data import xcor
 from morphs.plot import morph_grid
 
 
-def morph_viz(spikes, tau=0.01, stim_length=0.4, n_dim=50, smooth=False, **kwargs):
+def morph_viz(
+    spikes, tau=0.01, stim_length=0.4, n_dim=50, smooth=False, transpose=False, **kwargs
+):
+    xlabel = "Stimulus Duration (s)"
+    ylabel = "Morph Position"
+    if transpose:
+        xlabel, ylabel = ylabel, xlabel
     g = morph_grid(
         spikes,
         _morph_viz,
-        "Stimulus Duration (s)",
+        ylabel,
+        xlabel=xlabel,
         map_kwargs={
             "tau": tau,
             "stim_length": stim_length,
             "n_dim": n_dim,
             "smooth": smooth,
+            "transpose": transpose,
         },
         **kwargs
     )
-    g.set(yticks=[0.0, stim_length / 2, stim_length])
+    if transpose:
+        g.set(yticks=[0.0, stim_length / 2, stim_length])
+    else:
+        g.set(xticks=[0.0, stim_length / 2, stim_length])
+        g.set(yticks=[])
     return g
 
 
-def _morph_viz(tau=0.01, stim_length=0.4, n_dim=50, smooth=False, **kwargs):
+def _morph_viz(
+    tau=0.01, stim_length=0.4, n_dim=50, smooth=False, transpose=False, **kwargs
+):
     t = np.linspace(0, stim_length, n_dim)
     data = kwargs.pop("data")
     points = np.zeros((len(data["morph_pos"].unique()) * n_dim, 3))
@@ -36,16 +50,18 @@ def _morph_viz(tau=0.01, stim_length=0.4, n_dim=50, smooth=False, **kwargs):
             .apply(lambda x: morphs.spikes.filtered_response(x.values, tau=tau)(t))
             .mean()
         )
-        points[i * n_dim : (i + 1) * n_dim, :] = np.array(
+        points[i * n_dim: (i + 1) * n_dim, :] = np.array(
             list(zip(t, itertools.repeat(morph_pos), temp))
         )
 
     ax = plt.gca()
     x, y, z = (points[:, i] for i in range(3))
+    if transpose:
+        x, y = y, x
     if smooth:
-        ax.tricontourf(y, x, z, 20)
+        ax.tricontourf(x, y, z, 20)
     else:
-        ax.tripcolor(y, x, z)
+        ax.tripcolor(x, y, z)
 
 
 def morph_xcor_viz(spikes, tau=0.01, stim_length=0.4, n_dim=50, **kwargs):

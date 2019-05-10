@@ -46,6 +46,7 @@ def morph_grid(
     pair_df,
     map_func,
     ylabel,
+    xlabel="Morph Position",
     map_kwargs={},
     title="",
     row_order="abcdef",
@@ -61,8 +62,9 @@ def morph_grid(
         sharey=sharey,
     )
     g.map_dataframe(map_func, **map_kwargs)
-    g.set_titles("{row_name}     to     {col_name}")
-    g.set_axis_labels("Morph Position", ylabel)
+    g.set_titles("{row_name}{col_name}")
+    format_titles(g)
+    g.set_axis_labels(xlabel, ylabel)
     if title:
         plt.subplots_adjust(top=0.95)
         g.fig.suptitle(title)
@@ -83,3 +85,13 @@ def boundary(ax, morph_dim, color_dict=morphs.subj.BEHAVE_COLOR_MAP):
                 color=color_dict[bsubj],
                 label=bsubj,
             )
+
+
+def format_titles(g, upper=True, to_join=True):
+    for ax in g.axes.flat:
+        title = ax.get_title()
+        if upper:
+            title = title.upper()
+        if to_join:
+            title = "     to     ".join(title)
+        ax.set_title(title)
