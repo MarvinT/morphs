@@ -9,12 +9,23 @@ from morphs.plot import morph_grid
 
 
 def morph_viz(
-    spikes, tau=0.01, stim_length=0.4, n_dim=50, smooth=False, transpose=False, **kwargs
+    spikes,
+    tau=0.01,
+    stim_length=0.4,
+    n_dim=50,
+    smooth=False,
+    transpose=False,
+    row_order="abcdef",
+    col_order="cdefgh",
+    **kwargs
 ):
     xlabel = "Stimulus Duration (s)"
     ylabel = "Morph Position"
+    sharey = False
+    sharex = True
     if transpose:
         xlabel, ylabel = ylabel, xlabel
+        sharex, sharey = sharey, sharex
     g = morph_grid(
         spikes,
         _morph_viz,
@@ -27,13 +38,24 @@ def morph_viz(
             "smooth": smooth,
             "transpose": transpose,
         },
+        row_order=row_order,
+        col_order=col_order,
+        sharex=sharex,
+        sharey=sharey,
         **kwargs
     )
     if transpose:
         g.set(yticks=[0.0, stim_length / 2, stim_length])
     else:
         g.set(xticks=[0.0, stim_length / 2, stim_length])
-        g.set(yticks=[])
+        g.set_titles("")
+        morph_dims = spikes["morph_dim"].unique()
+        for row_index in range(len(row_order)):
+            for col_index in range(len(col_order)):
+                morph_dim = row_order[row_index] + col_order[col_index]
+                if morph_dim in morph_dims:
+                    g.axes[row_index, col_index].set_yticks([1, 128])
+                    g.axes[row_index, col_index].set_yticklabels(morph_dim.upper())
     return g
 
 
