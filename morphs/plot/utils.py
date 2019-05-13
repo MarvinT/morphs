@@ -52,6 +52,7 @@ def morph_grid(
     row_order="abcdef",
     col_order="cdefgh",
     sharey=True,
+    sharex=True,
 ):
     g = sns.FacetGrid(
         pair_df,
@@ -59,6 +60,7 @@ def morph_grid(
         row="lesser_dim",
         row_order=row_order,
         col_order=col_order,
+        sharex=sharex,
         sharey=sharey,
     )
     g.map_dataframe(map_func, **map_kwargs)
