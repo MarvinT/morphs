@@ -2,13 +2,13 @@ import matplotlib.pylab as plt
 import numpy as np
 
 
-def single(dim, pos, spects, invert=True):
+def single(dim, pos, spects, invert=True, aspect=0.5):
     im = spects[dim[0]][dim[1]][pos].astype(float)
     im /= np.max(im)
     if invert:
         im = 1 - im
     plt.figure()
-    f = plt.imshow(im, aspect=0.5, extent=(0, 0.4, np.log(850), np.log(10000)))
+    f = plt.imshow(im, aspect=aspect, extent=(0, 0.4, np.log(850), np.log(10000)))
     y_labels = [850, 1000, 2000, 4000, 10000]
     y_positions = [np.log(label) for label in y_labels]
     y_labels_str = ["850", "1k", "2k", "4k", "10k"]
