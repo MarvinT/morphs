@@ -15,6 +15,7 @@
 ### order=2
 - generate num_shuffle_pkl(8)
 - generate POP_PAIR_PKL
+- generate psych_shuffle_pkl(1024)
 
 ### order=3
 - generate ks_df(8)

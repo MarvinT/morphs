@@ -46,16 +46,18 @@ def morph_viz(
     )
     if transpose:
         g.set(yticks=[0.0, stim_length / 2, stim_length])
+        g.set_titles("")
+        morph_dims = spikes["morph_dim"].unique()
+        morphs.plot.format_morph_dim_label(
+            g, row_order, col_order, morph_dims, x_axis=True
+        )
     else:
         g.set(xticks=[0.0, stim_length / 2, stim_length])
         g.set_titles("")
         morph_dims = spikes["morph_dim"].unique()
-        for row_index in range(len(row_order)):
-            for col_index in range(len(col_order)):
-                morph_dim = row_order[row_index] + col_order[col_index]
-                if morph_dim in morph_dims:
-                    g.axes[row_index, col_index].set_yticks([1, 128])
-                    g.axes[row_index, col_index].set_yticklabels(morph_dim.upper())
+        morphs.plot.format_morph_dim_label(
+            g, row_order, col_order, morph_dims, x_axis=False
+        )
     return g
 
 

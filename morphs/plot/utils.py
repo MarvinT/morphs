@@ -97,3 +97,16 @@ def format_titles(g, upper=True, to_join=True):
         if to_join:
             title = "     to     ".join(title)
         ax.set_title(title)
+
+
+def format_morph_dim_label(g, row_order, col_order, morph_dims, x_axis=True):
+    for row_index in range(len(row_order)):
+        for col_index in range(len(col_order)):
+            morph_dim = row_order[row_index] + col_order[col_index]
+            if morph_dim in morph_dims:
+                if x_axis:
+                    g.axes[row_index, col_index].set_xticks([1, 128])
+                    g.axes[row_index, col_index].set_xticklabels(morph_dim.upper())
+                else:
+                    g.axes[row_index, col_index].set_yticks([1, 128])
+                    g.axes[row_index, col_index].set_yticklabels(morph_dim.upper())
