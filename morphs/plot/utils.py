@@ -13,6 +13,7 @@ def savefig(
     bbox_inches="tight",
     transparent=True,
     pad_inches=0,
+    dpi=300,
 ):
     folder.mkdir(parents=True, exist_ok=True)
     if format:
@@ -24,6 +25,7 @@ def savefig(
             bbox_inches=bbox_inches,
             transparent=transparent,
             pad_inches=pad_inches,
+            dpi=dpi,
         )
 
 
