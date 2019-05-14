@@ -37,6 +37,7 @@ def grid(
     legend=True,
     legend_title="Subject",
     size=5,
+    aspect=1,
     sub_title="{row_name}{col_name}",
     scatter_kws={"s": 1},
     **kwargs
@@ -68,7 +69,7 @@ def grid(
         palette=color_order,
         legend=False,
         height=size,
-        aspect=1,
+        aspect=aspect,
         scatter_kws=scatter_kws,
         **kwargs
     )
