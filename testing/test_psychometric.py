@@ -32,3 +32,11 @@ def test_load_generate_psychometric_params():
     assert not morphs.paths.PSYCHOMETRIC_PKL.exists()
     morphs.data.psychometric.load_psychometric_params()
     assert morphs.paths.PSYCHOMETRIC_PKL.exists()
+
+
+@pytest.mark.run(order=2)
+def test_load_generate_psychometric_param_shuffled_pdists():
+    num_shuffles = 1024
+    assert not morphs.paths.psych_shuffle_pkl(num_shuffles).exists()
+    morphs.data.psychometric.load_psychometric_param_shuffled_pdists(num_shuffles)
+    assert morphs.paths.psych_shuffle_pkl(num_shuffles).exists()

@@ -71,6 +71,12 @@ def num_shuffle_pkl(num_shuffles):
     )
 
 
+def psych_shuffle_pkl(num_shuffles):
+    return PROCESSED_DIR / (
+        "psychometrics_shuffled_" + str(num_shuffles) + ".pkl"
+    )
+
+
 def ks_df_pkl(num_shuffles):
     return KS_DF_DIR / ("ks_df_" + str(num_shuffles) + ".pkl")
 
