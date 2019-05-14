@@ -101,7 +101,9 @@ def format_titles(g, upper=True, to_join=True):
         ax.set_title(title)
 
 
-def format_morph_dim_label(g, row_order, col_order, morph_dims, x_axis=True):
+def format_morph_dim_label(
+    g, row_order, col_order, morph_dims, x_axis=True, divisions=4
+):
     for row_index in range(len(row_order)):
         for col_index in range(len(col_order)):
             morph_dim = row_order[row_index] + col_order[col_index]
@@ -109,6 +111,12 @@ def format_morph_dim_label(g, row_order, col_order, morph_dims, x_axis=True):
                 if x_axis:
                     g.axes[row_index, col_index].set_xticks([1, 128])
                     g.axes[row_index, col_index].set_xticklabels(morph_dim.upper())
+                    g.axes[row_index, col_index].set_xticks(
+                        np.linspace(1, 128, divisions, endpoint=False)[1:], minor=True
+                    )
                 else:
                     g.axes[row_index, col_index].set_yticks([1, 128])
                     g.axes[row_index, col_index].set_yticklabels(morph_dim.upper())
+                    g.axes[row_index, col_index].set_yticks(
+                        np.linspace(1, 128, divisions, endpoint=False)[1:], minor=True
+                    )
