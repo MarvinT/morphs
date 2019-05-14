@@ -81,6 +81,8 @@ def grid(
     morph_dims = behavior_df["morph_dim"].unique()
     if row is "lesser_dim" and col is "greater_dim":
         morphs.plot.format_morph_dim_label(g, row_order, col_order, morph_dims)
+    elif hue is "morph_dim":
+        g = g.set(yticks=[1, 128])
     elif col is "morph_dim":
         for col_index, morph_dim in enumerate(col_order):
             ax = g.axes.flatten()[col_index]
