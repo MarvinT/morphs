@@ -40,6 +40,7 @@ def grid(
     aspect=1,
     sub_title="",
     scatter_kws={"s": 1},
+    divisions=4,
     **kwargs
 ):
     if row and row_order is None:
@@ -84,11 +85,17 @@ def grid(
     elif hue is "morph_dim":
         g = g.set(xticks=[1, 128])
         g = g.set_xticklabels("")
+        g.axes.flatten()[0].set_xticks(
+            np.linspace(1, 128, divisions, endpoint=False)[1:], minor=True
+        )
     elif col is "morph_dim":
         for col_index, morph_dim in enumerate(col_order):
             ax = g.axes.flatten()[col_index]
             ax.set_xticks([1, 128])
             ax.set_xticklabels(morph_dim.upper())
+            ax.set_xticks(
+                np.linspace(1, 128, divisions, endpoint=False)[1:], minor=True
+            )
     else:
         print("I'll need to do something about these axis labels")
     if legend:
