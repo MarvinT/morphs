@@ -71,6 +71,7 @@ def grid(
         height=size,
         aspect=aspect,
         scatter_kws=scatter_kws,
+        sharex=False,
         **kwargs
     )
     if fit_reg:
@@ -78,7 +79,15 @@ def grid(
     g = g.set_titles(sub_title)
     morphs.plot.format_titles(g)
     morph_dims = behavior_df["morph_dim"].unique()
-    morphs.plot.format_morph_dim_label(g, row_order, col_order, morph_dims)
+    if row is "lesser_dim" and col is "greater_dim":
+        morphs.plot.format_morph_dim_label(g, row_order, col_order, morph_dims)
+    elif col is "morph_dim":
+        for col_index, morph_dim in enumerate(col_order):
+            ax = g.axes.flatten()[col_index]
+            ax.set_xticks([1, 128])
+            ax.set_xticklabels(morph_dim.upper())
+    else:
+        print("I'll need to do something about these axis labels")
     if legend:
         g = g.add_legend(title=legend_title)
     g = g.set(xlim=(1, 128), ylim=(0, 1), yticks=[0.0, 0.5, 1.0])
