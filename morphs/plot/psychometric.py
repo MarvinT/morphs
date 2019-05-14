@@ -77,8 +77,10 @@ def grid(
         g.map_dataframe(_4pl, "morph_pos", "greater_response")
     g = g.set_titles(sub_title)
     morphs.plot.format_titles(g)
+    morph_dims = behavior_df["morph_dim"].unique()
+    morphs.plot.format_morph_dim_label(g, row_order, col_order, morph_dims)
     if legend:
         g = g.add_legend(title=legend_title)
-    g = g.set(xlim=(1, 128), ylim=(0, 1), xticks=[], yticks=[0.0, 0.5, 1.0])
+    g = g.set(xlim=(1, 128), ylim=(0, 1), yticks=[0.0, 0.5, 1.0])
     g = g.set_axis_labels(x_label, y_label)
     return g
