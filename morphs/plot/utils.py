@@ -30,7 +30,7 @@ def savefig(
 
 
 def cumulative_distribution(
-    data, scaled=False, survival=False, label="Cumulative", **kwargs
+    data, scaled=False, survival=False, label="Cumulative", fill=False, bottom=0, **kwargs
 ):
     """
     plots cumulative (or survival) step distribution
@@ -41,7 +41,10 @@ def cumulative_distribution(
     y = np.arange(data.size + 1, dtype=float)
     if scaled:
         y /= y[-1]
-    plt.step(np.concatenate([data, data[[-1]]]), y, label=label, **kwargs)
+    x = np.concatenate([data, data[[-1]]])
+    plt.step(x, y, label=label, **kwargs)
+    if fill:
+        plt.fill_between(x, y, alpha=.5, step="pre", **kwargs)
 
 
 def morph_grid(
