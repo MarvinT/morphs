@@ -12,6 +12,7 @@ import pytest
 from click.testing import CliRunner
 
 
+@pytest.mark.run(order=0)
 def test_f_poly():
     x = np.linspace(1, 128)
     assert f_poly(x, [-5, 0, -0.5, 1]).shape == x.shape
