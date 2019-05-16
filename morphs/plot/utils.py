@@ -30,7 +30,16 @@ def savefig(
 
 
 def cumulative_distribution(
-    data, scaled=False, survival=False, label="Cumulative", fill=False, bottom=0, **kwargs
+    data,
+    scaled=False,
+    survival=False,
+    label="Cumulative",
+    fill=False,
+    target_length=np.inf,
+    downsample_method="geom",
+    flip=False,
+    preserve_ends=0,
+    **kwargs
 ):
     """
     plots cumulative (or survival) step distribution
@@ -42,9 +51,54 @@ def cumulative_distribution(
     if scaled:
         y /= y[-1]
     x = np.concatenate([data, data[[-1]]])
+    if len(x) > target_length:
+        if downsample_method == "geom":
+            x, y = log_downsample(x, y, target_length=target_length, flip=flip)
+        elif downsample_method == "even_end":
+            x, y = downsample(
+                x, y, target_length=target_length, preserve_ends=preserve_ends
+            )
+        else:
+            raise Exception("invalid downsample_method")
     plt.step(x, y, label=label, **kwargs)
     if fill:
-        plt.fill_between(x, y, alpha=.5, step="pre", **kwargs)
+        plt.fill_between(x, y, alpha=0.5, step="pre", **kwargs)
+
+
+def downsample(x, y, target_length=1000, preserve_ends=0):
+    assert len(x.shape) == 1
+    assert len(y.shape) == 1
+    assert len(x) > target_length
+    data = np.vstack((x, y))
+    if preserve_ends > 0:
+        l, data, r = np.split(data, (preserve_ends, -preserve_ends), axis=1)
+    interval = int(data.shape[1] / target_length) + 1
+    data = data[:, ::interval]
+    if preserve_ends > 0:
+        data = np.concatenate([l, data, r], axis=1)
+    return data[0, :], data[1, :]
+
+
+def geom_ind(stop, num=50):
+    geo_num = num
+    ind = np.geomspace(1, len(x), dtype=int, num=geo_num)
+    while len(set(ind)) < num - 1:
+        geo_num += 1
+        ind = np.geomspace(1, len(x), dtype=int, num=geo_num)
+    return np.sort(list(set(ind) | {0}))
+
+
+def log_downsample(x, y, target_length=1000, flip=False):
+    assert len(x.shape) == 1
+    assert len(y.shape) == 1
+    assert len(x) > target_length
+    data = np.vstack((x, y))
+    if flip:
+        data = np.fliplr(data)
+    data = data[:, geom_ind(data.shape[1], num=target_length)]
+    if flip:
+        data = np.fliplr(data)
+    return data[0, :], data[1, :]
 
 
 def morph_grid(
