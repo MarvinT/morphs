@@ -81,10 +81,10 @@ def downsample(x, y, target_length=1000, preserve_ends=0):
 
 def geom_ind(stop, num=50):
     geo_num = num
-    ind = np.geomspace(1, len(x), dtype=int, num=geo_num)
+    ind = np.geomspace(1, stop, dtype=int, num=geo_num)
     while len(set(ind)) < num - 1:
         geo_num += 1
-        ind = np.geomspace(1, len(x), dtype=int, num=geo_num)
+        ind = np.geomspace(1, stop, dtype=int, num=geo_num)
     return np.sort(list(set(ind) | {0}))
 
 
