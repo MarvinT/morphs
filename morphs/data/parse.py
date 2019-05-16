@@ -109,8 +109,8 @@ def recording_site(block_path):
     vals = {}
     for axis, (i, j) in idxs:
         vals[axis] = name.split("__")[i].split("_")[j]
-        assert vals[axis][0 : len(axis)] == axis
-        vals[axis] = int(vals[axis][len(axis) :])
+        assert vals[axis][0: len(axis)] == axis
+        vals[axis] = int(vals[axis][len(axis):])
     return tuple(vals[axis] for axis in axes)
 
 
@@ -171,3 +171,10 @@ def equal_spacing(pair_df):
             )
         )
     )
+
+
+def p_value(p, bonferroni_n=1):
+    for sym, crit in (("***", 0.001), ("**", 0.01), ("*", 0.05)):
+        if p < crit / bonferroni_n:
+            return sym
+    return ""
