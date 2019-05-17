@@ -13,10 +13,16 @@ def single(dim, pos, spects, invert=True, aspect=0.5, xlabel=True, ylabel=True):
         y_labels = [850, 1000, 2000, 4000, 10000]
         y_positions = [np.log(label) for label in y_labels]
         y_labels_str = ["850", "1k", "2k", "4k", "10k"]
-        plt.ylabel("Frequency (Hz)")
-    if xlabel:
         plt.yticks(y_positions, y_labels_str)
+        plt.ylabel("Frequency (Hz)")
+    else:
+        plt.yticks([])
+    if xlabel:
         plt.xlabel("Time (s)")
+    else:
+        plt.xticks([])
+    if not xlabel and not ylabel:
+        plt.axis("off")
     return f.figure
 
 
