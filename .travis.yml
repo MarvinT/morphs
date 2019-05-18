@@ -6,6 +6,8 @@ python:
 script:
   - pytest testing/ --cov=morphs 
   - pytest notebooks/ --cov=morphs --nbval-lax --current-env --cov-append
+before_install:
+  - sudo apt-get install libav-tools
 after_success:
   - coveralls
 sudo: required
