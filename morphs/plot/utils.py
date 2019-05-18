@@ -108,6 +108,7 @@ def morph_grid(
     xlabel="Morph Position",
     map_kwargs={},
     title="",
+    sub_title="{row_name}{col_name}",
     row_order="abcdef",
     col_order="cdefgh",
     sharey=True,
@@ -123,12 +124,8 @@ def morph_grid(
         sharey=sharey,
     )
     g.map_dataframe(map_func, **map_kwargs)
-    g.set_titles("")
-    morph_dims = pair_df["morph_dim"].unique()
-    if xlabel is "Morph Position":
-        format_morph_dim_label(g, row_order, col_order, morph_dims)
-    if ylabel is "Morph Position":
-        format_morph_dim_label(g, row_order, col_order, morph_dims, x_axis=False)
+    g.set_titles(sub_title)
+    format_titles(g)
     g.set_axis_labels(xlabel, ylabel)
     if title:
         plt.subplots_adjust(top=0.95)
@@ -163,12 +160,14 @@ def format_titles(g, upper=True, to_join=True):
 
 
 def format_morph_dim_label(
-    g, row_order, col_order, morph_dims, x_axis=True, divisions=4
+    g, row_order, col_order, morph_dims, x_axis=True, divisions=4, flip=False
 ):
     for row_index in range(len(row_order)):
         for col_index in range(len(col_order)):
             morph_dim = row_order[row_index] + col_order[col_index]
             if morph_dim in morph_dims:
+                if flip:
+                    morph_dim = morph_dim[::-1]
                 if x_axis:
                     g.axes[row_index, col_index].set_xticks([1, 128])
                     g.axes[row_index, col_index].set_xticklabels(morph_dim.upper())
