@@ -123,8 +123,12 @@ def morph_grid(
         sharey=sharey,
     )
     g.map_dataframe(map_func, **map_kwargs)
-    g.set_titles("{row_name}{col_name}")
-    format_titles(g)
+    g.set_titles("")
+    morph_dims = behavior_df["morph_dim"].unique()
+    if xlabel is "Morph Position":
+        format_morph_dim_label(g, row_order, col_order, morph_dims)
+    if ylabel is "Morph Position":
+        format_morph_dim_label(g, row_order, col_order, morph_dims, x_axis=False)
     g.set_axis_labels(xlabel, ylabel)
     if title:
         plt.subplots_adjust(top=0.95)

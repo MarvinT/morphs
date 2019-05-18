@@ -79,8 +79,8 @@ def grid(
         g.map_dataframe(_4pl, "morph_pos", "greater_response")
     g = g.set_titles(sub_title)
     morphs.plot.format_titles(g)
-    morph_dims = behavior_df["morph_dim"].unique()
     if row is "lesser_dim" and col is "greater_dim":
+        morph_dims = behavior_df["morph_dim"].unique()
         morphs.plot.format_morph_dim_label(g, row_order, col_order, morph_dims)
     elif hue is "morph_dim":
         g = g.set(xticks=[1, 128])
