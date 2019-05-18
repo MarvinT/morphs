@@ -113,6 +113,7 @@ def morph_grid(
     col_order="cdefgh",
     sharey=True,
     sharex=True,
+    **kwargs
 ):
     g = sns.FacetGrid(
         pair_df,
@@ -122,6 +123,7 @@ def morph_grid(
         col_order=col_order,
         sharex=sharex,
         sharey=sharey,
+        **kwargs
     )
     g.map_dataframe(map_func, **map_kwargs)
     g.set_titles(sub_title)
