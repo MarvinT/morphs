@@ -8,7 +8,6 @@ script:
   - pytest -v notebooks/1.* --cov=morphs --nbval-lax --current-env --cov-append
   - pytest -v notebooks/2.* --cov=morphs --nbval-lax --current-env --cov-append
   # - pytest -v notebooks/3.* --cov=morphs --nbval-lax --current-env --cov-append
-  - pytest -v notebooks/3.* --cov=morphs --nbval-lax --current-env --cov-append
   - pytest -v notebooks/4.* --cov=morphs --nbval-lax --current-env --cov-append
   - pytest -v notebooks/5.* --cov=morphs --nbval-lax --current-env --cov-append
   - pytest -v notebooks/6.* --cov=morphs --nbval-lax --current-env --cov-append
