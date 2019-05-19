@@ -4,17 +4,16 @@ python:
   # - "3.5"
   - "3.6"
 script:
-  - pytest testing/ --cov=morphs 
-  - pytest notebooks/1.* --cov=morphs --nbval-lax --current-env --cov-append
-  - pytest notebooks/2.* --cov=morphs --nbval-lax --current-env --cov-append
-  - pytest notebooks/3.* --cov=morphs --nbval-lax --current-env --cov-append
-  - pytest notebooks/3.* --cov=morphs --nbval-lax --current-env --cov-append
-  - pytest notebooks/4.* --cov=morphs --nbval-lax --current-env --cov-append
-  - pytest notebooks/5.* --cov=morphs --nbval-lax --current-env --cov-append
-  - pytest notebooks/6.* --cov=morphs --nbval-lax --current-env --cov-append
-  - pytest notebooks/7.* --cov=morphs --nbval-lax --current-env --cov-append
-  - pytest notebooks/8.* --cov=morphs --nbval-lax --current-env --cov-append
-  - pytest notebooks/supplemental --cov=morphs --nbval-lax --current-env --cov-append
+  - pytest -v testing/ --cov=morphs 
+  - pytest -v notebooks/1.* --cov=morphs --nbval-lax --current-env --cov-append
+  - pytest -v notebooks/2.* --cov=morphs --nbval-lax --current-env --cov-append
+  # - pytest -v notebooks/3.* --cov=morphs --nbval-lax --current-env --cov-append
+  - pytest -v notebooks/4.* --cov=morphs --nbval-lax --current-env --cov-append
+  - pytest -v notebooks/5.* --cov=morphs --nbval-lax --current-env --cov-append
+  - pytest -v notebooks/6.* --cov=morphs --nbval-lax --current-env --cov-append
+  - pytest -v notebooks/7.* --cov=morphs --nbval-lax --current-env --cov-append
+  - pytest -v notebooks/8.* --cov=morphs --nbval-lax --current-env --cov-append
+  - pytest -v notebooks/supplemental --cov=morphs --nbval-lax --current-env --cov-append
 before_install:
   - sudo apt-get install libav-tools
 after_success:
