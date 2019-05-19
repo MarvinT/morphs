@@ -7,7 +7,7 @@ script:
   - pytest testing/ --cov=morphs 
   - pytest notebooks/1.* --cov=morphs --nbval-lax --current-env --cov-append
   - pytest notebooks/2.* --cov=morphs --nbval-lax --current-env --cov-append
-  - pytest notebooks/3.* --cov=morphs --nbval-lax --current-env --cov-append
+  # - pytest notebooks/3.* --cov=morphs --nbval-lax --current-env --cov-append
   - pytest notebooks/3.* --cov=morphs --nbval-lax --current-env --cov-append
   - pytest notebooks/4.* --cov=morphs --nbval-lax --current-env --cov-append
   - pytest notebooks/5.* --cov=morphs --nbval-lax --current-env --cov-append
