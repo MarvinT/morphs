@@ -79,23 +79,15 @@ def grid(
         g.map_dataframe(_4pl, "morph_pos", "greater_response")
     g = g.set_titles(sub_title)
     morphs.plot.format_titles(g)
-    morph_dims = behavior_df["morph_dim"].unique()
     if row is "lesser_dim" and col is "greater_dim":
+        morph_dims = behavior_df["morph_dim"].unique()
         morphs.plot.format_morph_dim_label(g, row_order, col_order, morph_dims)
     elif hue is "morph_dim":
-        g = g.set(xticks=[1, 128])
-        g = g.set_xticklabels("")
-        g.axes.flatten()[0].set_xticks(
-            np.linspace(1, 128, divisions, endpoint=False)[1:], minor=True
-        )
+        morphs.plot.format_morph_dim_ax_label(g.axes.flatten()[0])
     elif col is "morph_dim":
         for col_index, morph_dim in enumerate(col_order):
             ax = g.axes.flatten()[col_index]
-            ax.set_xticks([1, 128])
-            ax.set_xticklabels(morph_dim.upper())
-            ax.set_xticks(
-                np.linspace(1, 128, divisions, endpoint=False)[1:], minor=True
-            )
+            morphs.plot.format_morph_dim_ax_label(ax, morph_dim=morph_dim)
     else:
         print("I'll need to do something about these axis labels")
     if legend:

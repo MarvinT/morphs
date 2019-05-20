@@ -108,10 +108,12 @@ def morph_grid(
     xlabel="Morph Position",
     map_kwargs={},
     title="",
+    sub_title="{row_name}{col_name}",
     row_order="abcdef",
     col_order="cdefgh",
     sharey=True,
     sharex=True,
+    **kwargs
 ):
     g = sns.FacetGrid(
         pair_df,
@@ -121,9 +123,10 @@ def morph_grid(
         col_order=col_order,
         sharex=sharex,
         sharey=sharey,
+        **kwargs
     )
     g.map_dataframe(map_func, **map_kwargs)
-    g.set_titles("{row_name}{col_name}")
+    g.set_titles(sub_title)
     format_titles(g)
     g.set_axis_labels(xlabel, ylabel)
     if title:
@@ -158,22 +161,28 @@ def format_titles(g, upper=True, to_join=True):
         ax.set_title(title)
 
 
-def format_morph_dim_label(
-    g, row_order, col_order, morph_dims, x_axis=True, divisions=4
-):
+def format_morph_dim_label(g, row_order, col_order, morph_dims, flip=False, **kwargs):
     for row_index in range(len(row_order)):
         for col_index in range(len(col_order)):
             morph_dim = row_order[row_index] + col_order[col_index]
             if morph_dim in morph_dims:
-                if x_axis:
-                    g.axes[row_index, col_index].set_xticks([1, 128])
-                    g.axes[row_index, col_index].set_xticklabels(morph_dim.upper())
-                    g.axes[row_index, col_index].set_xticks(
-                        np.linspace(1, 128, divisions, endpoint=False)[1:], minor=True
-                    )
-                else:
-                    g.axes[row_index, col_index].set_yticks([1, 128])
-                    g.axes[row_index, col_index].set_yticklabels(morph_dim.upper())
-                    g.axes[row_index, col_index].set_yticks(
-                        np.linspace(1, 128, divisions, endpoint=False)[1:], minor=True
-                    )
+                if flip:
+                    morph_dim = morph_dim[::-1]
+                format_morph_dim_ax_label(
+                    g.axes[row_index, col_index], morph_dim=morph_dim, **kwargs
+                )
+
+
+def format_morph_dim_ax_label(ax, morph_dim="", x_axis=True, divisions=4):
+    if x_axis:
+        ax.set_xticks([1, 128])
+        ax.set_xticklabels(morph_dim.upper())
+        ax.set_xticks(
+            np.linspace(1, 128, divisions, endpoint=False)[1:], minor=True
+        )
+    else:
+        ax.set_yticks([1, 128])
+        ax.set_yticklabels(morph_dim.upper())
+        ax.set_yticks(
+            np.linspace(1, 128, divisions, endpoint=False)[1:], minor=True
+        )

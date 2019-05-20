@@ -6,6 +6,7 @@ from morphs.plot.utils import (
     boundary,
     format_titles,
     format_morph_dim_label,
+    format_morph_dim_ax_label
 )
 import morphs.plot.psychometric
 import morphs.plot.neurometric
