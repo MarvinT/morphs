@@ -83,7 +83,7 @@ def grid(
     g = g.set_titles(sub_title)
     morph_dims = held_out_df["morph_dim"].unique()
     morphs.plot.format_morph_dim_label(g, row_order, col_order, morph_dims)
-    g.set(xlim=(0, 128), ylim=(0, 1), xticks=[], yticks=[0.0, 0.5, 1.0])
+    g.set(xlim=(0, 128), ylim=(0, 1), yticks=[0.0, 0.5, 1.0])
     g.set_axis_labels("Morph Position", "P(right response)")
 
     if sup_title:
