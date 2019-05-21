@@ -46,18 +46,22 @@ def held_out(labels, representations, behavior_subj, psychometric_params, **kwar
 
 def grid(
     held_out_df,
+    row_order=None,
+    col_order=None,
     sup_title="",
     legend=True,
     legend_title="",
     p_right_leg_label="Behavioral (True) values",
     predicted_leg_label="Predicted values",
-    sub_title="{row_name}{col_name}",
+    sub_title="",
 ):
     held_out_df["legend"] = held_out_df["legend"].map(
         {"p_right": p_right_leg_label, "predicted": predicted_leg_label}
     )
-    row_order = np.sort(held_out_df["lesser_dim"].unique())
-    col_order = np.sort(held_out_df["greater_dim"].unique())
+    if row_order is None:
+        row_order = np.sort(held_out_df["lesser_dim"].unique())
+    if col_order is None:
+        col_order = np.sort(held_out_df["greater_dim"].unique())
     g = sns.lmplot(
         x="morph_pos",
         y="p_right",
@@ -76,7 +80,8 @@ def grid(
     if legend:
         g.add_legend(title=legend_title)
     g = g.set_titles(sub_title)
-    morphs.plot.format_titles(g)
+    morph_dims = held_out_df["morph_dim"].unique()
+    morphs.plot.format_morph_dim_label(g, row_order, col_order, morph_dims)
     g.set(xlim=(0, 128), ylim=(0, 1), xticks=[], yticks=[0.0, 0.5, 1.0])
     g.set_axis_labels("morph position", "P(right response)")
 
