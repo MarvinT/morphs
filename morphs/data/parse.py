@@ -145,12 +145,13 @@ def ephys_class(
     neural_subj_label="neural_subj",
     class_label="class",
     split_training_cond=False,
+    split_self=True,
 ):
     """Parses df to classify neural subj into naive, trained or other training conditions"""
     for (behave_subj, subj), group in df.groupby(
         [behavior_subj_label, neural_subj_label]
     ):
-        if subj == behave_subj:
+        if split_self and subj == behave_subj:
             df.loc[group.index, class_label] = "self"
         elif subj not in morphs.subj.TRAINING:
             df.loc[group.index, class_label] = "naive"
