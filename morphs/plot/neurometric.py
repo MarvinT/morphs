@@ -75,6 +75,7 @@ def grid(
         row_order=row_order,
         col_order=col_order,
         legend=False,
+        sharex=False,
     )
     g.map_dataframe(_4pl, "morph_pos", "p_right")
     if legend:
@@ -83,7 +84,7 @@ def grid(
     morph_dims = held_out_df["morph_dim"].unique()
     morphs.plot.format_morph_dim_label(g, row_order, col_order, morph_dims)
     g.set(xlim=(0, 128), ylim=(0, 1), xticks=[], yticks=[0.0, 0.5, 1.0])
-    g.set_axis_labels("morph position", "P(right response)")
+    g.set_axis_labels("Morph Position", "P(right response)")
 
     if sup_title:
         plt.subplots_adjust(top=0.95)
