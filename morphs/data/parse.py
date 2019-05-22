@@ -101,6 +101,15 @@ def blockpath_name(block_path):
     return block_path.split(os.sep)[-1]
 
 
+def find_a_block_path(
+    block_name="Pen01_Lft_AP2500_ML750__Site04_Z2300__B1101_cat_P01_S04_3"
+):
+    for block_path in morphs.paths.blocks():
+        if block_name in block_path:
+            return block_path
+    return block_path
+
+
 def recording_site(block_path):
     """parses AP, ML, and Z position from block name"""
     name = blockpath_name(block_path)
