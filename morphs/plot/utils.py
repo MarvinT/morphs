@@ -171,6 +171,8 @@ def format_morph_dim_label(g, row_order, col_order, morph_dims, flip=False, **kw
                 format_morph_dim_ax_label(
                     g.axes[row_index, col_index], morph_dim=morph_dim, **kwargs
                 )
+            else:
+                g.axes[row_index, col_index].set_xticks([])
 
 
 def format_morph_dim_ax_label(ax, morph_dim="", x_axis=True, divisions=4):
