@@ -161,7 +161,9 @@ def format_titles(g, upper=True, to_join=True):
         ax.set_title(title)
 
 
-def format_morph_dim_label(g, row_order, col_order, morph_dims, flip=False, **kwargs):
+def format_morph_dim_label(
+    g, row_order, col_order, morph_dims, flip=False, x_axis=True, **kwargs
+):
     for row_index in range(len(row_order)):
         for col_index in range(len(col_order)):
             morph_dim = row_order[row_index] + col_order[col_index]
@@ -169,10 +171,16 @@ def format_morph_dim_label(g, row_order, col_order, morph_dims, flip=False, **kw
                 if flip:
                     morph_dim = morph_dim[::-1]
                 format_morph_dim_ax_label(
-                    g.axes[row_index, col_index], morph_dim=morph_dim, **kwargs
+                    g.axes[row_index, col_index],
+                    morph_dim=morph_dim,
+                    x_axis=x_axis,
+                    **kwargs
                 )
             else:
-                g.axes[row_index, col_index].set_xticks([])
+                if x_axis:
+                    g.axes[row_index, col_index].set_xticks([])
+                else:
+                    g.axes[row_index, col_index].set_yticks([])
 
 
 def format_morph_dim_ax_label(ax, morph_dim="", x_axis=True, divisions=4):
