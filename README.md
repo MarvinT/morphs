@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.com/MarvinT/morphs.svg?branch=master)](https://travis-ci.com/MarvinT/morphs)
 [![Coverage Status](https://coveralls.io/repos/github/MarvinT/morphs/badge.svg?branch=master)](https://coveralls.io/github/MarvinT/morphs?branch=master)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-
+[![Python versions](https://img.shields.io/badge/python-2.7%7C3.5%7C3.6-blue.svg)](https://www.python.org/)
 
 Code for my morph project and analysis
 
