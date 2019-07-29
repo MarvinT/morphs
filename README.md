@@ -4,7 +4,9 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![Python versions](https://img.shields.io/badge/python-2.7%7C3.5%7C3.6-blue.svg)](https://www.python.org/)
 
-Code for my morph project and analysis
+Code for my morph project and analysis.
+
+Please look at the notebooks folder for code to download and run all the code to produce the figures of the (soon to be) paper.
 
 Project Organization
 ------------
