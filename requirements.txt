@@ -26,7 +26,7 @@ librosa
 imageio==2.6.1
 seaborn
 # seaborn recommended:
-statsmodels
+statsmodels==0.10.1
 scipy==1.2.1
 patsy
 
