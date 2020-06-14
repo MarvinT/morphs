@@ -14,14 +14,14 @@ pandas<=0.25.3
 numpy
 scikit-learn==0.19.2
 googledrivedownloader
-pytest>=3.10
+pytest>=4.6
 pytest-ordering
 pytest-cov
 python-coveralls
 nbval
-umap-learn
-xgboost
-librosa
+umap-learn==0.3.10
+xgboost<=1.0.1
+librosa<=0.7.2
 
 imageio==2.6.1
 seaborn
@@ -38,3 +38,7 @@ git+https://github.com/gentnerlab/behav-analysis@master#egg=behav
 
 # backwards compatibility
 pathlib2
+
+# set specific versions for dependency dependencies
+llvmlite<=0.31
+numba<=0.47
