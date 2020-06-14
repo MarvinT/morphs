@@ -41,3 +41,4 @@ pathlib2
 
 # set specific versions for dependency dependencies
 llvmlite<=0.31
+numba<=0.47
