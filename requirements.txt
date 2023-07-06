@@ -27,7 +27,7 @@ imageio==2.6.1
 seaborn
 # seaborn recommended:
 statsmodels==0.10.1
-scipy==1.2.1
+scipy==1.10.0
 patsy
 
 git+https://github.com/gentnerlab/ephys-analysis@master#egg=ephys
